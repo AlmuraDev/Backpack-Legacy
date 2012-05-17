@@ -1,7 +1,7 @@
 package com.almuramc.backpack.api;
 
 import com.almuramc.backpack.Backpack;
-import com.almuramc.backpack.core.BackpackHandler;
+import com.almuramc.backpack.BackpackHandler;
 
 import org.bukkit.World;
 import org.bukkit.entity.Player;

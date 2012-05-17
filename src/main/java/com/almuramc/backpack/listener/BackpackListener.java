@@ -3,7 +3,7 @@ package com.almuramc.backpack.listener;
 import com.almuramc.backpack.Backpack;
 import com.almuramc.backpack.api.BackpackCloseEvent;
 import com.almuramc.backpack.api.BackpackOpenEvent;
-import com.almuramc.backpack.core.BackpackHandler;
+import com.almuramc.backpack.BackpackHandler;
 
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
@@ -15,10 +15,12 @@ import org.getspout.spoutapi.event.screen.ScreenOpenEvent;
 import org.getspout.spoutapi.gui.ScreenType;
 
 public class BackpackListener implements Listener {
-	private final BackpackHandler backpackHandler;
+	private final Backpack plugin;
+	private final BackpackHandler handler;
 
-	public BackpackListener() {
-		backpackHandler = Backpack.getInstance().getBackpackHandler();
+	public BackpackListener(Backpack instance, BackpackHandler handler) {
+		plugin = instance;
+		this.handler = handler;
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST)
@@ -29,7 +31,7 @@ public class BackpackListener implements Listener {
 		}
 		if (event.getScreenType() == ScreenType.CUSTOM_SCREEN) {
 			//Backpack menu has closed...save inventory first.
-			backpackHandler.saveBackpackFor(event.getPlayer());
+			handler.saveBackpackFor(event.getPlayer());
 			Bukkit.getServer().getPluginManager().callEvent(new BackpackCloseEvent(event.getPlayer()));
 		}
 	}
@@ -48,7 +50,7 @@ public class BackpackListener implements Listener {
 				event.setCancelled(true);
 				return;
 			}
-			backpackHandler.loadBackpackFor(event.getPlayer());
+			handler.loadBackpackFor(event.getPlayer());
 		}
 	}
 }
