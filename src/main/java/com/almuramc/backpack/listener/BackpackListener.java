@@ -1,8 +1,8 @@
 package com.almuramc.backpack.listener;
 
 import com.almuramc.backpack.Backpack;
-import com.almuramc.backpack.api.BackpackCloseEvent;
-import com.almuramc.backpack.api.BackpackOpenEvent;
+import com.almuramc.backpack.api.BackpackSaveEvent;
+import com.almuramc.backpack.api.BackpackLoadEvent;
 import com.almuramc.backpack.BackpackHandler;
 
 import org.bukkit.Bukkit;
@@ -32,7 +32,7 @@ public class BackpackListener implements Listener {
 		if (event.getScreenType() == ScreenType.CUSTOM_SCREEN) {
 			//Backpack menu has closed...save inventory first.
 			handler.saveBackpackFor(event.getPlayer());
-			Bukkit.getServer().getPluginManager().callEvent(new BackpackCloseEvent(event.getPlayer()));
+			Bukkit.getServer().getPluginManager().callEvent(new BackpackSaveEvent(event.getPlayer()));
 		}
 	}
 
@@ -42,9 +42,9 @@ public class BackpackListener implements Listener {
 			event.setCancelled(true);
 			return;
 		}
-		BackpackOpenEvent backpack = new BackpackOpenEvent(event.getPlayer());
+		BackpackLoadEvent backpack = new BackpackLoadEvent(event.getPlayer());
 		if (event.getScreenType() == ScreenType.CUSTOM_SCREEN) {
-			//Backpack menu is opened...call BackpackOpenEvent and let developers manipulate it before the player does.
+			//Backpack menu is opened...call BackpackLoadEvent and let developers manipulate it before the player does.
 			Bukkit.getServer().getPluginManager().callEvent(backpack);
 			if (backpack.isCancelled() || !backpack.hasBackpack()) {
 				event.setCancelled(true);

@@ -6,6 +6,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.almuramc.backpack.api.BackpackLoadEvent;
+import com.almuramc.backpack.api.BackpackSaveEvent;
+
 import org.apache.commons.collections.map.MultiKeyMap;
 
 import org.bukkit.Bukkit;
@@ -23,19 +26,17 @@ import org.bukkit.inventory.ItemStack;
  */
 public class BackpackHandler {
 	private static final YamlConfiguration parser = new YamlConfiguration();
-	private final Backpack PLUGIN;
 	//In-Memory store of paired player and world keys with inventories that are backpacks.
 	private final MultiKeyMap INVENTORIES;
 	private final File BACKPACK_ROOT;
 
 	/**
 	 * Constructs the handler to handle backpacks.
-	 * @param instance
+	 * @param
 	 */
 	public BackpackHandler(Backpack instance) {
-		PLUGIN = instance;
 		INVENTORIES = new MultiKeyMap();
-		BACKPACK_ROOT = new File(PLUGIN.getDataFolder(), "backpack");
+		BACKPACK_ROOT = new File(instance.getDataFolder(), "backpack");
 		setup();
 	}
 
@@ -170,6 +171,8 @@ public class BackpackHandler {
 						}
 						if (player != null && inv != null) {
 							INVENTORIES.put(player, player.getWorld(), inv);
+							BackpackLoadEvent event = new BackpackLoadEvent(player, world);
+							Bukkit.getPluginManager().callEvent(event);
 						}
 					}
 				} catch (FileNotFoundException e) {
@@ -216,6 +219,11 @@ public class BackpackHandler {
 						parser.load(playerBackpack);
 						parser.set("player", plr.getName());
 						parser.createSection("inventory");
+						BackpackSaveEvent event = new BackpackSaveEvent(plr);
+						Bukkit.getPluginManager().callEvent(event);
+						if (event.isCancelled()) {
+							continue;
+						}
 						ItemStack[] stacks = ((Inventory) INVENTORIES.get(plr, world)).getContents();
 						for (ItemStack stack : stacks) {
 							ConfigurationSection section = parser.getConfigurationSection("inventory").createSection(stack.getType().name());

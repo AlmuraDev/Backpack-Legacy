@@ -34,4 +34,12 @@ public class Backpack extends JavaPlugin {
 		Bukkit.getServer().getPluginManager().registerEvents(new BackpackListener(this, backpackHandler), this);
 		log.info("enabled.");
 	}
+
+	public static Backpack getInstance() {
+		return instance;
+	}
+
+	public BackpackHandler getHandler() {
+		return backpackHandler;
+	}
 }
