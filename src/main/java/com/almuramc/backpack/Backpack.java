@@ -2,7 +2,6 @@ package com.almuramc.backpack;
 
 import java.util.logging.Logger;
 
-import com.almuramc.backpack.core.BackpackHandler;
 import com.almuramc.backpack.input.BackpackInputHandler;
 import com.almuramc.backpack.listener.BackpackListener;
 
@@ -18,7 +17,7 @@ public class Backpack extends JavaPlugin {
 	private Logger log = Logger.getLogger("minecraft");
 
 	public Backpack() {
-		backpackHandler = new BackpackHandler();
+		backpackHandler = new BackpackHandler(this);
 	}
 
 	@Override
@@ -32,7 +31,7 @@ public class Backpack extends JavaPlugin {
 		instance = this;
 		backpackHandler.loadBackpacks();
 		SpoutManager.getKeyBindingManager().registerBinding("Backpack", Keyboard.KEY_B, "Opens the backpack", new BackpackInputHandler(), this);
-		Bukkit.getServer().getPluginManager().registerEvents(new BackpackListener(), this);
+		Bukkit.getServer().getPluginManager().registerEvents(new BackpackListener(this, backpackHandler), this);
 		log.info("enabled.");
 	}
 
@@ -40,7 +39,7 @@ public class Backpack extends JavaPlugin {
 		return instance;
 	}
 
-	public BackpackHandler getBackpackHandler() {
+	public BackpackHandler getHandler() {
 		return backpackHandler;
 	}
 }

@@ -1,7 +1,7 @@
 package com.almuramc.backpack.api;
 
 import com.almuramc.backpack.Backpack;
-import com.almuramc.backpack.core.BackpackHandler;
+import com.almuramc.backpack.BackpackHandler;
 
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -14,7 +14,7 @@ import org.bukkit.inventory.Inventory;
  * Custom event thrown when a backpack is opened. Modifications can be done
  * to the player's backpack.
  */
-public class BackpackOpenEvent extends Event implements Cancellable {
+public class BackpackLoadEvent extends Event implements Cancellable {
 	private static final HandlerList handlers = new HandlerList();
 	private final BackpackHandler backpackHandler;
 	private boolean isCancelled;
@@ -23,11 +23,10 @@ public class BackpackOpenEvent extends Event implements Cancellable {
 	private final World world;
 	private final Inventory inventory;
 
-	public BackpackOpenEvent(Player player) {
-		backpackHandler = Backpack.getInstance().getBackpackHandler();
+	public BackpackLoadEvent(Player player, World world) {
+		backpackHandler = Backpack.getInstance().getHandler();
 		this.player = player;
-		world = player.getWorld();
-		//Grab the prior backpack from the last time backpacks were accessed.
+		this.world = world;
 		inventory = backpackHandler.getBackpackFor(player, world);
 	}
 
@@ -45,6 +44,19 @@ public class BackpackOpenEvent extends Event implements Cancellable {
 	 */
 	public Inventory getBackpack() {
 		return inventory;
+	}
+
+	/**
+	 * Sets the inventory of the player's backpack. Note that the inventory object
+	 * is not changed, this merely copies the contents of the inventory argument to the
+	 * event's inventory.
+	 * @param inventory
+	 */
+	public void setBackpack(Inventory inventory) {
+		//Clear the current backpack
+		this.inventory.clear();
+		//Inject the inventory argument into this inventory.
+		this.inventory.setContents(inventory.getContents());
 	}
 
 	/**

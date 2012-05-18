@@ -1,7 +1,7 @@
 package com.almuramc.backpack.api;
 
 import com.almuramc.backpack.Backpack;
-import com.almuramc.backpack.core.BackpackHandler;
+import com.almuramc.backpack.BackpackHandler;
 
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -14,7 +14,7 @@ import org.bukkit.inventory.Inventory;
  * Custom event thrown when a player closes their backpack. No modifications can be done
  * to prevent duping (event is called after save).
  */
-public class BackpackCloseEvent extends Event implements Cancellable {
+public class BackpackSaveEvent extends Event implements Cancellable {
 	private static final HandlerList handlers = new HandlerList();
 	private final BackpackHandler backpackHandler;
 	private boolean isCancelled = false;
@@ -23,11 +23,10 @@ public class BackpackCloseEvent extends Event implements Cancellable {
 	private final World world;
 	private final Inventory inventory;
 
-	public BackpackCloseEvent(Player player) {
-		backpackHandler = Backpack.getInstance().getBackpackHandler();
+	public BackpackSaveEvent(Player player) {
 		this.player = player;
 		world = player.getWorld();
-		//Grab the manipulated backpack left from the player (or dev in BackpackOpenEvent)
+		backpackHandler = Backpack.getInstance().getHandler();
 		inventory = backpackHandler.getBackpackFor(player, world);
 	}
 
