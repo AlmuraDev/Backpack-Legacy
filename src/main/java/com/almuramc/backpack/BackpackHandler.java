@@ -88,10 +88,12 @@ public final class BackpackHandler {
 			playerDat = file;
 		}
 
+		//No file was found for this player, return a blank empty inventory then.
 		if (playerDat == null) {
-			return null;
+			return Bukkit.createInventory(player, 64, "Backpack"); //TODO return size based on player or global perm
 		}
 
+		//File found, lets load in contents
 		try {
 			parser.load(playerDat);
 			ArrayList<ItemStack> items = new ArrayList<ItemStack>();
@@ -102,11 +104,9 @@ public final class BackpackHandler {
 				items.add(item);
 			}
 
-			if (items.size() <= 0) {
-				return null;
-			}
-
-			return Bukkit.createInventory(player, items.size(), "Backpack");
+			Inventory backpack = Bukkit.createInventory(player, items.size(), "Backpack");
+			backpack.setContents((ItemStack[]) items.toArray());
+			return backpack;
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (InvalidConfigurationException e) {
