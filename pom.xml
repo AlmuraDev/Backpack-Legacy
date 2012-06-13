@@ -60,8 +60,7 @@
     </dependencies>
 
     <build>
-        <defaultGoal>clean package install</defaultGoal>
-        <sourceDirectory>${basedir}/src/main/java</sourceDirectory>
+        <defaultGoal>clean install</defaultGoal>
         <!-- Resources -->
         <resources>
             <resource>
@@ -69,8 +68,7 @@
                 <filtering>true</filtering>
                 <directory>${basedir}/src/main/resources</directory>
                 <includes>
-                    <include>plugin.yml</include>
-                    <include>config.yml</include>
+                    <include>*.yml</include>
                 </includes>
             </resource>
         </resources>
