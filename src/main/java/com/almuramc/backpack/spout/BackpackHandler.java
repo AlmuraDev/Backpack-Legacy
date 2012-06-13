@@ -18,7 +18,7 @@ public final class BackpackHandler {
 	}
 
 	public Inventory getBackpackFor(Player player, World world, Inventory backpack) {
-
+		return null;
 	}
 
 	public void setBackpackFor(Player player, World world, Inventory backpack) {
@@ -26,7 +26,7 @@ public final class BackpackHandler {
 	}
 
 	private Inventory loadBackpackFromFile(Player player, World world, Inventory backpack) {
-
+		return null;
 	}
 
 	private void saveBackpackToFile(Player player, World world, Inventory backpack) {
@@ -34,10 +34,10 @@ public final class BackpackHandler {
 	}
 
 	private Inventory loadBackpackFromSQL(Player player, World world, Inventory backpack) {
-
+		return null;
 	}
 
-	private void saveBacpackToSQL(Player player, World world, Inventory backpack) {
+	private void saveBackpackToSQL(Player player, World world, Inventory backpack) {
 
 	}
 
