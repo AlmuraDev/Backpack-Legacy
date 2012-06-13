@@ -24,86 +24,146 @@ import org.bukkit.inventory.ItemStack;
 /**
  * Serves as a handler for backpacks.
  */
-public class BackpackHandler {
+public final class BackpackHandler {
+	private static final File BACKPACK_ROOT = new File(BackpackPlugin.getInstance().getDataFolder(), "backpack");
+	private static final MultiKeyMap INVENTORIES = new MultiKeyMap();
 	private static final YamlConfiguration parser = new YamlConfiguration();
-	//In-Memory store of paired player and world keys with inventories that are backpacks.
-	private final MultiKeyMap INVENTORIES;
-	private final File BACKPACK_ROOT;
 
-	/**
-	 * Constructs the handler to handle backpacks.
-	 * @param
-	 */
-	public BackpackHandler(Backpack instance) {
-		INVENTORIES = new MultiKeyMap();
-		BACKPACK_ROOT = new File(instance.getDataFolder(), "backpack");
+	public BackpackHandler() {
 		setup();
 	}
 
-	/**
-	 * Sets a backpack for a player in a world.
-	 * @param player Player that will have backpack set.
-	 * @param world  World the player is in.
-	 * @param inventory the backpack's inventory.
-	 */
 	public void setBackpackFor(Player player, World world, Inventory inventory) {
-		INVENTORIES.put(player, world, inventory);
+		BackpackSaveEvent event = new BackpackSaveEvent(player, world, inventory);
+		Inventory backpack = event.getBackpack();
+		//Cancel saving but don't delete files
+		if (event.isCancelled()) {
+			return;
+		}
+		if (backpack == null) {
+			INVENTORIES.remove(player, world);
+		}
+		//Check to see if it is SQL or flat file and call appropriate method
+		if (!BackpackPlugin.getInstance().getCached().isSQLEnabled()) {
+			saveToFile(player, world, inventory);
+			return;
+		}
+		saveToSQL(player, world, inventory);
 	}
 
-	/**
-	 * Gets a backpack for a player in a world.
-	 * @param player Player that is accessing their backpack.
-	 * @param world World the player is in.
-	 * @return
-	 */
 	public Inventory getBackpackFor(Player player, World world) {
-		return (Inventory) INVENTORIES.get(player, world);
+		Inventory currentBackpack = (Inventory) INVENTORIES.get(player, world);
+		//If they have a null backpack, assume they don't have it loaded from disk and try to fetch it.
+		if (currentBackpack == null) {
+			//Check here if SQL or flat file and execute relative method
+			if (!BackpackPlugin.getInstance().getCached().isSQLEnabled()) {
+				currentBackpack = loadFromFile(player, world);
+			} else {
+				currentBackpack = loadFromSQL(player, world);
+			}
+		}
+		BackpackLoadEvent event = new BackpackLoadEvent(player, world, currentBackpack);
+		Inventory backpack = event.getBackpack();
+		//If they still have a null backpack by this point, assume they will not have a backpack period.
+		if (backpack == null || event.isCancelled()) {
+			return null;
+		}
+		if (!currentBackpack.equals(backpack)) {
+			INVENTORIES.put(player, world, event.getBackpack());
+		}
+		return backpack;
 	}
 
-	/**
-	 * Loads all the backpacks from disk.
-	 */
-	public void loadBackpacks() {
-		loadFor(null, Bukkit.getWorlds());
+	private Inventory loadFromFile(Player player, World world) {
+		File worldDir = new File(BACKPACK_ROOT, world.getName());
+		File playerDat = null;
+		for (File file : worldDir.listFiles()) {
+			if (!file.getName().contains(".yml")) {
+				continue;
+			}
+			String name = (file.getName().split(".yml"))[0];
+			if (!name.equals(player.getName())) {
+				continue;
+			}
+			playerDat = file;
+		}
+
+		if (playerDat == null) {
+			return null;
+		}
+
+		try {
+			parser.load(playerDat);
+			ArrayList<ItemStack> items = new ArrayList<ItemStack>();
+			ConfigurationSection parent = parser.getConfigurationSection("backpack");
+			for (String key : parent.getKeys(false)) {
+				ConfigurationSection sub = parent.getConfigurationSection(key);
+				ItemStack item = new ItemStack(Material.getMaterial(key), sub.getInt("amount"), (Short) sub.get("durability"), (Byte) sub.get("data"));
+				items.add(item);
+			}
+
+			if (items.size() <= 0) {
+				return null;
+			}
+
+			return Bukkit.createInventory(player, items.size(), "Backpack");
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (InvalidConfigurationException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
-	/**
-	 * Loads a backpack for a particular player.
-	 * @param player
-	 */
-	public void loadBackpackFor(Player player, World world) {
-		//Dirty but this stops the duplication of a lot of code.
-		Player[] players = {player};
-		ArrayList<World> worlds = new ArrayList<World>();
-		worlds.add(world);
-		loadFor(players, worlds);
+	private void saveToFile(Player player, World world, Inventory backpack) {
+		File playerBackpack = new File(BACKPACK_ROOT, world.getName() + File.pathSeparator + player.getName() + ".yml");
+		try {
+			//Delete the current file (it saves a lot of hassle and code, just delete and remake with contents)
+			if (playerBackpack.exists()) {
+				playerBackpack.delete();
+			}
+			//Stop saving if null backpack
+			if (backpack == null) {
+				return;
+			}
+			//If creating the new file failed for some reason stop saving.
+			if (!playerBackpack.createNewFile()) {
+				return;
+			}
+			parser.load(playerBackpack);
+			parser.createSection("backpack");
+			ItemStack[] stacks = backpack.getContents();
+			for (ItemStack stack : stacks) {
+				ConfigurationSection section = parser.getConfigurationSection("backpack").createSection(stack.getType().name());
+				section.set("amount", stack.getAmount());
+				section.set("durability", stack.getDurability());
+				section.set("data", stack.getData());
+				section.set("enchantments", stack.getEnchantments());
+			}
+			parser.save(playerBackpack);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (InvalidConfigurationException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
-	/**
-	 * Saves all the backpacks of the online players to disk. This will not cause an issue
-	 * with players that logged in and then left before this method is called as a backpack
-	 * is saved right when the backpack inventory is closed.
-	 */
-	public void saveBackpacks() {
-		saveFor(Bukkit.getOnlinePlayers(), Bukkit.getWorlds());
+	private Inventory loadFromSQL(Player player, World world) {
+		return null;
 	}
 
-	/**
-	 * Saves a backpack for a particular player.
-	 * @param player
-	 */
-	public void saveBackpackFor(Player player, World world) {
-		//Dirty but this stops the duplication of a lot of code.
-		Player[] players = {player};
-		ArrayList<World> worlds = new ArrayList<World>();
-		worlds.add(world);
-		saveFor(players, worlds);
+	private void saveToSQL(Player player, World world, Inventory backpack) {
+
 	}
 
 	/**
 	 * Called to setup directory structure of backpacks.
 	 */
-	private final void setup() {
+	private void setup() {
 		if (!BACKPACK_ROOT.exists()) {
 			BACKPACK_ROOT.mkdir();
 		}
@@ -117,130 +177,6 @@ public class BackpackHandler {
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
-			}
-		}
-	}
-
-	/**
-	 * Handles loading from flat file backpacks. The construct of each backpack file should happen like this.
-	 *
-	 * Example:
-	 *
-	 * /backpacks/world/NinjaZidane.yml
-	 *
-	 * player: NinjaZidane
-	 * inventory:
-	 * 		WOODEN_PICKAXE:
-	 * 			amount: 1
-	 * 			durability: 100
-	 * 			data: Some byte...
-	 * 			enchantments: list of them
-	 *
-	 * @param players
-	 * @param worlds
-	 */
-	private void loadFor(Player[] players, List<World> worlds) {
-		for (World world : worlds) {
-			File worldDir = new File(BACKPACK_ROOT, world.getName());
-			ArrayList<File> playerFiles = new ArrayList<File>();
-			for (File file : worldDir.listFiles()) {
-				if (!file.getName().contains(".yml")) {
-					continue;
-				}
-				//Just add any file encountered if players are null
-				if (players == null) {
-					playerFiles.add(file);
-				} else {
-					String name = (file.getName().split(".yml"))[0];
-					if (Bukkit.getPlayer(name) != null) {
-						playerFiles.add(file);
-					}
-				}
-			}
-			for (File file : playerFiles) {
-				try {
-					parser.load(file);
-					if (parser != null) {
-						Player player = Bukkit.getPlayer((String) parser.get("player"));
-						Inventory inv = Bukkit.createInventory(player, 64, "Backpack"); //TODO This makes me sad
-						ConfigurationSection parent = parser.getConfigurationSection("inventory");
-						for (String key : parent.getKeys(false)) {
-							ConfigurationSection sub = parent.getConfigurationSection(key);
-							ItemStack item = new ItemStack(Material.getMaterial(key), sub.getInt("amount"), (Short) sub.get("durability"), (Byte) sub.get("data"));
-							inv.addItem(item);
-						}
-						if (player != null && inv != null) {
-							INVENTORIES.put(player, player.getWorld(), inv);
-							BackpackLoadEvent event = new BackpackLoadEvent(player, world);
-							Bukkit.getPluginManager().callEvent(event);
-						}
-					}
-				} catch (FileNotFoundException e) {
-					e.printStackTrace();
-				} catch (InvalidConfigurationException e) {
-					e.printStackTrace();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-	}
-
-	/**
-	 * Handles saving to flat file for backpacks. The construct of each backpack file should happen like this.
-	 *
-	 * Example:
-	 *
-	 * /backpacks/world/NinjaZidane.yml
-	 *
-	 * player: NinjaZidane
-	 * inventory:
-	 * 		WOODEN_PICKAXE:
-	 * 			amount: 1
-	 * 			durability: 100
-	 * 			data: Some byte...
-	 * 			enchantments: list of them
-	 *
-	 * Note: When the backpack is saved to file it is destroyed and then re-recreated. TODO Evaluate the performance impact of this.
-	 *
-	 * @param players
-	 * @param worlds
-	 */
-	private void saveFor(Player[] players, List<World> worlds) {
-		for (Player plr : players) {
-			for (World world : worlds) {
-				File playerBackpack = new File(BACKPACK_ROOT, world.getName() + File.pathSeparator + plr.getName() + ".yml");
-				if (INVENTORIES.get(plr, world) != null) {
-					try {
-						if (!playerBackpack.exists()) {
-							playerBackpack.delete();
-							playerBackpack.createNewFile();
-						}
-						parser.load(playerBackpack);
-						parser.set("player", plr.getName());
-						parser.createSection("inventory");
-						BackpackSaveEvent event = new BackpackSaveEvent(plr);
-						Bukkit.getPluginManager().callEvent(event);
-						if (event.isCancelled()) {
-							continue;
-						}
-						ItemStack[] stacks = ((Inventory) INVENTORIES.get(plr, world)).getContents();
-						for (ItemStack stack : stacks) {
-							ConfigurationSection section = parser.getConfigurationSection("inventory").createSection(stack.getType().name());
-							section.set("amount", stack.getAmount());
-							section.set("durability", stack.getDurability());
-							section.set("data", stack.getData());
-							section.set("enchantments", stack.getEnchantments());
-						}
-						parser.save(playerBackpack);
-					} catch (FileNotFoundException e) {
-						e.printStackTrace();
-					} catch (InvalidConfigurationException e) {
-						e.printStackTrace();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				}
 			}
 		}
 	}

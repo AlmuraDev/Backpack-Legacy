@@ -1,0 +1,10 @@
+name: Backpack
+version: dev-SNAPSHOT
+description: Backpack is a plugin for Spout that gives users a handy backpack for inventory.
+
+author: Zidane
+authors: [Zidane, Dockter]
+
+main: com.almuramc.backpack.BackpackPlugin
+softdepend: [spout]
+load: startup

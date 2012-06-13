@@ -1,8 +1,5 @@
 package com.almuramc.backpack.api;
 
-import com.almuramc.backpack.Backpack;
-import com.almuramc.backpack.BackpackHandler;
-
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
@@ -11,31 +8,35 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.Inventory;
 
 /**
- * Custom event thrown when a player closes their backpack. No modifications can be done
- * to prevent duping (event is called after save).
+ * Custom event thrown when a player closes their backpack.
  */
 public class BackpackSaveEvent extends Event implements Cancellable {
 	private static final HandlerList handlers = new HandlerList();
-	private final BackpackHandler backpackHandler;
 	private boolean isCancelled = false;
-
 	private final Player player;
 	private final World world;
-	private final Inventory inventory;
+	private final Inventory backpack;
 
-	public BackpackSaveEvent(Player player) {
+	public BackpackSaveEvent(Player player, World world, Inventory backpack) {
 		this.player = player;
-		world = player.getWorld();
-		backpackHandler = Backpack.getInstance().getHandler();
-		inventory = backpackHandler.getBackpackFor(player, world);
+		this.world = world;
+		this.backpack = backpack;
+	}
+
+	public final Player getPlayer() {
+		return player;
+	}
+
+	public final World getWorld() {
+		return world;
 	}
 
 	/**
 	 * Returns the saved backpack after the player has closed it.
 	 * @return
 	 */
-	public Inventory getBackpack() {
-		return inventory;
+	public final Inventory getBackpack() {
+		return backpack;
 	}
 
 	@Override
