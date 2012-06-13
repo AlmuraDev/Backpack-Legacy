@@ -1,0 +1,9 @@
+name: ${project.name}
+version: ${releaseVersion}
+description: ${project.description}
+author: ${project.organization.name}
+website: ${project.organization.url}
+
+main: com.almuramc.backpack.spout.BackpackPlugin
+load: POSTWORLD
+platform: BOTH

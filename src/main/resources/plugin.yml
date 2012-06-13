@@ -5,6 +5,6 @@ description: Backpack is a plugin for Spout that gives users a handy backpack fo
 author: Zidane
 authors: [Zidane, Dockter]
 
-main: com.almuramc.backpack.BackpackPlugin
+main: com.almuramc.backpack.bukkit.BackpackPlugin
 softdepend: [spout]
 load: startup

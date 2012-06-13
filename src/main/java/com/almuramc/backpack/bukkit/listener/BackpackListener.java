@@ -1,6 +1,6 @@
-package com.almuramc.backpack.listener;
+package com.almuramc.backpack.bukkit.listener;
 
-import com.almuramc.backpack.BackpackPlugin;
+import com.almuramc.backpack.bukkit.BackpackPlugin;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

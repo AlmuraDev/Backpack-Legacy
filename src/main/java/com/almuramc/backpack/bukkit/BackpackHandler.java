@@ -1,4 +1,4 @@
-package com.almuramc.backpack;
+package com.almuramc.backpack.bukkit;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -6,8 +6,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.almuramc.backpack.api.BackpackLoadEvent;
-import com.almuramc.backpack.api.BackpackSaveEvent;
+import com.almuramc.backpack.bukkit.api.BackpackLoadEvent;
+import com.almuramc.backpack.bukkit.api.BackpackSaveEvent;
 
 import org.apache.commons.collections.map.MultiKeyMap;
 
@@ -25,7 +25,7 @@ import org.bukkit.inventory.ItemStack;
  * Serves as a handler for backpacks.
  */
 public final class BackpackHandler {
-	private static final File BACKPACK_ROOT = new File(BackpackPlugin.getInstance().getDataFolder(), "backpack");
+	private static final File BACKPACK_ROOT = new File(BackpackPlugin.getInstance().getDataFolder(), "backpacks");
 	private static final MultiKeyMap INVENTORIES = new MultiKeyMap();
 	private static final YamlConfiguration parser = new YamlConfiguration();
 

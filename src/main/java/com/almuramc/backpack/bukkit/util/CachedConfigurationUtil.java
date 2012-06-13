@@ -1,8 +1,8 @@
-package com.almuramc.backpack.util;
+package com.almuramc.backpack.bukkit.util;
 
 import java.io.File;
 
-import com.almuramc.backpack.BackpackPlugin;
+import com.almuramc.backpack.bukkit.BackpackPlugin;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.Plugin;

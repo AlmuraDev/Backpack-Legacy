@@ -1,10 +1,10 @@
-package com.almuramc.backpack;
+package com.almuramc.backpack.bukkit;
 
 import java.util.logging.Logger;
 
-import com.almuramc.backpack.input.BackpackInputHandler;
-import com.almuramc.backpack.listener.BackpackListener;
-import com.almuramc.backpack.util.CachedConfigurationUtil;
+import com.almuramc.backpack.bukkit.input.BackpackInputHandler;
+import com.almuramc.backpack.bukkit.listener.BackpackListener;
+import com.almuramc.backpack.bukkit.util.CachedConfigurationUtil;
 
 import org.getspout.spoutapi.SpoutManager;
 import org.getspout.spoutapi.keyboard.Keyboard;

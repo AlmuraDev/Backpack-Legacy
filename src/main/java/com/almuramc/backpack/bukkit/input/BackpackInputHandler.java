@@ -1,6 +1,6 @@
-package com.almuramc.backpack.input;
+package com.almuramc.backpack.bukkit.input;
 
-import com.almuramc.backpack.BackpackPlugin;
+import com.almuramc.backpack.bukkit.BackpackPlugin;
 
 import org.getspout.spoutapi.event.input.KeyBindingEvent;
 import org.getspout.spoutapi.keyboard.BindingExecutionDelegate;

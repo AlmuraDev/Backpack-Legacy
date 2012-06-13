@@ -1,4 +1,4 @@
-package com.almuramc.backpack.api;
+package com.almuramc.backpack.bukkit.api;
 
 import org.bukkit.World;
 import org.bukkit.entity.Player;
