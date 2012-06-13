@@ -35,7 +35,17 @@
             <id>spout-repo</id>
             <url>http://repo.spout.org</url>
         </repository>
-    </repositories>
+		<repository>
+			<id>nexus</id>
+			<name>nesus.alta189</name>
+			<url>http://repo.alta189.com</url>
+			<snapshots>
+				<enabled>true</enabled>
+				<updatePolicy>always</updatePolicy>
+			</snapshots>
+		</repository>
+
+	</repositories>
 
     <!-- Dependencies -->
     <dependencies>
@@ -62,6 +72,11 @@
 			<artifactId>spoutapi</artifactId>
 			<version>dev-SNAPSHOT</version>
 			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.alta189</groupId>
+			<artifactId>simplesave</artifactId>
+			<version>1.1.0-SNAPSHOT</version>
 		</dependency>
     </dependencies>
 
