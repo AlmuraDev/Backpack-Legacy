@@ -32,7 +32,7 @@ public class BackpackPlugin extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		//Assign plugin instance
-		instance = null;
+		instance = this;
 		//Setup config
 		cached = new CachedConfigurationUtil();
 		//Setup handler
