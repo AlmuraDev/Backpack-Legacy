@@ -10,7 +10,7 @@ import org.bukkit.inventory.Inventory;
 /**
  * Custom event thrown when a player closes their backpack.
  */
-public class BackpackSaveEvent extends Event implements Cancellable {
+public final class BackpackSaveEvent extends Event implements Cancellable {
 	private static final HandlerList handlers = new HandlerList();
 	private boolean isCancelled = false;
 	private final Player player;
@@ -35,7 +35,7 @@ public class BackpackSaveEvent extends Event implements Cancellable {
 	 * Returns the saved backpack after the player has closed it.
 	 * @return
 	 */
-	public final Inventory getBackpack() {
+	public Inventory getBackpack() {
 		return backpack;
 	}
 

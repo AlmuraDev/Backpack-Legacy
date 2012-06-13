@@ -10,12 +10,12 @@ import org.bukkit.inventory.Inventory;
 /**
  * Custom event thrown when a backpack is opened.
  */
-public class BackpackLoadEvent extends Event implements Cancellable {
+public final class BackpackLoadEvent extends Event implements Cancellable {
 	private static final HandlerList handlers = new HandlerList();
 	private boolean isCancelled;
 	private final Player player;
 	private final World world;
-	private Inventory backpack;
+	private final Inventory backpack;
 
 	public BackpackLoadEvent(Player player, World world, Inventory backpack) {
 		this.player = player;
@@ -53,7 +53,11 @@ public class BackpackLoadEvent extends Event implements Cancellable {
 	 * @param backpack
 	 */
 	public void setBackpack(Inventory backpack) {
-		this.backpack = backpack;
+		if (backpack == null) {
+			this.backpack.clear();
+			return;
+		}
+		this.backpack.setContents(backpack.getContents());
 	}
 
 	/**

@@ -40,7 +40,7 @@ public final class BackpackHandler {
 		if (event.isCancelled()) {
 			return;
 		}
-		if (backpack == null) {
+		if (backpack == null || backpack.getContents().length <= 0) {
 			INVENTORIES.remove(player, world);
 		}
 		//Check to see if it is SQL or flat file and call appropriate method
@@ -54,7 +54,7 @@ public final class BackpackHandler {
 	public Inventory getBackpackFor(Player player, World world) {
 		Inventory currentBackpack = (Inventory) INVENTORIES.get(player, world);
 		//If they have a null backpack, assume they don't have it loaded from disk and try to fetch it.
-		if (currentBackpack == null) {
+		if (currentBackpack == null || currentBackpack.getContents().length <= 0) {
 			//Check here if SQL or flat file and execute relative method
 			if (!BackpackPlugin.getInstance().getCached().isSQLEnabled()) {
 				currentBackpack = loadFromFile(player, world);
