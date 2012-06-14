@@ -17,7 +17,7 @@ public class BackpackListener implements Listener {
 		Player player = (Player) event.getPlayer();
 		Inventory backpack = viewer.getTopInventory();
 
-		if (backpack.getHolder() == player && backpack.getTitle().equals("Backpack")) {
+		if (backpack.getHolder().equals(player) && backpack.getTitle().equals("Backpack")) {
 			BackpackPlugin.getInstance().getHandler().setBackpackFor(player, player.getWorld(), backpack);
 		}
 	}
