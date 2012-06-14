@@ -75,12 +75,7 @@ public final class BackpackHandler {
 	}
 
 	private Inventory loadFromFile(Player player, World world) {
-		File worldDir = null;
-		try {
-			worldDir = new File(BACKPACK_ROOT.getCanonicalPath(), world.getName());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		File worldDir = new File(BACKPACK_ROOT, world.getName());
 		File playerDat = null;
 		if (worldDir == null) {
 			return null;
@@ -93,7 +88,7 @@ public final class BackpackHandler {
 			if (!name.equals(player.getName())) {
 				continue;
 			}
-			playerDat = new File(worldDir, name);
+			playerDat = new File(worldDir, file.getName());
 		}
 
 		//No file was found for this player, return a blank empty inventory then.
@@ -108,12 +103,12 @@ public final class BackpackHandler {
 			ConfigurationSection parent = parser.getConfigurationSection("backpack");
 			for (String key : parent.getKeys(false)) {
 				ConfigurationSection sub = parent.getConfigurationSection(key);
-				ItemStack item = new ItemStack(Material.getMaterial(key), sub.getInt("amount"), (Short) sub.get("durability"), (Byte) sub.get("data"));
+				ItemStack item = new ItemStack(Material.getMaterial(key), sub.getInt("amount"), ((Integer) sub.get("durability")).shortValue(), ((Integer) sub.get("data")).byteValue());
 				items.add(item);
 			}
 
 			Inventory backpack = Bukkit.createInventory(player, 63, "Backpack");
-			backpack.setContents((ItemStack[]) items.toArray());
+			backpack.setContents(items.toArray(new ItemStack[items.size()]));
 			return backpack;
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -126,9 +121,8 @@ public final class BackpackHandler {
 	}
 
 	private void saveToFile(Player player, World world, Inventory backpack) {
+		File playerBackpack = new File(BACKPACK_ROOT + File.separator + world.getName(), player.getName() + ".yml");
 		try {
-			File playerBackpack = new File(BACKPACK_ROOT.getCanonicalPath() + File.pathSeparator + world.getName(), player.getName() + ".yml");
-			Bukkit.getLogger().info(playerBackpack.toString());
 			//Delete the current file (it saves a lot of hassle and code, just delete and remake with contents)
 			if (playerBackpack.exists()) {
 				playerBackpack.delete();
