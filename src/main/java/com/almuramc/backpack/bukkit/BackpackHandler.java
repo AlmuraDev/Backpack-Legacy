@@ -90,7 +90,7 @@ public final class BackpackHandler {
 
 		//No file was found for this player, return a blank empty inventory then.
 		if (playerDat == null) {
-			return Bukkit.createInventory(player, 64, "Backpack"); //TODO return size based on player or global perm
+			return Bukkit.createInventory(player, 63, "Backpack"); //TODO return size based on player or global perm
 		}
 
 		//File found, lets load in contents
