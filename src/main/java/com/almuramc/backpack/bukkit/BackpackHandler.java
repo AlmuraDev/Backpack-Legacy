@@ -85,7 +85,7 @@ public final class BackpackHandler {
 			if (!name.equals(player.getName())) {
 				continue;
 			}
-			playerDat = file;
+			playerDat = new File(worldDir, name);
 		}
 
 		//No file was found for this player, return a blank empty inventory then.
@@ -118,7 +118,7 @@ public final class BackpackHandler {
 	}
 
 	private void saveToFile(Player player, World world, Inventory backpack) {
-		File playerBackpack = new File(BACKPACK_ROOT, world.getName() + File.pathSeparator + player.getName() + ".yml");
+		File playerBackpack = new File(BACKPACK_ROOT + File.pathSeparator + world.getName(), player.getName() + ".yml");
 		try {
 			//Delete the current file (it saves a lot of hassle and code, just delete and remake with contents)
 			if (playerBackpack.exists()) {
@@ -142,7 +142,7 @@ public final class BackpackHandler {
 				ConfigurationSection section = parser.getConfigurationSection("backpack").createSection(stack.getType().name());
 				section.set("amount", stack.getAmount());
 				section.set("durability", stack.getDurability());
-				section.set("data", stack.getData());
+				section.set("data", stack.getData().getData());
 				section.set("enchantments", stack.getEnchantments());
 			}
 			parser.save(playerBackpack);
