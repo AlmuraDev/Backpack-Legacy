@@ -6,5 +6,5 @@ author: Zidane
 authors: [Zidane, Dockter]
 
 main: com.almuramc.backpack.bukkit.BackpackPlugin
-softdepend: [spout]
+softdepend: [Spout]
 load: POSTWORLD
