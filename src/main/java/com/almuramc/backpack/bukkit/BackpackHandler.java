@@ -75,8 +75,16 @@ public final class BackpackHandler {
 	}
 
 	private Inventory loadFromFile(Player player, World world) {
-		File worldDir = new File(BACKPACK_ROOT, world.getName());
+		File worldDir = null;
+		try {
+			worldDir = new File(BACKPACK_ROOT.getCanonicalPath(), world.getName());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		File playerDat = null;
+		if (worldDir == null) {
+			return null;
+		}
 		for (File file : worldDir.listFiles()) {
 			if (!file.getName().contains(".yml")) {
 				continue;
@@ -118,9 +126,9 @@ public final class BackpackHandler {
 	}
 
 	private void saveToFile(Player player, World world, Inventory backpack) {
-		File playerBackpack = new File(BACKPACK_ROOT + File.pathSeparator + world.getName(), player.getName() + ".yml");
-		Bukkit.getLogger().info(playerBackpack.toString());
 		try {
+			File playerBackpack = new File(BACKPACK_ROOT.getCanonicalPath() + File.pathSeparator + world.getName(), player.getName() + ".yml");
+			Bukkit.getLogger().info(playerBackpack.toString());
 			//Delete the current file (it saves a lot of hassle and code, just delete and remake with contents)
 			if (playerBackpack.exists()) {
 				playerBackpack.delete();
