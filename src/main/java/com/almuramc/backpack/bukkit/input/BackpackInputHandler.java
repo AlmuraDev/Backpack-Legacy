@@ -3,17 +3,30 @@ package com.almuramc.backpack.bukkit.input;
 import com.almuramc.backpack.bukkit.BackpackPlugin;
 
 import org.getspout.spoutapi.event.input.KeyBindingEvent;
+import org.getspout.spoutapi.gui.ScreenType;
 import org.getspout.spoutapi.keyboard.BindingExecutionDelegate;
 
+import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryView;
 
 public class BackpackInputHandler implements BindingExecutionDelegate {
 	@Override
 	public void keyPressed(KeyBindingEvent keyBindingEvent) {
 		Player player = keyBindingEvent.getPlayer();
 		World world = player.getWorld();
+		//Check if backpack is open, close if so.
+		InventoryView inventory = player.getOpenInventory();
+		if (inventory.getTopInventory().getTitle().equals("Backpack")) {
+			player.closeInventory();
+		}
+		//Only open backpack on game screen
+		if (!keyBindingEvent.getScreenType().equals(ScreenType.GAME_SCREEN)) {
+			 return;
+		}
 		Inventory backpack = BackpackPlugin.getInstance().getHandler().getBackpackFor(player, world);
 		if (backpack == null) {
 			return;
