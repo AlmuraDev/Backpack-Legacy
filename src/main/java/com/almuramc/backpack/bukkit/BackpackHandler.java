@@ -104,7 +104,7 @@ public final class BackpackHandler {
 				items.add(item);
 			}
 
-			Inventory backpack = Bukkit.createInventory(player, items.size(), "Backpack");
+			Inventory backpack = Bukkit.createInventory(player, 63, "Backpack");
 			backpack.setContents((ItemStack[]) items.toArray());
 			return backpack;
 		} catch (FileNotFoundException e) {
@@ -136,6 +136,9 @@ public final class BackpackHandler {
 			parser.createSection("backpack");
 			ItemStack[] stacks = backpack.getContents();
 			for (ItemStack stack : stacks) {
+				if (stack == null) {
+					continue;
+				}
 				ConfigurationSection section = parser.getConfigurationSection("backpack").createSection(stack.getType().name());
 				section.set("amount", stack.getAmount());
 				section.set("durability", stack.getDurability());
