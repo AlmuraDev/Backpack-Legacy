@@ -119,6 +119,7 @@ public final class BackpackHandler {
 
 	private void saveToFile(Player player, World world, Inventory backpack) {
 		File playerBackpack = new File(BACKPACK_ROOT + File.pathSeparator + world.getName(), player.getName() + ".yml");
+		Bukkit.getLogger().info(playerBackpack.toString());
 		try {
 			//Delete the current file (it saves a lot of hassle and code, just delete and remake with contents)
 			if (playerBackpack.exists()) {
