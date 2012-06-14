@@ -26,7 +26,6 @@ public class BackpackPlugin extends JavaPlugin {
 		}
 		instance = null;
 		handler = null;
-		log.info("disabled.");
 	}
 
 	@Override
@@ -41,7 +40,6 @@ public class BackpackPlugin extends JavaPlugin {
 		SpoutManager.getKeyBindingManager().registerBinding("Backpack", Keyboard.KEY_B, "Opens the backpack", new BackpackInputHandler(), this);
 		//Register events
 		Bukkit.getServer().getPluginManager().registerEvents(new BackpackListener(), this);
-		log.info("enabled.");
 	}
 
 	public static final BackpackPlugin getInstance() {
