@@ -1,39 +1,49 @@
 # Backpack Configuration File
-# General Settings:
-#   sql: 
-#       False = data storage will take place as flat PLAYERNAME.yml files.
-#       True = data will be stored in sql database format.
-#   useEconomy:
-#       False = will not charge users to upgrade their backpacks
-#       True = users will be charges for backpack upgrades according to upgrade pricing below.
-#   keepitemsondeath:
-#       False = player will lose items on death regardless of permission (server wide)
-#       True = player will have the ability to keep their items on death provided they have permission to do so. 
-# Spout GUI:
-#   Enabled:
-#       True/False: Enables or disables the additional Spout GUI and Hotkey functionalities.  (Requires SpoutPlugin)
+#
+# general:
+#   use-economy:
+#       false - will not charge users to upgrade their backpacks.
+#       true - users will be charges for backpack upgrades according to upgrade pricing below.
+#   use-spout:
+#       true/false - Enables or disables hotkeys/additional guis support.
+#   use-sql:
+#       false - data storage will take place as flat PLAYERNAME.yml files.
+#       true - data will be stored in sql database format.
+#
+# admin:
+#   control-panel:
+#       true/false - Enables or disables the Control Panel Interface for Backpack for easy upgrading and other functions. use-spout *MUST* be enabled for this to work.
 #   hotkey:
-#       Default Value:  KEY_B  , this value can be changed to pre-set the hotkey to open your backpack.
-#   controlpanel:
-#       True/False: Enables or disables the Control Panel Interface for Backpack for easy upgrading and other functions.
-#  Storage Settings for MySQL.  (Do not remove ' ' around settings.
-#   host = typically this is localhost.
-#   port = default port for mysql is 3306.
-#   database = database or schema name.
-#   username = username with sufficient privilages to access and make changes to db.
-#   password = password for above username.
+#       Default Value - KEY_V, this value can be changed to pre-set the hotkey to open the control panel. use-spout *MUST* be enabled for this to work.
+#
+# backpack:
+#   hotkey:
+#       Default Value - KEY_B, this value can be changed to pre-set the hotkey to open your backpack. use-spout *MUST* be enabled for this to work.
+#
+# storage:
+#   host:
+#       Typically this is localhost.
+#   port:
+#       default port for mysql is 3306.
+#   database:
+#       database or schema name.
+#   username:
+#       username with sufficient privileges to access and make changes to db.
+#   password:
+#       password for above username.
+#
 general:
   use-economy: false
   use-spout: false
   use-sql: false
-  keep-items-on-death: false
-gui:
-  enabled: true
+admin:
+  control-panel: false
+  hotkey: KEY_V
+backpack:
   hotkey: KEY_B
-  control-panel: true
 storage:
   host: localhost
-  port: '3306'
+  port: 3306
   database: minecraft
   username: root
   password: password

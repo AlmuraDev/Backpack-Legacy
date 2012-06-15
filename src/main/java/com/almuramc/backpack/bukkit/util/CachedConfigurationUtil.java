@@ -20,12 +20,16 @@ public final class CachedConfigurationUtil {
 		setup();
 	}
 
-	public boolean useEconomy() {
-		return cached.getBoolean("general.useEconomy");
+	public String getBackpackHotkey() {
+		return cached.getString("backpack.hotkey");
 	}
 
-	public boolean useGUI() {
-		return cached.getBoolean("spoutgui.enable");
+	public boolean useControlPanel() {
+		return cached.getBoolean("admin.control-panel");
+	}
+
+	public boolean useEconomy() {
+		return cached.getBoolean("general.use-economy");
 	}
 
 	public boolean useSpout() {
@@ -33,11 +37,7 @@ public final class CachedConfigurationUtil {
 	}
 
 	public boolean useSQL() {
-		return cached.getBoolean("general.sql");
-	}
-
-	public String getBackpackHotkey() {
-		return cached.getString("spoutgui.hotkey");
+		return cached.getBoolean("general.use-sql");
 	}
 
 	/**
