@@ -6,7 +6,7 @@ author: Zidane
 authors: [Zidane, Dockter]
 
 main: com.almuramc.backpack.bukkit.BackpackPlugin
-softdepend: [Spout]
+softdepend: [Spout, Vault]
 load: POSTWORLD
 commands:
     backpack:

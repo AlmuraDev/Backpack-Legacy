@@ -74,6 +74,7 @@ public final class BackpackHandler {
 		return backpack;
 	}
 
+	@SuppressWarnings("unused")
 	private Inventory loadFromFile(Player player, World world) {
 		File worldDir = new File(BACKPACK_ROOT, world.getName());
 		File playerDat = null;

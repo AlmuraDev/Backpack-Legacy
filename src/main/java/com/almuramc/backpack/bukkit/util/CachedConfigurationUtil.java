@@ -32,6 +32,10 @@ public final class CachedConfigurationUtil {
 	public boolean spoutguiEnabled() {
 		return cached.getBoolean("spoutgui.enable");
 	}
+	
+	public boolean useEconomy() {
+		return cached.getBoolean("general.useEconomy");
+	}
 	/**
 	 * Reloads the cached config. Configs files are always guaranteed to be present.
 	 */

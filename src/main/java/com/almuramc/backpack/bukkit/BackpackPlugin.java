@@ -12,6 +12,8 @@ import org.getspout.spoutapi.keyboard.Keyboard;
 
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.RegisteredServiceProvider;
+import net.milkbowl.vault.economy.Economy;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class BackpackPlugin extends JavaPlugin {
@@ -19,6 +21,7 @@ public class BackpackPlugin extends JavaPlugin {
 	private static BackpackPlugin instance;
 	private static BackpackHandler handler;
 	private static CachedConfigurationUtil cached;
+	private Economy econ = null;
 
 	@Override
 	public void onDisable() {
@@ -39,6 +42,7 @@ public class BackpackPlugin extends JavaPlugin {
 		//Setup handler
 		handler = new BackpackHandler();
 		//Set keybinding
+		
 		PluginManager pm = this.getServer().getPluginManager();
 		if (pm.isPluginEnabled("Spout") && cached.spoutguiEnabled()) {
 			log.info("[Backpack] - Spout plugin detected and Enabled!!");			
@@ -51,6 +55,17 @@ public class BackpackPlugin extends JavaPlugin {
 		} else {
 			log.info("[Backpack} - Spoutplugin was not detected or is disabled in the config.yml!");
 		}
+		
+		if (pm.isPluginEnabled("Vault") && cached.useEconomy()) {
+			RegisteredServiceProvider<Economy> economyProvider = this.getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);			
+			if (economyProvider != null) {
+				log.info("[Backpack] - Vault Economy system detected and Enabled!");
+				econ = economyProvider.getProvider();
+			} else {
+				log.info("[Backpack] - Vault Economy system was not detected or is disabled in the config.yml!");
+			}
+		}
+		
 		//Register events
 		Bukkit.getServer().getPluginManager().registerEvents(new BackpackListener(), this);
 	}
