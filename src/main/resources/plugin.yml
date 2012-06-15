@@ -8,3 +8,41 @@ authors: [Zidane, Dockter]
 main: com.almuramc.backpack.bukkit.BackpackPlugin
 softdepend: [Spout]
 load: POSTWORLD
+commands:
+    backpack:
+        description: Manage Backpacks
+        usage: /backpack
+permissions:
+    backpack.admin:
+        description: Gives you access to /backpack clear player
+        default: op
+    backpack.use:
+        description: Allows users to access backpack.
+        default: true
+    backpack.keepitems:
+        description: Allows users to keep backpack items on death.
+        default: true
+    backpack.upgrade:
+        description: Allows users to upgrade their backpacks beyond 9 slots.
+        default: op
+    backpack.slot9:
+        description: Allows users to upgrade to a 9 slot backpack.
+        default: true
+    backpack.slot18:
+        description: Allows user to upgrade to a 18 slot backpack.
+        default: op
+    backpack.slot27:
+        description: Allows users to upgrade to a 27 slot backpack.
+        default: op
+    backpack.slot36:
+        description: Allows users to upgrade to a 36 slot backpack.
+        default: op
+    backpack.slot45:
+        description: Allows users to upgrade to a 45 slot backpack.
+        default: op
+    backpack.slot54:
+        description: Allows user to upgrade to a 54 slot backpack.
+        default: op
+    backpack.workbench:
+        description: Allows users to use workbench if it exists in the users backpack or inventory.
+        default: op

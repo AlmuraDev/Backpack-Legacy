@@ -7,9 +7,11 @@ import com.almuramc.backpack.bukkit.listener.BackpackListener;
 import com.almuramc.backpack.bukkit.util.CachedConfigurationUtil;
 
 import org.getspout.spoutapi.SpoutManager;
+import org.getspout.spoutapi.keyboard.KeyBindingManager;
 import org.getspout.spoutapi.keyboard.Keyboard;
 
 import org.bukkit.Bukkit;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class BackpackPlugin extends JavaPlugin {
@@ -37,7 +39,18 @@ public class BackpackPlugin extends JavaPlugin {
 		//Setup handler
 		handler = new BackpackHandler();
 		//Set keybinding
-		SpoutManager.getKeyBindingManager().registerBinding("Backpack", Keyboard.KEY_B, "Opens the backpack", new BackpackInputHandler(), this);
+		PluginManager pm = this.getServer().getPluginManager();
+		if (pm.isPluginEnabled("Spout") && cached.spoutguiEnabled()) {
+			log.info("[Backpack] - Spout plugin detected and Enabled!!");			
+			KeyBindingManager kbm = SpoutManager.getKeyBindingManager();
+			try {
+				kbm.registerBinding("Backpack", Keyboard.valueOf(cached.bpHotkey()), "Opens the backpack", new BackpackInputHandler(), this);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}			
+		} else {
+			log.info("[Backpack} - Spoutplugin was not detected or is disabled in the config.yml!");
+		}
 		//Register events
 		Bukkit.getServer().getPluginManager().registerEvents(new BackpackListener(), this);
 	}
