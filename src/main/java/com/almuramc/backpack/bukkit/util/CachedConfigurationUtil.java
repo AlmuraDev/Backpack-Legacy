@@ -6,7 +6,6 @@ import com.almuramc.backpack.bukkit.BackpackPlugin;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.Plugin;
-import org.getspout.spoutapi.keyboard.Keyboard;
 
 /**
  * Utility helper config class that uses a cached config instance to access the config
@@ -14,28 +13,33 @@ import org.getspout.spoutapi.keyboard.Keyboard;
  */
 public final class CachedConfigurationUtil {
 	private final Plugin plugin;
-	private FileConfiguration cached;	
+	private FileConfiguration cached;
 
 	public CachedConfigurationUtil() {
 		plugin = BackpackPlugin.getInstance();
 		setup();
 	}
 
-	public boolean isSQLEnabled() {
-		return cached.getBoolean("general.sql");
-	}
-
-	public String bpHotkey() {
-		return cached.getString("spoutgui.hotkey");
-	}
-	
-	public boolean spoutguiEnabled() {
-		return cached.getBoolean("spoutgui.enable");
-	}
-	
 	public boolean useEconomy() {
 		return cached.getBoolean("general.useEconomy");
 	}
+
+	public boolean useGUI() {
+		return cached.getBoolean("spoutgui.enable");
+	}
+
+	public boolean useSpout() {
+		return cached.getBoolean("general.use-spout");
+	}
+
+	public boolean useSQL() {
+		return cached.getBoolean("general.sql");
+	}
+
+	public String getBackpackHotkey() {
+		return cached.getString("spoutgui.hotkey");
+	}
+
 	/**
 	 * Reloads the cached config. Configs files are always guaranteed to be present.
 	 */

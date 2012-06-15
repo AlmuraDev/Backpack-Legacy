@@ -23,13 +23,14 @@
 #   username = username with sufficient privilages to access and make changes to db.
 #   password = password for above username.
 general:
-  sql: false
-  useEconomy: false
-  keepitemsondeath: false
-spoutgui:
+  use-economy: false
+  use-spout: false
+  use-sql: false
+  keep-items-on-death: false
+gui:
   enabled: true
   hotkey: KEY_B
-  controlpanel: true
+  control-panel: true
 storage:
   host: localhost
   port: '3306'

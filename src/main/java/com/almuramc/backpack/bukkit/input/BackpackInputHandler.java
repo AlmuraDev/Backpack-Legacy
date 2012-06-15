@@ -6,10 +6,8 @@ import org.getspout.spoutapi.event.input.KeyBindingEvent;
 import org.getspout.spoutapi.gui.ScreenType;
 import org.getspout.spoutapi.keyboard.BindingExecutionDelegate;
 
-import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 
@@ -25,9 +23,9 @@ public class BackpackInputHandler implements BindingExecutionDelegate {
 		}
 		//Only open backpack on game screen
 		if (!keyBindingEvent.getScreenType().equals(ScreenType.GAME_SCREEN)) {
-			 return;
+			return;
 		}
-		Inventory backpack = BackpackPlugin.getInstance().getHandler().getBackpackFor(player, world);
+		Inventory backpack = BackpackPlugin.getInstance().getCore().getBackpackFor(player, world);
 		if (backpack == null) {
 			return;
 		}

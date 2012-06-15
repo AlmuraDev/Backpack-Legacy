@@ -10,6 +10,7 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.event.server.PluginEnableEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 
@@ -21,27 +22,33 @@ public class BackpackListener implements Listener {
 		Inventory backpack = viewer.getTopInventory();
 
 		if (backpack.getHolder().equals(player) && backpack.getTitle().equals("Backpack")) {
-			BackpackPlugin.getInstance().getHandler().setBackpackFor(player, player.getWorld(), backpack);
+			BackpackPlugin.getInstance().getCore().setBackpackFor(player, player.getWorld(), backpack);
 		}
 	}
-	
+
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerTeleport(PlayerTeleportEvent event) {
 		// World Detection & Config pull to see if player can share bp inventory.
 	}
-	
+
 	@EventHandler
 	public void onPlayerKick(PlayerKickEvent event) {
 		// Fire Save event in-case player gets kicked while having backpack open.	
 	}
-	
+
 	@EventHandler
 	public void onEntityDeath(EntityDeathEvent event) {
 		if (event.getEntity() instanceof Player) {
 			Player player = (Player) event.getEntity();
-			
+
 			// Handle player death.  If player has permission to keep items do nothing, if player doesnt, set backpack inventory to null.
-			
+
 		}
+	}
+
+	@EventHandler
+	public void onPluginEnable(PluginEnableEvent event) {
+		//This should cover our dependency issues
+		BackpackPlugin.getInstance().getHooks().setup();
 	}
 }

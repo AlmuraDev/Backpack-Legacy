@@ -24,12 +24,12 @@ import org.bukkit.inventory.ItemStack;
 /**
  * Serves as a handler for backpacks.
  */
-public final class BackpackHandler {
+public final class BackpackCore {
 	private static final File BACKPACK_ROOT = new File(BackpackPlugin.getInstance().getDataFolder(), "backpacks");
 	private static final MultiKeyMap INVENTORIES = new MultiKeyMap();
 	private static final YamlConfiguration parser = new YamlConfiguration();
 
-	public BackpackHandler() {
+	public BackpackCore() {
 		setup();
 	}
 
@@ -44,7 +44,7 @@ public final class BackpackHandler {
 			INVENTORIES.remove(player, world);
 		}
 		//Check to see if it is SQL or flat file and call appropriate method
-		if (!BackpackPlugin.getInstance().getCached().isSQLEnabled()) {
+		if (!BackpackPlugin.getInstance().getCached().useSQL()) {
 			saveToFile(player, world, inventory);
 			return;
 		}
@@ -56,7 +56,7 @@ public final class BackpackHandler {
 		//If they have a null backpack, assume they don't have it loaded from disk and try to fetch it.
 		if (currentBackpack == null || currentBackpack.getContents().length <= 0) {
 			//Check here if SQL or flat file and execute relative method
-			if (!BackpackPlugin.getInstance().getCached().isSQLEnabled()) {
+			if (!BackpackPlugin.getInstance().getCached().useSQL()) {
 				currentBackpack = loadFromFile(player, world);
 			} else {
 				currentBackpack = loadFromSQL(player, world);
@@ -74,7 +74,6 @@ public final class BackpackHandler {
 		return backpack;
 	}
 
-	@SuppressWarnings("unused")
 	private Inventory loadFromFile(Player player, World world) {
 		File worldDir = new File(BACKPACK_ROOT, world.getName());
 		File playerDat = null;
