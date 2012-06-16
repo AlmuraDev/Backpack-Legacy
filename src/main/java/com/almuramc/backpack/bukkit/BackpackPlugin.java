@@ -1,7 +1,5 @@
 package com.almuramc.backpack.bukkit;
 
-import java.util.logging.Logger;
-
 import com.almuramc.backpack.bukkit.listener.BackpackListener;
 import com.almuramc.backpack.bukkit.util.CachedConfigurationUtil;
 import com.almuramc.backpack.bukkit.util.DependencyUtil;

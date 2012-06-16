@@ -8,12 +8,12 @@ import org.bukkit.permissions.PermissionAttachmentInfo;
  */
 public class PermissionUtil {
 	private static final String[] SIZE_PERMS = {
-		"backpack.size.9",
-		"backpack.size.18",
-		"backpack.size.27",
-		"backpack.size.36",
-		"backpack.size.45",
-		"backpack.size.54"
+			"backpack.size.9",
+			"backpack.size.18",
+			"backpack.size.27",
+			"backpack.size.36",
+			"backpack.size.45",
+			"backpack.size.54"
 	};
 
 	/**
@@ -33,6 +33,7 @@ public class PermissionUtil {
 					found = perm.getPermission();
 					//Splice out the size
 					int temp = Integer.parseInt(found.split("backpack.size.")[1]);
+					//Only set biggest size
 					if (temp > size) {
 						size = temp;
 					}
