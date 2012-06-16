@@ -7,7 +7,7 @@ import org.bukkit.permissions.PermissionAttachmentInfo;
  * Simple class to handle checking of permissions.
  */
 public class PermissionUtil {
-	private static final String[] SIZE_PERMS = {
+	private static final String[] BACKPACK_SIZE_PERMS = {
 			"backpack.size.9",
 			"backpack.size.18",
 			"backpack.size.27",
@@ -26,7 +26,7 @@ public class PermissionUtil {
 		String found;
 		int size = -1;
 		for (PermissionAttachmentInfo perm : player.getEffectivePermissions()) {
-			for (String sizePerm : SIZE_PERMS) {
+			for (String sizePerm : BACKPACK_SIZE_PERMS) {
 				//Find a valid size perm
 				if (perm.getPermission().equals(sizePerm)) {
 					//Store the found permission.
