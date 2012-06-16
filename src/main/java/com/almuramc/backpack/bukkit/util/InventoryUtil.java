@@ -2,7 +2,6 @@ package com.almuramc.backpack.bukkit.util;
 
 import java.util.ArrayList;
 
-import org.bukkit.Bukkit;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
@@ -12,9 +11,13 @@ import org.bukkit.inventory.ItemStack;
 public class InventoryUtil {
 	public static Inventory filterIllegalItemsFromInventory(ArrayList<ItemStack> blacklist, Inventory inventory) {
 		ItemStack[] contents = inventory.getContents();
+		Inventory inv = inventory;
 		//Sanity checks
-		if (inventory == null || blacklist == null) {
+		if (inventory == null) {
 			return null;
+		}
+		if (blacklist == null) {
+			return inventory;
 		}
 		for (int i = 0; i < contents.length; i++) {
 			for (int j = 0; j < i; j++) {
@@ -25,6 +28,7 @@ public class InventoryUtil {
 				contents[i] = null;
 			}
 		}
-		return inventory;
+		inv.setContents(contents);
+		return inv;
 	}
 }
