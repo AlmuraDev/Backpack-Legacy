@@ -25,7 +25,7 @@ public class BackpackInputHandler implements BindingExecutionDelegate {
 		if (!keyBindingEvent.getScreenType().equals(ScreenType.GAME_SCREEN)) {
 			return;
 		}
-		Inventory backpack = BackpackPlugin.getInstance().getCore().getBackpackFor(player, world);
+		Inventory backpack = BackpackPlugin.getInstance().getStore().getBackpackFor(player, world);
 		if (backpack == null) {
 			return;
 		}

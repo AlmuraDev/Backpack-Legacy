@@ -22,7 +22,7 @@ public class BackpackListener implements Listener {
 		Inventory backpack = viewer.getTopInventory();
 
 		if (backpack.getHolder().equals(player) && backpack.getTitle().equals("Backpack")) {
-			BackpackPlugin.getInstance().getCore().setBackpackFor(player, player.getWorld(), backpack);
+			BackpackPlugin.getInstance().getStore().setBackpackFor(player, player.getWorld(), backpack);
 		}
 	}
 
