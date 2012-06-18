@@ -9,7 +9,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class BackpackPlugin extends JavaPlugin {
 	private static BackpackPlugin instance;
-	private static BackpackCore core;
+	private static BackpackHandler handler;
 	private static CachedConfigurationUtil cached;
 	private static DependencyUtil hooks;
 
@@ -20,7 +20,7 @@ public class BackpackPlugin extends JavaPlugin {
 			cached = null;
 		}
 		instance = null;
-		core = null;
+		handler = null;
 	}
 
 	@Override
@@ -29,8 +29,8 @@ public class BackpackPlugin extends JavaPlugin {
 		instance = this;
 		//Setup config
 		cached = new CachedConfigurationUtil();
-		//Setup core
-		core = new BackpackCore();
+		//Setup storage
+		handler = new BackpackHandler();
 		//Setup dependencies
 		hooks = new DependencyUtil();
 		//Register events
@@ -41,8 +41,8 @@ public class BackpackPlugin extends JavaPlugin {
 		return instance;
 	}
 
-	public final BackpackCore getCore() {
-		return core;
+	public final BackpackHandler getCore() {
+		return handler;
 	}
 
 	public final CachedConfigurationUtil getCached() {
