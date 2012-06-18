@@ -71,19 +71,7 @@ public abstract class Storage {
 			current = put(player, world);
 		//Check for and adjust inventory size based on permissions
 		} else {
-			int size = PermissionUtil.getSizeByPermFor(player);
-			if (current.getSize() != size) {
-				ItemStack[] contents = current.getContents();
-				ArrayList<ItemStack> adjustment = new ArrayList<ItemStack>();
-				for (int i = 0; i < size; i++) {
-					if (i >= contents.length) {
-						continue;
-					} else {
-						adjustment.add(contents[i]);
-					}
-				}
-				current.setContents(adjustment.toArray(new ItemStack[adjustment.size()]));
-			}
+			current = resizeInventory(player, world, current, PermissionUtil.getSizeByPermFor(player));
 		}
 		return current;
 	}
@@ -104,6 +92,27 @@ public abstract class Storage {
 		}
 
 		return playerInventories;
+	}
+
+	public final Inventory resizeInventory(Player player, World world, Inventory inventory, int size) {
+		if (player == null || world == null || inventory == null || inventory.getSize() == size) {
+			return null;
+		}
+		ArrayList<ItemStack> resized = new ArrayList<ItemStack>();
+		ItemStack[] items = inventory.getContents();
+		for (int i = 0; i < size; i ++) {
+			if (i > items.length) {
+				resized.add(null); //TODO may cause an issue
+			} else {
+				resized.add(items[i]);
+			}
+		}
+		if (resized.size() > 0) {
+			Inventory toReplace = Bukkit.createInventory(player, size, "Backpack");
+			toReplace.setContents(resized.toArray(new ItemStack[resized.size()]));
+			return toReplace;
+		}
+		return inventory;
 	}
 
 	public abstract StorageMode getMode();
