@@ -40,6 +40,9 @@ public class PermissionUtil {
 				}
 			}
 		}
+		if (size == -1) {
+			return 54; //TODO return defaults from config if perm not found
+		}
 		return size;
 	}
 }
