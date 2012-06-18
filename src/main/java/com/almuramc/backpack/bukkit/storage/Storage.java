@@ -74,7 +74,7 @@ public abstract class Storage {
 		} else {
 			int size = PermissionUtil.getSizeByPermFor(player);
 			if (size == -1) {
-				size = 9; //TODO set default size?
+				size = 54; //TODO set default size?
 			}
 			if (current.getSize() != size) {
 				ItemStack[] contents = current.getContents();
