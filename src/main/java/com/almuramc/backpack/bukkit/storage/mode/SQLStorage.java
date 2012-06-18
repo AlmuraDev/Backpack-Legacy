@@ -7,10 +7,7 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
-public class SQLStorage implements Storage {
-	public SQLStorage() {
-	}
-
+public class SQLStorage extends Storage {
 	@Override
 	public StorageMode getMode() {
 		return StorageMode.SQL;

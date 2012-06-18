@@ -32,12 +32,14 @@ public class BackpackPlugin extends JavaPlugin {
 		instance = this;
 		//Setup config
 		cached = new CachedConfigurationUtil();
-		//Setup storage
+		//Assign configured storage
 		if (cached.useSQL()) {
 			store = new SQLStorage();
 		} else {
 			store = new YamlFileStorage(getDataFolder());
 		}
+		//Setup storage
+		store.setup();
 		//Setup dependencies
 		hooks = new DependencyUtil();
 		//Register events
