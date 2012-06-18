@@ -1,14 +1,17 @@
 package com.almuramc.backpack.bukkit.storage;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 
 import com.almuramc.backpack.bukkit.util.PermissionUtil;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
 public abstract class Storage {
 	private static final HashMap<UUID, HashMap<String, Inventory>> INVENTORIES = new HashMap<UUID, HashMap<String, Inventory>>();
@@ -62,6 +65,21 @@ public abstract class Storage {
 		//If they have no inventory in the map, make one
 		if (current == null) {
 			current = put(player, world);
+		//Check for and adjust inventory size based on permissions
+		} else {
+			int size = PermissionUtil.getSizeByPermFor(player);
+			if (current.getSize() != size) {
+				ItemStack[] contents = current.getContents();
+				ArrayList<ItemStack> adjustment = new ArrayList<ItemStack>();
+				for (int i = 0; i < size; i++) {
+					if (i >= contents.length) {
+						adjustment.add(new ItemStack(Material.AIR));
+					} else {
+						adjustment.add(contents[i]);
+					}
+				}
+				current.setContents(adjustment.toArray(new ItemStack[adjustment.size()]));
+			}
 		}
 		return current;
 	}
