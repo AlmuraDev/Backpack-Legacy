@@ -23,7 +23,7 @@ import org.bukkit.inventory.ItemStack;
 
 public class YamlFileStorage extends Storage {
 	private static File BACKPACK_ROOT;
-	private final YamlConfiguration reader = new YamlConfiguration();
+	private static final YamlConfiguration reader = new YamlConfiguration();
 
 	public YamlFileStorage(File parentDir) {
 		BACKPACK_ROOT = new File(parentDir, "backpacks");
