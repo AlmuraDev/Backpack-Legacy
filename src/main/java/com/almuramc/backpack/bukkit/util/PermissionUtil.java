@@ -1,5 +1,8 @@
 package com.almuramc.backpack.bukkit.util;
 
+import com.almuramc.backpack.bukkit.BackpackPlugin;
+
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissionAttachmentInfo;
 
@@ -41,7 +44,11 @@ public class PermissionUtil {
 			}
 		}
 		if (size == -1) {
-			return 54; //TODO return defaults from config if perm not found
+			try {
+				return BackpackPlugin.getInstance().getCached().getDefaultSize();
+			} catch (InvalidConfigurationException e) {
+				e.printStackTrace();
+			}
 		}
 		return size;
 	}

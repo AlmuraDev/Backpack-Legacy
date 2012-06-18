@@ -4,6 +4,7 @@ import java.io.File;
 
 import com.almuramc.backpack.bukkit.BackpackPlugin;
 
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.Plugin;
 
@@ -38,6 +39,18 @@ public final class CachedConfigurationUtil {
 
 	public boolean useSQL() {
 		return cached.getBoolean("general.use-sql");
+	}
+
+	public int getDefaultSize() throws InvalidConfigurationException {
+		int size = cached.getInt("backpack.no-perm-default-size");
+		if (size > 54) {
+			throw new InvalidConfigurationException("Size set for no-perm-default-size should be less than 54 and a multiple of 9.");
+		} else if (size <= 0) {
+			throw new InvalidConfigurationException("Size set for no-perm-default-size should be more than 0 and a multiple of 9.");
+		} else if (size % 9 != 0) {
+			throw new InvalidConfigurationException("Size set for no-perm-default-size should be a multiple of 9!");
+		}
+		return size;
 	}
 
 	/**
