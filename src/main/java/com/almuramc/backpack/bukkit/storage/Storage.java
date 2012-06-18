@@ -48,7 +48,8 @@ public abstract class Storage {
 	 * @return the resulting inventory.
 	 */
 	public final Inventory put(Player player, World world) {
-		return put(player, world, Bukkit.createInventory(player, PermissionUtil.getSizeByPermFor(player), "Backpack"));
+		int size = PermissionUtil.getSizeByPermFor(player);
+		return put(player, world, Bukkit.createInventory(player, size == -1 ? 54 : size, "Backpack"));
 	}
 
 	/**
@@ -61,13 +62,20 @@ public abstract class Storage {
 		if (player == null || world == null) {
 			return null;
 		}
-		Inventory current = INVENTORIES.get(world.getUID()).get(player.getName());
+		HashMap<String, Inventory> map = INVENTORIES.get(world.getUID());
 		//If they have no inventory in the map, make one
+		if (map == null) {
+			map = new HashMap<String, Inventory>();
+		}
+		Inventory current = map.get(player.getName());
 		if (current == null) {
 			current = put(player, world);
 		//Check for and adjust inventory size based on permissions
 		} else {
 			int size = PermissionUtil.getSizeByPermFor(player);
+			if (size == -1) {
+				size = 9; //TODO set default size?
+			}
 			if (current.getSize() != size) {
 				ItemStack[] contents = current.getContents();
 				ArrayList<ItemStack> adjustment = new ArrayList<ItemStack>();
