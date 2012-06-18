@@ -3,7 +3,7 @@ package com.almuramc.backpack.bukkit;
 import com.almuramc.backpack.bukkit.listener.BackpackListener;
 import com.almuramc.backpack.bukkit.storage.Storage;
 import com.almuramc.backpack.bukkit.storage.mode.SQLStorage;
-import com.almuramc.backpack.bukkit.storage.mode.YamlFileStorage;
+import com.almuramc.backpack.bukkit.storage.mode.YamlStorage;
 import com.almuramc.backpack.bukkit.util.CachedConfigurationUtil;
 import com.almuramc.backpack.bukkit.util.DependencyUtil;
 
@@ -36,7 +36,7 @@ public class BackpackPlugin extends JavaPlugin {
 		if (cached.useSQL()) {
 			store = new SQLStorage();
 		} else {
-			store = new YamlFileStorage(getDataFolder());
+			store = new YamlStorage(getDataFolder());
 		}
 		//Setup storage
 		store.setup();

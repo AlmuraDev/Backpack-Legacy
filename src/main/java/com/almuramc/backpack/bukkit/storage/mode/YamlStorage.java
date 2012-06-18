@@ -21,11 +21,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-public class YamlFileStorage extends Storage {
+public class YamlStorage extends Storage {
 	private static File BACKPACK_ROOT;
 	private static final YamlConfiguration reader = new YamlConfiguration();
 
-	public YamlFileStorage(File parentDir) {
+	public YamlStorage(File parentDir) {
 		BACKPACK_ROOT = new File(parentDir, "backpacks");
 	}
 
