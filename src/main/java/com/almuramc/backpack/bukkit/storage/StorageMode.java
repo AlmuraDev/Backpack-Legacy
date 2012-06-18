@@ -4,7 +4,7 @@ import gnu.trove.map.TIntObjectMap;
 import gnu.trove.map.hash.TIntObjectHashMap;
 
 /**
- * FileStorage modes for backpacks
+ * Enum of storage modes
  */
 public enum StorageMode {
 	FILE(0),

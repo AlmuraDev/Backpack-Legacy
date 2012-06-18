@@ -1,29 +1,38 @@
 package com.almuramc.backpack.bukkit.storage.mode;
 
+import java.io.File;
+
 import com.almuramc.backpack.bukkit.storage.Storage;
 import com.almuramc.backpack.bukkit.storage.StorageMode;
 
 import org.bukkit.World;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
-public class FileStorage extends Storage {
-	public FileStorage(StorageMode mode) {
-		super(mode);
+public class YamlFileStorage implements Storage {
+	private final File parentDir;
+	private final YamlConfiguration reader = new YamlConfiguration();
+
+	public YamlFileStorage(File parentDir) {
+		this.parentDir = parentDir;
+	}
+
+	@Override
+	public StorageMode getMode() {
+		return StorageMode.FILE;
 	}
 
 	@Override
 	public void setup() {
-		//To change body of implemented methods use File | Settings | File Templates.
 	}
 
 	@Override
 	public Inventory getBackpackFor(Player player, World world) {
-		return null;  //To change body of implemented methods use File | Settings | File Templates.
+		return null;
 	}
 
 	@Override
 	public void setBackpackFor(Player player, World world, Inventory inventory) {
-		//To change body of implemented methods use File | Settings | File Templates.
 	}
 }

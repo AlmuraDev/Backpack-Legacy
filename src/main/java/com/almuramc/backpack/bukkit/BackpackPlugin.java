@@ -1,6 +1,9 @@
 package com.almuramc.backpack.bukkit;
 
 import com.almuramc.backpack.bukkit.listener.BackpackListener;
+import com.almuramc.backpack.bukkit.storage.Storage;
+import com.almuramc.backpack.bukkit.storage.mode.SQLStorage;
+import com.almuramc.backpack.bukkit.storage.mode.YamlFileStorage;
 import com.almuramc.backpack.bukkit.util.CachedConfigurationUtil;
 import com.almuramc.backpack.bukkit.util.DependencyUtil;
 
@@ -9,7 +12,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class BackpackPlugin extends JavaPlugin {
 	private static BackpackPlugin instance;
-	private static BackpackHandler handler;
+	private static Storage store;
 	private static CachedConfigurationUtil cached;
 	private static DependencyUtil hooks;
 
@@ -20,7 +23,7 @@ public class BackpackPlugin extends JavaPlugin {
 			cached = null;
 		}
 		instance = null;
-		handler = null;
+		store = null;
 	}
 
 	@Override
@@ -30,7 +33,11 @@ public class BackpackPlugin extends JavaPlugin {
 		//Setup config
 		cached = new CachedConfigurationUtil();
 		//Setup storage
-		handler = new BackpackHandler();
+		if (cached.useSQL()) {
+			store = new SQLStorage();
+		} else {
+			store = new YamlFileStorage(getDataFolder());
+		}
 		//Setup dependencies
 		hooks = new DependencyUtil();
 		//Register events
@@ -41,8 +48,8 @@ public class BackpackPlugin extends JavaPlugin {
 		return instance;
 	}
 
-	public final BackpackHandler getCore() {
-		return handler;
+	public final Storage getStore() {
+		return store;
 	}
 
 	public final CachedConfigurationUtil getCached() {

@@ -7,23 +7,25 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
-public class SQLStorage extends Storage {
-	public SQLStorage(StorageMode mode) {
-		super(mode);
+public class SQLStorage implements Storage {
+	public SQLStorage() {
+	}
+
+	@Override
+	public StorageMode getMode() {
+		return StorageMode.SQL;
 	}
 
 	@Override
 	public void setup() {
-		//To change body of implemented methods use File | Settings | File Templates.
 	}
 
 	@Override
 	public Inventory getBackpackFor(Player player, World world) {
-		return null;  //To change body of implemented methods use File | Settings | File Templates.
+		return null;
 	}
 
 	@Override
 	public void setBackpackFor(Player player, World world, Inventory inventory) {
-		//To change body of implemented methods use File | Settings | File Templates.
 	}
 }
