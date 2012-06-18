@@ -42,7 +42,7 @@ public final class CachedConfigurationUtil {
 	}
 
 	public int getDefaultSize() throws InvalidConfigurationException {
-		int size = cached.getInt("backpack.no-perm-size-default");
+		int size = cached.getInt("backpack.no-perm-default-size");
 		if (size > 54) {
 			throw new InvalidConfigurationException("Size set for no-perm-default-size should be less than 54 and a multiple of 9.");
 		} else if (size <= 0) {

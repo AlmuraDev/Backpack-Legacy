@@ -1,5 +1,5 @@
 name: Backpack
-version: dev-SNAPSHOT
+version: 1.0-SNAPSHOT
 description: Backpack is a plugin for Spout that gives users a handy backpack for inventory.
 
 author: Zidane
@@ -24,24 +24,6 @@ permissions:
         default: true
     backpack.upgrade:
         description: Allows users to upgrade their backpacks beyond 9 slots.
-        default: op
-    backpack.slot9:
-        description: Allows users to upgrade to a 9 slot backpack.
-        default: true
-    backpack.slot18:
-        description: Allows user to upgrade to a 18 slot backpack.
-        default: op
-    backpack.slot27:
-        description: Allows users to upgrade to a 27 slot backpack.
-        default: op
-    backpack.slot36:
-        description: Allows users to upgrade to a 36 slot backpack.
-        default: op
-    backpack.slot45:
-        description: Allows users to upgrade to a 45 slot backpack.
-        default: op
-    backpack.slot54:
-        description: Allows user to upgrade to a 54 slot backpack.
         default: op
     backpack.workbench:
         description: Allows users to use workbench if it exists in the users backpack or inventory.

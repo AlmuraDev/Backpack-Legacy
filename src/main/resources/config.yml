@@ -40,7 +40,7 @@ admin:
   control-panel: false
   hotkey: KEY_V
 backpack:
-  no-perm-size-default: 9
+  no-perm-default-size: 9
   hotkey: KEY_B
 storage:
   host: localhost
