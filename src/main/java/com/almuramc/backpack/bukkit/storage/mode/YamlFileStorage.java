@@ -53,38 +53,37 @@ public class YamlFileStorage extends Storage {
 		}
 	}
 
+	/**
+	 * Gets the inventory from the inventory memory storage or from file if not found.
+	 * @param player the player to get an inventory for
+	 * @param world the world to get the inventory from
+	 * @return the inventory loaded from memory storage/file storage or null if the event was cancelled.
+	 */
 	@Override
 	public Inventory getBackpackFor(Player player, World world) {
-		Inventory currentBackpack = (Inventory) INVENTORIES.get(player, world);
-		//If they have a null backpack, assume they don't have it loaded from disk and try to fetch it.
-		if (currentBackpack == null || currentBackpack.getContents().length <= 0) {
-			currentBackpack = loadFromFile(player, world);
+		Inventory backpack = get(player, world);
+		if (backpack == null) {
+			backpack = loadFromFile(player, world);
 		}
-		BackpackLoadEvent event = new BackpackLoadEvent(player, world, currentBackpack);
-		Inventory backpack = event.getBackpack();
-		//If they still have a null backpack by this point, assume they will not have a backpack period.
-		if (backpack == null || event.isCancelled()) {
+		BackpackLoadEvent event = new BackpackLoadEvent(player, world, backpack);
+		Bukkit.getPluginManager().callEvent(event);
+		if (event.isCancelled()) {
 			return null;
 		}
-		if (!currentBackpack.equals(backpack)) {
-			INVENTORIES.put(player, world, event.getBackpack());
-		}
-		return backpack;
+		Inventory result = event.getBackpack();
+
+		return result == null ? put(player, world) : put(player, world, result);
 	}
 
 	@Override
 	public void setBackpackFor(Player player, World world, Inventory inventory) {
 		BackpackSaveEvent event = new BackpackSaveEvent(player, world, inventory);
-		Inventory backpack = event.getBackpack();
-		//Cancel saving but don't delete files
+		Bukkit.getPluginManager().callEvent(event);
 		if (event.isCancelled()) {
 			return;
-		} else {
-			if (backpack == null || backpack.getContents().length <= 0) {
-				INVENTORIES.remove(player, world);
-			}
-			saveToFile(player, world, inventory);
 		}
+		Inventory backpack = event.getBackpack();
+		saveToFile(player, world, backpack == null ? put(player, world) : backpack);
 	}
 
 	private Inventory loadFromFile(Player player, World world) {
