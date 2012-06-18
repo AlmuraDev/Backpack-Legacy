@@ -77,7 +77,7 @@ public abstract class Storage {
 				ArrayList<ItemStack> adjustment = new ArrayList<ItemStack>();
 				for (int i = 0; i < size; i++) {
 					if (i >= contents.length) {
-						adjustment.add(new ItemStack(Material.AIR));
+						continue;
 					} else {
 						adjustment.add(contents[i]);
 					}

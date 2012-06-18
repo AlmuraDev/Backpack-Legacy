@@ -63,6 +63,17 @@ public class YamlFileStorage extends Storage {
 	public Inventory getBackpackFor(Player player, World world) {
 		Inventory backpack = get(player, world);
 		if (backpack == null) {
+			return null;
+		}
+		ItemStack[] contents = backpack.getContents();
+		boolean newFile = true;
+		for (int i = 0; i < contents.length; i++) {
+			if (contents[i] != null) {
+				newFile = false;
+				break;
+			}
+		}
+		if (newFile) {
 			backpack = loadFromFile(player, world);
 		}
 		BackpackLoadEvent event = new BackpackLoadEvent(player, world, backpack);
@@ -83,7 +94,10 @@ public class YamlFileStorage extends Storage {
 			return;
 		}
 		Inventory backpack = event.getBackpack();
-		saveToFile(player, world, backpack == null ? put(player, world) : backpack);
+		if (backpack == null) {
+			return;
+		}
+		saveToFile(player, world, backpack);
 	}
 
 	private Inventory loadFromFile(Player player, World world) {
@@ -103,9 +117,9 @@ public class YamlFileStorage extends Storage {
 			playerDat = new File(worldDir, file.getName());
 		}
 
-		//No file was found for this player, return a blank empty inventory then.
+		//No file was found for this player.
 		if (playerDat == null) {
-			return Bukkit.createInventory(player, 54, "Backpack"); //TODO return size based on player or global perm
+			return null;
 		}
 
 		//File found, lets load in contents
@@ -115,7 +129,7 @@ public class YamlFileStorage extends Storage {
 			ConfigurationSection parent = reader.getConfigurationSection("backpack");
 			for (String key : parent.getKeys(false)) {
 				ConfigurationSection sub = parent.getConfigurationSection(key);
-				ItemStack item = new ItemStack(Material.getMaterial(key), sub.getInt("amount"), ((Integer) sub.get("durability")).shortValue(), ((Integer) sub.get("data")).byteValue());
+				ItemStack item = sub.getItemStack("ItemStack", new ItemStack(Material.AIR));
 				items.add(item);
 			}
 
@@ -135,37 +149,29 @@ public class YamlFileStorage extends Storage {
 	private void saveToFile(Player player, World world, Inventory backpack) {
 		File playerBackpack = new File(BACKPACK_ROOT + File.separator + world.getName(), player.getName() + ".yml");
 		try {
-			//Delete the current file (it saves a lot of hassle and code, just delete and remake with contents)
-			if (playerBackpack.exists()) {
-				playerBackpack.delete();
+			if (!playerBackpack.exists()) {
+				playerBackpack.createNewFile();
+				reader.load(playerBackpack);
+				reader.createSection("backpack");
+			} else {
+				reader.load(playerBackpack);
 			}
-			//Stop saving if null backpack
-			if (backpack == null) {
-				return;
-			}
-			//If creating the new file failed for some reason stop saving.
-			if (!playerBackpack.createNewFile()) {
-				return;
-			}
-			reader.load(playerBackpack);
-			reader.createSection("backpack");
-			ItemStack[] stacks = backpack.getContents();
-			for (ItemStack stack : stacks) {
-				if (stack == null) {
-					continue;
+			ItemStack[] contents = backpack.getContents();
+			ConfigurationSection parent = reader.getConfigurationSection("backpack");
+			for (int i = 0; i < contents.length; i++) {
+				//Slot doesn't exist
+				ConfigurationSection slot;
+				if (!reader.isConfigurationSection("Slot " + i)) {
+					slot = parent.createSection("Slot " + i);
+				} else {
+					slot = parent.getConfigurationSection("Slot "+ i);
 				}
-				ConfigurationSection section = reader.getConfigurationSection("backpack").createSection(stack.getType().name());
-				section.set("amount", stack.getAmount());
-				section.set("durability", stack.getDurability());
-				section.set("data", stack.getData().getData());
-				section.set("enchantments", stack.getEnchantments());
+				slot.set("ItemStack", contents[i]);
 			}
 			reader.save(playerBackpack);
-		} catch (FileNotFoundException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (InvalidConfigurationException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}

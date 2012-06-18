@@ -19,6 +19,7 @@ public class BackpackInputHandler implements BindingExecutionDelegate {
 		//Check if backpack is open, close if so.
 		InventoryView inventory = player.getOpenInventory();
 		if (inventory.getTopInventory().getTitle().equals("Backpack")) {
+			BackpackPlugin.getInstance().getStore().setBackpackFor(player, world, inventory.getTopInventory());
 			player.closeInventory();
 		}
 		//Only open backpack on game screen
