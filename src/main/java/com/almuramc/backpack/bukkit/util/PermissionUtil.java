@@ -44,11 +44,7 @@ public class PermissionUtil {
 			}
 		}
 		if (size == -1) {
-			try {
-				return BackpackPlugin.getInstance().getCached().getDefaultSize();
-			} catch (InvalidConfigurationException e) {
-				e.printStackTrace();
-			}
+			return BackpackPlugin.getInstance().getCached().getDefaultSize();
 		}
 		return size;
 	}

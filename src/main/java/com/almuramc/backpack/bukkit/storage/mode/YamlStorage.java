@@ -129,10 +129,11 @@ public class YamlStorage extends Storage {
 			reader.load(playerDat);
 			ArrayList<ItemStack> items = new ArrayList<ItemStack>();
 			ConfigurationSection parent = reader.getConfigurationSection("backpack");
-			Set<String> keys = parent.getKeys(false);
+			Set<String> temp = parent.getKeys(false);
+			String[] keys = temp.toArray(new String[temp.size()]);
 			int size = PermissionUtil.getSizeByPermFor(player);
 			for (int i = 0; i < size; i++) {
-				ConfigurationSection sub = parent.getConfigurationSection(keys.iterator().next());
+				ConfigurationSection sub = parent.getConfigurationSection(keys[i]);
 				ItemStack item = sub.getItemStack("ItemStack", new ItemStack(Material.AIR));
 				items.add(item);
 			}

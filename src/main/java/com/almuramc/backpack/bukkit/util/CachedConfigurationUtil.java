@@ -41,7 +41,7 @@ public final class CachedConfigurationUtil {
 		return cached.getBoolean("general.use-sql");
 	}
 
-	public int getDefaultSize() throws InvalidConfigurationException {
+	public int getDefaultSize() {
 		int size = cached.getInt("backpack.no-perm-default-size");
 		if (MathUtil.isValidBackpackSize(size)) {
 			return size;
