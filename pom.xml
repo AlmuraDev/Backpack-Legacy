@@ -4,17 +4,22 @@
     <!-- Project information -->
     <groupId>com.almuramc</groupId>
     <artifactId>backpack</artifactId>
-    <version>dev-SNAPSHOT</version>
+    <version>1.0-SNAPSHOT</version>
     <name>Backpack</name>
-    <url>http://www.spout.org</url>
-    <description>Backpack is a plugin for Spout that gives users a handy backpack for inventory.</description>
+    <url>http://www.almuramc.com</url>
+    <description>Backpack is a plugin for Bukkit/Spout that gives users a handy backpack.</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <bukkitVersion>1.2.5-R4.0</bukkitVersion>
-        <apiVersion>${project.version}</apiVersion>
         <buildNumber>Unknown</buildNumber>
     </properties>
+
+	<!-- Organization -->
+	<organization>
+		<name>AlmuraDev</name>
+		<url>http://www.almuramc.com</url>
+	</organization>
 
     <!-- License -->
     <licenses>
@@ -66,12 +71,6 @@
             <artifactId>vault</artifactId>
             <version>1.2.12</version>
         </dependency>
-        <dependency>
-            <groupId>commons-collections</groupId>
-            <artifactId>commons-collections</artifactId>
-            <version>3.2.1</version>
-            <scope>compile</scope>
-        </dependency>
 		<dependency>
 			<groupId>org.spout</groupId>
 			<artifactId>spoutapi</artifactId>
@@ -111,6 +110,44 @@
                     <target>1.6</target>
                 </configuration>
             </plugin>
+			<!-- License header formatting plugin -->
+			<plugin>
+				<groupId>com.mycila.maven-license-plugin</groupId>
+				<artifactId>maven-license-plugin</artifactId>
+				<version>1.10.b1</version>
+				<executions>
+					<execution>
+						<phase>clean</phase>
+						<goals>
+							<goal>format</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<quiet>true</quiet>
+					<encoding>UTF-8</encoding>
+					<strictCheck>true</strictCheck>
+					<header>${basedir}/HEADER.txt</header>
+					<keywords>
+						<keyword>${project.name}</keyword>
+						<keyword>license</keyword>
+					</keywords>
+					<mapping>
+						<java>SLASHSTAR_STYLE</java>
+					</mapping>
+					<properties>
+						<name>${project.name}</name>
+						<url>${project.organization.url}</url>
+						<license>GNU Public License version 3</license>
+						<licenseUrl>http://www.gnu.org/licenses/gpl.txt</licenseUrl>
+						<copyright>Copyright (c) 2012, AlmuraDev</copyright>
+					</properties>
+					<includes>
+						<include>src/main/java/**</include>
+						<include>src/test/java/**</include>
+					</includes>
+				</configuration>
+			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>

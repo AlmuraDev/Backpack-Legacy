@@ -1,3 +1,22 @@
+/*
+ * This file is part of Backpack.
+ *
+ * Copyright (c) 2012, AlmuraDev <http://www.almuramc.com/>
+ * Backpack is licensed under the GNU Public License version 3.
+ *
+ * Backpack is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Backpack is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Backpack.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.almuramc.backpack.bukkit.storage;
 
 import java.util.ArrayList;
@@ -7,7 +26,6 @@ import java.util.UUID;
 import com.almuramc.backpack.bukkit.util.PermissionUtil;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -69,7 +87,7 @@ public abstract class Storage {
 		Inventory current = map.get(player.getName());
 		if (current == null) {
 			current = put(player, world);
-		//Check for and adjust inventory size based on permissions
+			//Check for and adjust inventory size based on permissions
 		} else {
 			current = resizeInventory(player, world, current, PermissionUtil.getSizeByPermFor(player));
 		}
@@ -103,7 +121,7 @@ public abstract class Storage {
 		}
 		ArrayList<ItemStack> resized = new ArrayList<ItemStack>();
 		ItemStack[] items = inventory.getContents();
-		for (int i = 0; i < size; i ++) {
+		for (int i = 0; i < size; i++) {
 			if (i > items.length) {
 				resized.add(null); //TODO may cause an issue
 			} else {
