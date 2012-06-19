@@ -42,6 +42,8 @@ admin:
 backpack:
   no-perm-default-size: 9
   hotkey: KEY_B
+workbench:  
+  hotkey: KEY_N
 storage:
   host: localhost
   port: 3306

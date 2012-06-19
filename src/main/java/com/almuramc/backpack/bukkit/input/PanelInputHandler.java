@@ -11,12 +11,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 
-public class BackpackInputHandler implements BindingExecutionDelegate {
+public class PanelInputHandler implements BindingExecutionDelegate {
 	@Override
 	public void keyPressed(KeyBindingEvent keyBindingEvent) {
 		Player player = keyBindingEvent.getPlayer();
 		World world = player.getWorld();
-		if (player.hasPermission("backpack.use")) {
+		if (player.hasPermission("backpack.admin")) {
 			//Check if backpack is open, close if so.
 			InventoryView inventory = player.getOpenInventory();
 			if (inventory.getTopInventory().getTitle().equals("Backpack")) {
@@ -27,11 +27,9 @@ public class BackpackInputHandler implements BindingExecutionDelegate {
 			if (!keyBindingEvent.getScreenType().equals(ScreenType.GAME_SCREEN)) {
 				return;
 			}
-			Inventory backpack = BackpackPlugin.getInstance().getStore().getBackpackFor(player, world);
-			if (backpack == null) {
-				return;
-			}
-			player.openInventory(backpack);
+			
+			// Call Panel GUI
+
 		}
 	}
 

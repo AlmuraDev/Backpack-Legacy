@@ -6,32 +6,29 @@ import org.getspout.spoutapi.event.input.KeyBindingEvent;
 import org.getspout.spoutapi.gui.ScreenType;
 import org.getspout.spoutapi.keyboard.BindingExecutionDelegate;
 
+import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 
-public class BackpackInputHandler implements BindingExecutionDelegate {
+
+public class WorkbenchInputHandler implements BindingExecutionDelegate {
 	@Override
 	public void keyPressed(KeyBindingEvent keyBindingEvent) {
 		Player player = keyBindingEvent.getPlayer();
 		World world = player.getWorld();
-		if (player.hasPermission("backpack.use")) {
-			//Check if backpack is open, close if so.
-			InventoryView inventory = player.getOpenInventory();
-			if (inventory.getTopInventory().getTitle().equals("Backpack")) {
-				BackpackPlugin.getInstance().getStore().setBackpackFor(player, world, inventory.getTopInventory());
+		if (player.hasPermission("backpack.workbench")) {
+			//Check if workbench is open, close if so.
+			if (keyBindingEvent.getScreenType().equals(ScreenType.WORKBENCH_INVENTORY)) {
 				player.closeInventory();
 			}
-			//Only open backpack on game screen
 			if (!keyBindingEvent.getScreenType().equals(ScreenType.GAME_SCREEN)) {
 				return;
 			}
-			Inventory backpack = BackpackPlugin.getInstance().getStore().getBackpackFor(player, world);
-			if (backpack == null) {
-				return;
-			}
-			player.openInventory(backpack);
+			Inventory workbench = Bukkit.createInventory(player, InventoryType.CRAFTING);		
+			player.openWorkbench(null, true);
 		}
 	}
 

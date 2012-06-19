@@ -24,7 +24,15 @@ public final class CachedConfigurationUtil {
 	public String getBackpackHotkey() {
 		return cached.getString("backpack.hotkey");
 	}
+	
+	public String getWorkbenchHotkey() {
+		return cached.getString("workbench.hotkey");
+	}
 
+	public String getPanelHotkey() {
+		return cached.getString("admin.hotkey");
+	}
+	
 	public boolean useControlPanel() {
 		return cached.getBoolean("admin.control-panel");
 	}
