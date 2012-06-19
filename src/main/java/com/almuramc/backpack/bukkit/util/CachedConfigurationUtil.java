@@ -43,14 +43,11 @@ public final class CachedConfigurationUtil {
 
 	public int getDefaultSize() throws InvalidConfigurationException {
 		int size = cached.getInt("backpack.no-perm-default-size");
-		if (size > 54) {
-			throw new InvalidConfigurationException("Size set for no-perm-default-size should be less than 54 and a multiple of 9.");
-		} else if (size <= 0) {
-			throw new InvalidConfigurationException("Size set for no-perm-default-size should be more than 0 and a multiple of 9.");
-		} else if (size % 9 != 0) {
-			throw new InvalidConfigurationException("Size set for no-perm-default-size should be a multiple of 9!");
+		if (MathUtil.isValidBackpackSize(size)) {
+			return size;
 		}
-		return size;
+		BackpackPlugin.getInstance().getLogger().warning("Invalid backpack size specified for no-perm-default-size. Defaulting to 9");
+		return 9;
 	}
 
 	/**
