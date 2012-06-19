@@ -95,8 +95,11 @@ public abstract class Storage {
 	}
 
 	public final Inventory resizeInventory(Player player, World world, Inventory inventory, int size) {
-		if (player == null || world == null || inventory == null || inventory.getSize() == size) {
+		if (player == null || world == null || inventory == null) {
 			return null;
+		}
+		if (inventory.getSize() == size) {
+			return inventory;
 		}
 		ArrayList<ItemStack> resized = new ArrayList<ItemStack>();
 		ItemStack[] items = inventory.getContents();
@@ -107,12 +110,9 @@ public abstract class Storage {
 				resized.add(items[i]);
 			}
 		}
-		if (resized.size() > 0) {
-			Inventory toReplace = Bukkit.createInventory(player, size, "Backpack");
-			toReplace.setContents(resized.toArray(new ItemStack[resized.size()]));
-			return toReplace;
-		}
-		return inventory;
+		Inventory toReplace = Bukkit.createInventory(player, size, "Backpack");
+		toReplace.setContents(resized.toArray(new ItemStack[resized.size()]));
+		return toReplace;
 	}
 
 	public abstract StorageMode getMode();
