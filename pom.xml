@@ -15,11 +15,11 @@
         <buildNumber>Unknown</buildNumber>
     </properties>
 
-	<!-- Organization -->
-	<organization>
-		<name>AlmuraDev</name>
-		<url>http://www.almuramc.com</url>
-	</organization>
+    <!-- Organization -->
+    <organization>
+        <name>AlmuraDev</name>
+        <url>http://www.almuramc.com</url>
+    </organization>
 
     <!-- License -->
     <licenses>
