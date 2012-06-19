@@ -5,11 +5,13 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import com.almuramc.backpack.bukkit.api.BackpackLoadEvent;
 import com.almuramc.backpack.bukkit.api.BackpackSaveEvent;
 import com.almuramc.backpack.bukkit.storage.Storage;
 import com.almuramc.backpack.bukkit.storage.StorageMode;
+import com.almuramc.backpack.bukkit.util.PermissionUtil;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -127,13 +129,14 @@ public class YamlStorage extends Storage {
 			reader.load(playerDat);
 			ArrayList<ItemStack> items = new ArrayList<ItemStack>();
 			ConfigurationSection parent = reader.getConfigurationSection("backpack");
-			for (String key : parent.getKeys(false)) {
-				ConfigurationSection sub = parent.getConfigurationSection(key);
+			Set<String> keys = parent.getKeys(false);
+			int size = PermissionUtil.getSizeByPermFor(player);
+			for (int i = 0; i < size; i++) {
+				ConfigurationSection sub = parent.getConfigurationSection(keys.iterator().next());
 				ItemStack item = sub.getItemStack("ItemStack", new ItemStack(Material.AIR));
 				items.add(item);
 			}
-
-			Inventory backpack = Bukkit.createInventory(player, 54, "Backpack");
+			Inventory backpack = Bukkit.createInventory(player, size, "Backpack");
 			backpack.setContents(items.toArray(new ItemStack[items.size()]));
 			return backpack;
 		} catch (FileNotFoundException e) {
