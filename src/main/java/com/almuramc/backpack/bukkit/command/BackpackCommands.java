@@ -40,39 +40,44 @@ public class BackpackCommands implements CommandExecutor {
 		//TODO cleanup
 		if (!(commandSender instanceof Player)) {
 			commandSender.sendMessage("Must be in-game to utilize backpack commands");
+			return false;
 		}
 		Player player = (Player) commandSender;
 		if (command.getName().equalsIgnoreCase("backpack")) {
 			//No additional arguments
 			if (strings.length == 0) {
-				if (player.hasPermission("backpack.use")) {
-					Inventory backpack = BackpackPlugin.getInstance().getStore().getBackpackFor(player, player.getWorld());
-					if (backpack != null) {
-						player.openInventory(backpack);
-						return true;
-					}
-				}
+				return openBackpack(player);
 			//Open argument
 			} else if (strings[0].equalsIgnoreCase("open")) {
 				if (strings.length == 1) {
-					if (player.hasPermission("backpack.use")) {
-						Inventory backpack = BackpackPlugin.getInstance().getStore().getBackpackFor(player, player.getWorld());
-						if (backpack != null) {
-							player.openInventory(backpack);
-							return true;
-						}
-					}
+					return openBackpack(player);
 				} else {
 					//TODO Will need to figure out a way to open and save for a player.
 					return true;
 				}
 			}
 			if (strings[0].equalsIgnoreCase("workbench")) {
-				if (player.hasPermission("backpack.workbench")) {
-					player.openWorkbench(null, true);
-					return true;
-				}
+				return openWorkbench(player);
 			}
+		}
+		return false;
+	}
+
+	private boolean openBackpack(Player player) {
+		if (player.hasPermission("backpack.use")) {
+			Inventory backpack = BackpackPlugin.getInstance().getStore().getBackpackFor(player, player.getWorld());
+			if (backpack != null) {
+				player.openInventory(backpack);
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private boolean openWorkbench(Player player) {
+		if (player.hasPermission("backpack.workbench")) {
+			player.openWorkbench(null, true);
+			return true;
 		}
 		return false;
 	}
