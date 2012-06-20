@@ -4,7 +4,7 @@
     <!-- Project information -->
     <groupId>com.almuramc</groupId>
     <artifactId>backpack</artifactId>
-    <version>1.0</version>
+    <version>1.1-SNAPSHOT</version>
     <name>Backpack</name>
     <url>http://www.almuramc.com</url>
     <description>Backpack is a plugin for Bukkit/Spout that gives users a handy backpack.</description>
