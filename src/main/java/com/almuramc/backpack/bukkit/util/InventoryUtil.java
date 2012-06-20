@@ -21,6 +21,9 @@ package com.almuramc.backpack.bukkit.util;
 
 import java.util.ArrayList;
 
+import org.bukkit.Bukkit;
+import org.bukkit.World;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
@@ -28,7 +31,41 @@ import org.bukkit.inventory.ItemStack;
  * Simple class to handle inventory transactions.
  */
 public class InventoryUtil {
-	public static Inventory filterIllegalItemsFromInventory(ArrayList<ItemStack> blacklist, Inventory inventory) {
+	public static final Inventory resizeInventory(Player player, World world, Inventory inventory, int size) {
+		if (player == null || world == null || inventory == null) {
+			return null;
+		}
+		if (inventory.getSize() == size) {
+			return inventory;
+		}
+		ArrayList<ItemStack> resized = new ArrayList<ItemStack>();
+		ItemStack[] items = inventory.getContents();
+		for (int i = 0; i < size; i++) {
+			if (i > items.length) {
+				resized.add(null); //TODO may cause an issue
+			} else {
+				resized.add(items[i]);
+			}
+		}
+		Inventory toReplace = Bukkit.createInventory(player, size, "Backpack");
+		toReplace.setContents(resized.toArray(new ItemStack[resized.size()]));
+		return toReplace;
+	}
+
+	public static final boolean hasActualContents(Inventory inventory) {
+		if (inventory == null) {
+			return false;
+		}
+		ItemStack[] contents = inventory.getContents();
+		for (int i = 0; i < contents.length; i++) {
+			if (contents[i] != null) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public static final Inventory filterIllegalItemsFromInventory(ArrayList<ItemStack> blacklist, Inventory inventory) {
 		ItemStack[] contents = inventory.getContents();
 		Inventory inv = inventory;
 		//Sanity checks

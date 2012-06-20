@@ -60,8 +60,6 @@ public class BackpackListener implements Listener {
 		if (event.getEntity() instanceof Player) {
 			Player player = (Player) event.getEntity();
 
-			// Handle player death.  If player has permission to keep items do nothing, if player doesnt, set backpack inventory to null.
-
 		}
 	}
 

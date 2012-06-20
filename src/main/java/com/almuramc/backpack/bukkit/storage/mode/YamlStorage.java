@@ -30,7 +30,9 @@ import com.almuramc.backpack.bukkit.api.BackpackLoadEvent;
 import com.almuramc.backpack.bukkit.api.BackpackSaveEvent;
 import com.almuramc.backpack.bukkit.storage.Storage;
 import com.almuramc.backpack.bukkit.storage.StorageMode;
+import com.almuramc.backpack.bukkit.util.InventoryUtil;
 import com.almuramc.backpack.bukkit.util.PermissionUtil;
+import com.almuramc.backpack.bukkit.util.StorageUtil;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -42,7 +44,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-public class YamlStorage extends Storage {
+public class YamlStorage implements Storage {
 	private static File BACKPACK_ROOT;
 	private static final YamlConfiguration reader = new YamlConfiguration();
 
@@ -87,19 +89,11 @@ public class YamlStorage extends Storage {
 	 */
 	@Override
 	public Inventory getBackpackFor(Player player, World world) {
-		Inventory backpack = get(player, world);
+		Inventory backpack = StorageUtil.get(player, world);
 		if (backpack == null) {
 			return null;
 		}
-		ItemStack[] contents = backpack.getContents();
-		boolean newFile = true;
-		for (int i = 0; i < contents.length; i++) {
-			if (contents[i] != null) {
-				newFile = false;
-				break;
-			}
-		}
-		if (newFile) {
+		if (!InventoryUtil.hasActualContents(backpack)) {
 			backpack = loadFromFile(player, world);
 		}
 		BackpackLoadEvent event = new BackpackLoadEvent(player, world, backpack);
@@ -109,7 +103,7 @@ public class YamlStorage extends Storage {
 		}
 		Inventory result = event.getBackpack();
 
-		return result == null ? put(player, world) : put(player, world, result);
+		return result == null ? StorageUtil.put(player, world) : StorageUtil.put(player, world, result);
 	}
 
 	@Override
