@@ -87,4 +87,21 @@ public class InventoryUtil {
 		inv.setContents(contents);
 		return inv;
 	}
+
+	public static final Inventory filterNullsFromInventory(Inventory inventory) {
+		if (!hasActualContents(inventory)) {
+			return null;
+		}
+		ItemStack[] contents = inventory.getContents();
+		ArrayList<ItemStack> items = new ArrayList<ItemStack>();
+		for (int i = 0; i < contents.length; i++) {
+			ItemStack current = contents[i];
+			if (current == null) {
+				continue;
+			}
+			items.add(current);
+		}
+		inventory.setContents(items.toArray(new ItemStack[items.size()]));
+		return inventory;
+	}
 }
