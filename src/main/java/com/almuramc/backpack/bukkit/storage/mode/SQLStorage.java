@@ -33,7 +33,12 @@ public class SQLStorage extends Storage {
 	}
 
 	@Override
-	public void setup() {
+	public void onLoad() {
+	}
+
+	@Override
+	public void onUnload() {
+
 	}
 
 	@Override
@@ -43,5 +48,6 @@ public class SQLStorage extends Storage {
 
 	@Override
 	public void setBackpackFor(Player player, World world, Inventory inventory) {
+
 	}
 }

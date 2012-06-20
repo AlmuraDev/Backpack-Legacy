@@ -44,7 +44,7 @@ backpack:
   hotkey: KEY_B
 workbench:  
   hotkey: KEY_N
-storage:
+sql:
   host: localhost
   port: 3306
   database: minecraft

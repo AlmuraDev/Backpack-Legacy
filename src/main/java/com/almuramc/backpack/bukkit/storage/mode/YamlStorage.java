@@ -56,7 +56,7 @@ public class YamlStorage extends Storage {
 	}
 
 	@Override
-	public void setup() {
+	public void onLoad() {
 		if (!BACKPACK_ROOT.exists()) {
 			BACKPACK_ROOT.mkdir();
 		}
@@ -72,6 +72,11 @@ public class YamlStorage extends Storage {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	@Override
+	public void onUnload() {
+		BACKPACK_ROOT = null;
 	}
 
 	/**

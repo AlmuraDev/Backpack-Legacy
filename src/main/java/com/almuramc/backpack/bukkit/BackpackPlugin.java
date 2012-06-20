@@ -41,6 +41,7 @@ public class BackpackPlugin extends JavaPlugin {
 			cached.save();
 			cached = null;
 		}
+		store.onUnload();
 		instance = null;
 		store = null;
 	}
@@ -58,7 +59,7 @@ public class BackpackPlugin extends JavaPlugin {
 			store = new YamlStorage(getDataFolder());
 		}
 		//Setup storage
-		store.setup();
+		store.onLoad();
 		//Setup dependencies
 		hooks = new DependencyUtil();
 		//Register events

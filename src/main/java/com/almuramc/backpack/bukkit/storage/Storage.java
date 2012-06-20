@@ -135,7 +135,9 @@ public abstract class Storage {
 
 	public abstract StorageMode getMode();
 
-	public abstract void setup();
+	public abstract void onLoad();
+
+	public abstract void onUnload();
 
 	public abstract Inventory getBackpackFor(Player player, World world);
 
