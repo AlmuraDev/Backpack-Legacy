@@ -61,7 +61,7 @@ public class BackpackListener implements Listener {
 	public void onEntityDeath(EntityDeathEvent event) {
 		if (event.getEntity() instanceof Player) {
 			Player player = (Player) event.getEntity();
-			if (!player.hasPermission("backpack.keepitems")) {
+			if (player.hasPermission("backpack.keepitems")) {
 				return;
 			}
 			Inventory inventory = StorageUtil.get(player, player.getWorld());
