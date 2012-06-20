@@ -27,7 +27,6 @@
 package com.almuramc.backpack.bukkit.command;
 
 import com.almuramc.backpack.bukkit.BackpackPlugin;
-import com.almuramc.backpack.bukkit.util.StorageUtil;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -54,7 +53,7 @@ public class BackpackCommands implements CommandExecutor {
 			//No additional arguments
 			if (strings.length == 0) {
 				return openBackpack(player);
-			//Open argument
+				//Open argument
 			} else if (strings[0].equalsIgnoreCase("open")) {
 				if (strings.length == 1) {
 					return openBackpack(player);

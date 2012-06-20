@@ -30,7 +30,6 @@ import com.almuramc.backpack.bukkit.BackpackPlugin;
 import com.almuramc.backpack.bukkit.util.InventoryUtil;
 import com.almuramc.backpack.bukkit.util.StorageUtil;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;

@@ -31,7 +31,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
 public interface Storage {
-
 	public abstract StorageMode getMode();
 
 	public abstract void onLoad();
