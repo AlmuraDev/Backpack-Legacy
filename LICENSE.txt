@@ -6,7 +6,7 @@ License.
 The software is licensed under the GNU General Public License version
 3.0.
 
-An exception is made for all classes that do notutilize or reference
+An exception is made for all classes that do not utilize or reference
 any GPL licensed code. For these classes. they will be licensed as GNU
 Lesser Public License version 3 (provided below).
 
