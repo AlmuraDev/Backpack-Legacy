@@ -40,13 +40,7 @@ import org.bukkit.inventory.ItemStack;
 public class BackpackListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onInventoryClose(InventoryCloseEvent event) {
-		InventoryView viewer = event.getView();
-		Player player = (Player) event.getPlayer();
-		Inventory backpack = viewer.getTopInventory();
-
-		if (backpack.getHolder().equals(player) && backpack.getTitle().equals("Backpack")) {
-			BackpackPlugin.getInstance().getStore().setBackpackFor(player, player.getWorld(), backpack);
-		}
+		onBackpackClose(event.getView(), (Player) event.getPlayer());
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR)
@@ -56,7 +50,11 @@ public class BackpackListener implements Listener {
 
 	@EventHandler
 	public void onPlayerKick(PlayerKickEvent event) {
-		// Fire Save event in-case player gets kicked while having backpack open.	
+		if (event.isCancelled()) {
+			event.setCancelled(true);
+			return;
+		}
+		onBackpackClose(event.getPlayer().getOpenInventory(), event.getPlayer());
 	}
 
 	@EventHandler
@@ -83,5 +81,13 @@ public class BackpackListener implements Listener {
 	public void onPluginEnable(PluginEnableEvent event) {
 		//This should cover our dependency issues
 		BackpackPlugin.getInstance().getHooks().setup();
+	}
+
+	private void onBackpackClose(InventoryView viewer, Player player) {
+		Inventory backpack = viewer.getTopInventory();
+
+		if (backpack.getHolder().equals(player) && backpack.getTitle().equals("Backpack")) {
+			BackpackPlugin.getInstance().getStore().setBackpackFor(player, player.getWorld(), backpack);
+		}
 	}
 }
