@@ -20,7 +20,10 @@
 package com.almuramc.backpack.bukkit.listener;
 
 import com.almuramc.backpack.bukkit.BackpackPlugin;
+import com.almuramc.backpack.bukkit.util.InventoryUtil;
+import com.almuramc.backpack.bukkit.util.StorageUtil;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -32,6 +35,7 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.server.PluginEnableEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
+import org.bukkit.inventory.ItemStack;
 
 public class BackpackListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGHEST)
@@ -59,7 +63,19 @@ public class BackpackListener implements Listener {
 	public void onEntityDeath(EntityDeathEvent event) {
 		if (event.getEntity() instanceof Player) {
 			Player player = (Player) event.getEntity();
-
+			if (!player.hasPermission("backpack.keepitems")) {
+				return;
+			}
+			Inventory inventory = StorageUtil.get(player, player.getWorld());
+			if (inventory == null) {
+				return;
+			}
+			if (InventoryUtil.hasActualContents(inventory)) {
+				ItemStack[] contents = inventory.getContents();
+				for (ItemStack toDrop : contents) {
+					player.getWorld().dropItemNaturally(player.getLocation(), toDrop);
+				}
+			}
 		}
 	}
 
