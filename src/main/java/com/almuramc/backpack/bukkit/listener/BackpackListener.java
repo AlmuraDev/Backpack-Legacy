@@ -69,7 +69,10 @@ public class BackpackListener implements Listener {
 				return;
 			}
 			if (InventoryUtil.hasActualContents(inventory)) {
-				ItemStack[] contents = InventoryUtil.filterNullsFromInventory(player, inventory).getContents();
+				ItemStack[] contents = InventoryUtil.getAllValidItems(inventory);
+				if (contents == null) {
+					return;
+				}
 				for (ItemStack toDrop : contents) {
 					player.getWorld().dropItemNaturally(player.getLocation(), toDrop);
 				}
