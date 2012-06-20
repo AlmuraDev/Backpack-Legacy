@@ -28,15 +28,15 @@ import org.bukkit.entity.Player;
 public class WorkbenchInputHandler implements BindingExecutionDelegate {
 	@Override
 	public void keyPressed(KeyBindingEvent keyBindingEvent) {
+		//Check if workbench is open, close if so.
+		Player player = keyBindingEvent.getPlayer();
+		if (keyBindingEvent.getScreenType().equals(ScreenType.WORKBENCH_INVENTORY)) {
+			player.closeInventory();
+		}
 		if (!keyBindingEvent.getScreenType().equals(ScreenType.GAME_SCREEN)) {
 			return;
 		}
-		Player player = keyBindingEvent.getPlayer();
 		if (player.hasPermission("backpack.workbench")) {
-			//Check if workbench is open, close if so.
-			if (keyBindingEvent.getScreenType().equals(ScreenType.WORKBENCH_INVENTORY)) {
-				player.closeInventory();
-			}
 			player.openWorkbench(null, true);
 		}
 	}
