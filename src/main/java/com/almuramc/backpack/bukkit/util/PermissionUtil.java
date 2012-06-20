@@ -11,7 +11,7 @@
  *
  * As an exception, all classes which do not reference GPL licensed code
  * are hereby licensed under the GNU Lesser Public License, as described
- * in themAlmura Development License version 1.
+ * in Almura Development License version 1.
  *
  * Backpack is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -26,8 +26,14 @@
  */
 package com.almuramc.backpack.bukkit.util;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+
 import com.almuramc.backpack.bukkit.BackpackPlugin;
 
+import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissionAttachmentInfo;
 
@@ -72,5 +78,47 @@ public class PermissionUtil {
 			return BackpackPlugin.getInstance().getCached().getDefaultSize();
 		}
 		return size;
+	}
+
+	public static boolean canUseBackpackIn(String perm, World world) {
+		if (perm.contains("backpack.") && perm.contains(".use")) {
+			String worldName = perm.split("backpack.")[1].split(".use")[0];
+			if (Bukkit.getWorld(worldName) != null && world.getName().equals(worldName)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public static LinkedList<World> getWorldsToShareTo(String perm) {
+		LinkedList<World> worlds = new LinkedList<World>();
+		//Check if valid perm
+		if (perm.contains("backpack.share")) {
+			//Check to see if any entries past share
+			if (perm.split("backpack.share.").length != 0) {
+				String[] nodes = perm.split("backpack.share.")[1].toString().split(".");
+				//Loop through all nodes in the perm split by ., example: backpack.share.world.world_nether is now [world] [world_nether]
+				for (int i = 0; i < nodes.length; i++) {
+					//perm is backpack.share.world.*, share to all
+					if (i > 0 && nodes[i].equals("*")) {
+						for (World world : Bukkit.getWorlds()) {
+							if (worlds.contains(world)) {
+								continue;
+							}
+							worlds.add(world);
+							//Encountered star node, break out.
+							break;
+						}
+					} else {
+						//perm is backpack.share.world.world_nether.world_end etc
+						World world = Bukkit.getWorld(nodes[i]);
+						if (world != null) {
+							worlds.add(world);
+						}
+					}
+				}
+			}
+		}
+		return worlds;
 	}
 }

@@ -11,7 +11,7 @@
  *
  * As an exception, all classes which do not reference GPL licensed code
  * are hereby licensed under the GNU Lesser Public License, as described
- * in themAlmura Development License version 1.
+ * in Almura Development License version 1.
  *
  * Backpack is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of

@@ -11,7 +11,7 @@
  *
  * As an exception, all classes which do not reference GPL licensed code
  * are hereby licensed under the GNU Lesser Public License, as described
- * in themAlmura Development License version 1.
+ * in Almura Development License version 1.
  *
  * Backpack is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -29,6 +29,9 @@ package com.almuramc.backpack.bukkit.listener;
 import com.almuramc.backpack.bukkit.BackpackPlugin;
 import com.almuramc.backpack.bukkit.util.InventoryUtil;
 import com.almuramc.backpack.bukkit.util.StorageUtil;
+
+import org.getspout.spoutapi.event.spout.SpoutCraftEnableEvent;
+import org.getspout.spoutapi.player.SpoutPlayer;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -96,6 +99,14 @@ public class BackpackListener implements Listener {
 
 		if (backpack.getHolder().equals(player) && backpack.getTitle().equals("Backpack")) {
 			BackpackPlugin.getInstance().getStore().setBackpackFor(player, player.getWorld(), backpack);
+		}
+	}
+
+	@EventHandler
+	public void onSpoutCraftEnable(SpoutCraftEnableEvent event) {
+		SpoutPlayer player = event.getPlayer();
+		if (player.hasPermission("backpack.visible")) {
+			player.setCape(""); //TODO My little secret project
 		}
 	}
 }
