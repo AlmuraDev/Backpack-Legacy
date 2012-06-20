@@ -3,7 +3,8 @@ License.
 
 -----------------------------------------------------------------------
 
-The software is licensed under the LGPL version 3.0.
+The software is licensed under the Lesser GNU Public License version
+3.0.
 
 An exception is made for all classes that utilize or reference any GPL
 licensed code. For these classes. they will be licensed as GPL General

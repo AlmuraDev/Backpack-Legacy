@@ -144,7 +144,6 @@
 					</properties>
 					<includes>
 						<include>src/main/java/**</include>
-						<include>src/main/test/**</include>
 					</includes>
 				</configuration>
 			</plugin>
