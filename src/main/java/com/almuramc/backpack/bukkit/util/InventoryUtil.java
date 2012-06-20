@@ -88,7 +88,7 @@ public class InventoryUtil {
 		return inv;
 	}
 
-	public static final Inventory filterNullsFromInventory(Inventory inventory) {
+	public static final Inventory filterNullsFromInventory(Player player, Inventory inventory) {
 		if (inventory == null) {
 			return null;
 		}
@@ -101,7 +101,8 @@ public class InventoryUtil {
 			}
 			items.add(current);
 		}
-		inventory.setContents(items.toArray(new ItemStack[items.size()]));
-		return inventory;
+		Inventory temp = Bukkit.createInventory(player, items.size());
+		temp.setContents(items.toArray(new ItemStack[items.size()]));
+		return temp;
 	}
 }
