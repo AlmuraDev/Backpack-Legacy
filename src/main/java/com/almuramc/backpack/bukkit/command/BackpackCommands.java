@@ -46,7 +46,7 @@ public class BackpackCommands implements CommandExecutor {
 			//No additional arguments
 			if (strings.length == 0) {
 				if (player.hasPermission("backpack.use")) {
-					Inventory backpack = BackpackPlugin.getInstance().getStore().getBackpackFor(player, world);
+					Inventory backpack = BackpackPlugin.getInstance().getStore().getBackpackFor(player, player.getWorld());
 					if (backpack != null) {
 						player.openInventory(backpack);
 						return true;
@@ -56,7 +56,7 @@ public class BackpackCommands implements CommandExecutor {
 			} else if (strings[0].equalsIgnoreCase("open")) {
 				if (strings.length == 1) {
 					if (player.hasPermission("backpack.use")) {
-						Inventory backpack = BackpackPlugin.getInstance().getStore().getBackpackFor(player, world);
+						Inventory backpack = BackpackPlugin.getInstance().getStore().getBackpackFor(player, player.getWorld());
 						if (backpack != null) {
 							player.openInventory(backpack);
 							return true;
@@ -70,6 +70,7 @@ public class BackpackCommands implements CommandExecutor {
 			if (strings[0].equalsIgnoreCase("workbench")) {
 				if (player.hasPermission("backpack.workbench")) {
 					player.openWorkbench(null, true);
+					return true;
 				}
 			}
 		}
