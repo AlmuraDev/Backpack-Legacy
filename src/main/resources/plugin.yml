@@ -21,7 +21,7 @@ permissions:
         default: true
     backpack.keepitems:
         description: Allows users to keep backpack items on death.
-        default: true
+        default: op
     backpack.upgrade:
         description: Allows users to upgrade their backpacks beyond 9 slots.
         default: op
