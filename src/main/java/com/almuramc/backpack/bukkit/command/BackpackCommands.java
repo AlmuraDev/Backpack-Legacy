@@ -19,13 +19,60 @@
  */
 package com.almuramc.backpack.bukkit.command;
 
+import com.almuramc.backpack.bukkit.BackpackPlugin;
+import com.almuramc.backpack.bukkit.util.StorageUtil;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 
 public class BackpackCommands implements CommandExecutor {
+	private final BackpackPlugin plugin;
+
+	public BackpackCommands(BackpackPlugin instance) {
+		plugin = instance;
+	}
+
 	@Override
 	public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
+		//TODO cleanup
+		if (!(commandSender instanceof Player)) {
+			commandSender.sendMessage("Must be in-game to utilize backpack commands");
+		}
+		Player player = (Player) commandSender;
+		if (command.getName().equalsIgnoreCase("backpack")) {
+			//No additional arguments
+			if (strings.length == 0) {
+				if (player.hasPermission("backpack.use")) {
+					Inventory backpack = BackpackPlugin.getInstance().getStore().getBackpackFor(player, world);
+					if (backpack != null) {
+						player.openInventory(backpack);
+						return true;
+					}
+				}
+			//Open argument
+			} else if (strings[0].equalsIgnoreCase("open")) {
+				if (strings.length == 1) {
+					if (player.hasPermission("backpack.use")) {
+						Inventory backpack = BackpackPlugin.getInstance().getStore().getBackpackFor(player, world);
+						if (backpack != null) {
+							player.openInventory(backpack);
+							return true;
+						}
+					}
+				} else {
+					//TODO Will need to figure out a way to open and save for a player.
+					return true;
+				}
+			}
+			if (strings[0].equalsIgnoreCase("workbench")) {
+				if (player.hasPermission("backpack.workbench")) {
+					player.openWorkbench(null, true);
+				}
+			}
+		}
 		return false;
 	}
 }

@@ -19,6 +19,7 @@
  */
 package com.almuramc.backpack.bukkit;
 
+import com.almuramc.backpack.bukkit.command.BackpackCommands;
 import com.almuramc.backpack.bukkit.listener.BackpackListener;
 import com.almuramc.backpack.bukkit.storage.Storage;
 import com.almuramc.backpack.bukkit.storage.mode.SQLStorage;
@@ -34,6 +35,7 @@ public class BackpackPlugin extends JavaPlugin {
 	private static Storage store;
 	private static CachedConfigurationUtil cached;
 	private static DependencyUtil hooks;
+	private BackpackCommands executor;
 
 	@Override
 	public void onDisable() {
@@ -64,6 +66,9 @@ public class BackpackPlugin extends JavaPlugin {
 		hooks = new DependencyUtil();
 		//Register events
 		Bukkit.getServer().getPluginManager().registerEvents(new BackpackListener(), this);
+		//Register commands
+		executor = new BackpackCommands(this);
+		getCommand("backpack").setExecutor(executor);
 	}
 
 	public static final BackpackPlugin getInstance() {
