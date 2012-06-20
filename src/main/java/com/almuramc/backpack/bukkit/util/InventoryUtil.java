@@ -89,7 +89,7 @@ public class InventoryUtil {
 	}
 
 	public static final Inventory filterNullsFromInventory(Inventory inventory) {
-		if (!hasActualContents(inventory)) {
+		if (inventory == null) {
 			return null;
 		}
 		ItemStack[] contents = inventory.getContents();
