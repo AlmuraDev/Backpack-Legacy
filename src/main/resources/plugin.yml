@@ -1,17 +1,17 @@
-name: Backpack
-version: 1.1-SNAPSHOT
-description: Backpack is a plugin for Spout that gives users a handy backpack for inventory.
-
-author: Zidane
-authors: [Zidane, Dockter]
+name: ${project.name}
+version: ${buildNumber}
+description: ${project.description}
+author: ${project.organization.name}
+website: ${project.organization.url}
 
 main: com.almuramc.backpack.bukkit.BackpackPlugin
 softdepend: [Spout, Vault]
 load: POSTWORLD
+
 commands:
     backpack:
         description: Manage Backpacks
-        usage: /backpack
+        usage: /backpack [command] [arguments]
 permissions:
     backpack.admin:
         description: Gives you access to /backpack clear player

@@ -106,7 +106,7 @@ public class BackpackListener implements Listener {
 	public void onSpoutCraftEnable(SpoutCraftEnableEvent event) {
 		SpoutPlayer player = event.getPlayer();
 		if (player.hasPermission("backpack.visible")) {
-			player.setCape(""); //TODO My little secret project
+			//player.setCape(""); //TODO My little secret project
 		}
 	}
 }

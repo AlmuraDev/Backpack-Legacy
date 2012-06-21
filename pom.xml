@@ -4,7 +4,7 @@
     <!-- Project information -->
     <groupId>com.almuramc</groupId>
     <artifactId>backpack</artifactId>
-    <version>1.1-SNAPSHOT</version>
+    <version>dev-SNAPSHOT</version>
     <name>Backpack</name>
     <url>http://www.almuramc.com</url>
     <description>Backpack is a plugin for Bukkit/Spout that gives users a handy backpack.</description>
@@ -146,37 +146,6 @@
 						<include>src/main/java/**</include>
 					</includes>
 				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-shade-plugin</artifactId>
-				<version>1.6</version>
-				<executions>
-					<execution>
-						<phase>package</phase>
-						<goals>
-							<goal>shade</goal>
-						</goals>
-						<configuration>
-							<filters>
-								<filter>
-									<artifact>*:*</artifact>
-									<excludes>
-										<exclude>lib/**</exclude>
-										<exclude>templates/**</exclude>
-										<exclude>META-INF/*.xml</exclude>
-										<exclude>META-INF/*.txt</exclude>
-										<exclude>**/LICENSE</exclude>
-										<exclude>**/NOTICE</exclude>
-										<exclude>**/DEPENDENCIES</exclude>
-										<exclude>**/*.java</exclude>
-									</excludes>
-								</filter>
-							</filters>
-							<minimizeJar>true</minimizeJar>
-						</configuration>
-					</execution>
-				</executions>
 			</plugin>
         </plugins>
     </build>
