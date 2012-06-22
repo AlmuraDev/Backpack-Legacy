@@ -27,10 +27,12 @@
 package com.almuramc.backpack.bukkit.input;
 
 import com.almuramc.backpack.bukkit.BackpackPlugin;
+import com.almuramc.backpack.bukkit.gui.UpgradePanel;
 
 import org.getspout.spoutapi.event.input.KeyBindingEvent;
 import org.getspout.spoutapi.gui.ScreenType;
 import org.getspout.spoutapi.keyboard.BindingExecutionDelegate;
+import org.getspout.spoutapi.player.SpoutPlayer;
 
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -41,6 +43,7 @@ public class PanelInputHandler implements BindingExecutionDelegate {
 	public void keyPressed(KeyBindingEvent keyBindingEvent) {
 		Player player = keyBindingEvent.getPlayer();
 		World world = player.getWorld();
+		SpoutPlayer sPlayer = keyBindingEvent.getPlayer();
 		if (player.hasPermission("backpack.admin")) {
 			//Check if backpack is open, close if so.
 			InventoryView inventory = player.getOpenInventory();
@@ -52,7 +55,8 @@ public class PanelInputHandler implements BindingExecutionDelegate {
 			if (!keyBindingEvent.getScreenType().equals(ScreenType.GAME_SCREEN)) {
 				return;
 			}
-
+			
+			sPlayer.getMainScreen().attachPopupScreen(new UpgradePanel(sPlayer));	
 			// Call Panel GUI
 
 		}
