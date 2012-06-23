@@ -187,7 +187,7 @@ public class YamlStorage implements Storage {
 			}
 			ItemStack[] contents = backpack.getContents();
 			ConfigurationSection parent = reader.getConfigurationSection("backpack");
-			for (int i = 0; i < contents.length; i++) {
+			for (int i = 0; i < 54; i++) {
 				//Slot doesn't exist
 				ConfigurationSection slot;
 				if (!reader.isConfigurationSection("Slot " + i)) {
