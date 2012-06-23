@@ -162,7 +162,7 @@ public class YamlStorage implements Storage {
 				size = psize;
 			}
 			for (int i = 0; i < size; i++) {
-				if (keys[i] == null) {
+				if (i >= keys.length) {
 					items.add(new ItemStack(Material.AIR));
 				} else {
 					ConfigurationSection sub = parent.getConfigurationSection(keys[i]);
