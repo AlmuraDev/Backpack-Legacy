@@ -156,7 +156,7 @@ public class YamlStorage implements Storage {
 			ConfigurationSection parent = reader.getConfigurationSection("backpack");
 			Set<String> temp = parent.getKeys(false);
 			String[] keys = temp.toArray(new String[temp.size()]);
-			int size = parent.getInt("contents-size", PermissionUtil.getSizeByPermFor(player));
+			int size = parent.getInt("contents-amount", PermissionUtil.getSizeByPermFor(player));
 			for (int i = 0; i < size; i++) {
 				ConfigurationSection sub = parent.getConfigurationSection(keys[i]);
 				ItemStack item = sub.getItemStack("ItemStack", new ItemStack(Material.AIR));
