@@ -195,7 +195,7 @@ public class YamlStorage implements Storage {
 				} else {
 					slot = parent.getConfigurationSection("Slot " + i);
 				}
-				if (i > contents.length) {
+				if (i >= contents.length) {
 					continue;
 				}
 				slot.set("ItemStack", contents[i]);
