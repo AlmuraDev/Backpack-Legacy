@@ -162,9 +162,13 @@ public class YamlStorage implements Storage {
 				size = psize;
 			}
 			for (int i = 0; i < size; i++) {
-				ConfigurationSection sub = parent.getConfigurationSection(keys[i]);
-				ItemStack item = sub.getItemStack("ItemStack", new ItemStack(Material.AIR));
-				items.add(item);
+				if (keys[i] == null) {
+					items.add(new ItemStack(Material.AIR));
+				} else {
+					ConfigurationSection sub = parent.getConfigurationSection(keys[i]);
+					ItemStack item = sub.getItemStack("ItemStack", new ItemStack(Material.AIR));
+					items.add(item);
+				}
 			}
 			Inventory backpack = Bukkit.createInventory(player, size, "Backpack");
 			backpack.setContents(items.toArray(new ItemStack[items.size()]));
