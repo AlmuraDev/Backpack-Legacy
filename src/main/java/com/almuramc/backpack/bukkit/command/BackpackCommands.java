@@ -28,6 +28,7 @@ package com.almuramc.backpack.bukkit.command;
 
 import com.almuramc.backpack.bukkit.BackpackPlugin;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -35,10 +36,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
 public class BackpackCommands implements CommandExecutor {
-	private final BackpackPlugin plugin;
-
+	//TODO needed
 	public BackpackCommands(BackpackPlugin instance) {
-		plugin = instance;
 	}
 
 	@Override
@@ -57,12 +56,20 @@ public class BackpackCommands implements CommandExecutor {
 			} else if (strings[0].equalsIgnoreCase("open")) {
 				if (strings.length == 1) {
 					return openBackpack(player);
-				} else {
-					//TODO Will need to figure out a way to open and save for a player.
-					return true;
+				} else if (strings.length == 2) {
+					//TODO cleanup code dupe later
+					Player other = Bukkit.getPlayer(strings[1]);
+					if (other != null && other.getWorld() != null) {
+						Inventory backpack = BackpackPlugin.getInstance().getStore().getBackpackFor(other, other.getWorld());
+						if (backpack != null) {
+							Inventory toView = Bukkit.createInventory(player, backpack.getSize(), other.getName().endsWith("s") ? other.getName() + "' Backpack" : other.getName() + "'s Backpack");
+							toView.setContents(backpack.getContents());
+							player.openInventory(toView);
+							return true;
+						}
+					}
 				}
-			}
-			if (strings[0].equalsIgnoreCase("workbench")) {
+			} else if (strings[0].equalsIgnoreCase("workbench")) {
 				return openWorkbench(player);
 			}
 		}

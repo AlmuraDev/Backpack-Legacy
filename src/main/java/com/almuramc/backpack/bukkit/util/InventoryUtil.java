@@ -48,7 +48,7 @@ public class InventoryUtil {
 		ArrayList<ItemStack> resized = new ArrayList<ItemStack>();
 		ItemStack[] items = inventory.getContents();
 		for (int i = 0; i < size; i++) {
-			if (i > items.length) {
+			if (i > items.length - 1) {
 				resized.add(null); //TODO may cause an issue
 			} else {
 				resized.add(items[i]);

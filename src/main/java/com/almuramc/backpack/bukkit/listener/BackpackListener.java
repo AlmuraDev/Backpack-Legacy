@@ -30,15 +30,15 @@ import com.almuramc.backpack.bukkit.BackpackPlugin;
 import com.almuramc.backpack.bukkit.util.InventoryUtil;
 import com.almuramc.backpack.bukkit.util.StorageUtil;
 
-import org.getspout.spoutapi.event.spout.SpoutCraftEnableEvent;
-import org.getspout.spoutapi.player.SpoutPlayer;
-
+import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.server.PluginEnableEvent;
@@ -52,11 +52,30 @@ public class BackpackListener implements Listener {
 		onBackpackClose(event.getView(), (Player) event.getPlayer());
 	}
 
-	@EventHandler(priority = EventPriority.MONITOR)
-	public void onPlayerTeleport(PlayerTeleportEvent event) {
-		// World Detection & Config pull to see if player can share bp inventory.
-	}
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onInventoryOpen(InventoryOpenEvent event) {
+		if(event.isCancelled()) {
+			event.setCancelled(true);
+			return;
+		}
+		Player player = (Player) event.getPlayer();
+		InventoryView viewer = event.getView();
+		String windowTitle = event.getView().getTopInventory().getTitle();
+		if (viewer.getPlayer().equals(player)) {
+			if (windowTitle.equals("Backpack")) {
 
+			} else if (windowTitle.contains("Backpack")) {
+				String name = windowTitle.split("\\s+")[0].split("'")[0];
+				Player other = Bukkit.getPlayer(name);
+				if (other != null) {
+					World world = other.getWorld();
+					if (Bukkit.getWorlds().contains(world)) {
+						viewer.getTopInventory().setContents(StorageUtil.get(other, world).getContents());
+					}
+				}
+			}
+		}
+	}
 	@EventHandler
 	public void onPlayerKick(PlayerKickEvent event) {
 		if (event.isCancelled()) {
@@ -90,7 +109,6 @@ public class BackpackListener implements Listener {
 
 	@EventHandler
 	public void onPluginEnable(PluginEnableEvent event) {
-		//This should cover our dependency issues
 		BackpackPlugin.getInstance().getHooks().setup();
 	}
 
@@ -102,11 +120,5 @@ public class BackpackListener implements Listener {
 		}
 	}
 
-	@EventHandler
-	public void onSpoutCraftEnable(SpoutCraftEnableEvent event) {
-		SpoutPlayer player = event.getPlayer();
-		if (player.hasPermission("backpack.visible")) {
-			//player.setCape(""); //TODO My little secret project
-		}
-	}
+	private void onBackpackOpen()
 }
