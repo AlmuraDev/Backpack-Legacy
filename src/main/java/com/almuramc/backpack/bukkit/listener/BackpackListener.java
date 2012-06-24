@@ -119,6 +119,4 @@ public class BackpackListener implements Listener {
 			BackpackPlugin.getInstance().getStore().setBackpackFor(player, player.getWorld(), backpack);
 		}
 	}
-
-	private void onBackpackOpen()
 }

@@ -49,7 +49,7 @@ public class InventoryUtil {
 		ItemStack[] items = inventory.getContents();
 		for (int i = 0; i < size; i++) {
 			if (i > items.length - 1) {
-				resized.add(null); //TODO may cause an issue
+				break;
 			} else {
 				resized.add(items[i]);
 			}
