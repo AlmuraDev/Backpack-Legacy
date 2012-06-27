@@ -42,6 +42,12 @@ admin:
 backpack:
   no-perm-default-size: 9
   hotkey: KEY_B
+  cost:
+    slot18: 0
+    slot27: 0
+    slot36: 0
+    slot45: 0
+    slot54: 0
 workbench:  
   hotkey: KEY_N
 sql:

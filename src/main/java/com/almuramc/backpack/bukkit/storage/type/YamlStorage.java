@@ -113,7 +113,7 @@ public class YamlStorage extends Storage {
 				String[] keys = temp.toArray(new String[temp.size()]);
 				int psize = PermissionHelper.getSizeByPermFor(player);
 				int size = READER.getInt("contents-amount", psize);
-				if (size != psize) {
+				if (size > psize) {
 					size = psize;
 				}
 				for (int i = 0; i < size; i++) {

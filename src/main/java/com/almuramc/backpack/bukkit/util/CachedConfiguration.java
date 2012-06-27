@@ -29,8 +29,10 @@ package com.almuramc.backpack.bukkit.util;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
 import com.almuramc.backpack.bukkit.BackpackPlugin;
 
@@ -101,6 +103,14 @@ public final class CachedConfiguration {
 		}
 		elements.removeAll(Collections.singletonList(null));
 		return new HashSet<String>(elements);
+	}
+
+	public HashMap<String, Double> getUpgradeCosts() {
+		HashMap<String, Double> costMap = new HashMap<String, Double>();
+		for (String key : cachedConfig.getStringList("backpack.cost")) {
+			costMap.put(key, cachedConfig.getDouble("backpack.cost." + key, 0));
+		}
+		return costMap;
 	}
 
 	/**

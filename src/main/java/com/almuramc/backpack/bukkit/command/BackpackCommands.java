@@ -28,14 +28,17 @@ package com.almuramc.backpack.bukkit.command;
 
 import com.almuramc.backpack.bukkit.BackpackPlugin;
 import com.almuramc.backpack.bukkit.util.CachedConfiguration;
+import com.almuramc.backpack.bukkit.util.PermissionHelper;
 
 import org.getspout.spoutapi.player.SpoutPlayer;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 
 public class BackpackCommands implements CommandExecutor {
 	private static final CachedConfiguration CONFIG = BackpackPlugin.getInstance().getCached();
@@ -62,6 +65,32 @@ public class BackpackCommands implements CommandExecutor {
 				return true;
 			} else if (strings[0].equalsIgnoreCase("workbench") && player != null) {
 				return openWorkbench(player);
+			} else if (strings[0].equalsIgnoreCase("upgrade") && player != null) {
+				if (!BackpackPlugin.getInstance().getHooks().getPermHook().has(player.getWorld().getName(), player.getName(), "backpack.upgrade")) {
+					 return true;
+				}
+				Inventory backpack = BackpackPlugin.getInstance().getStore().get(player, player.getWorld());
+				if (backpack.getSize() >= 54) {
+					//TODO let user know Backpack can't be upgraded further
+					return true;
+				}
+				int newSize = backpack.getSize() + 9;
+				if (newSize > PermissionHelper.getSizeByPermFor(player)) {
+					//TODO let user know they can't upgrade further cause of perms
+					return true;
+				}
+				double cost = CONFIG.getUpgradeCosts().get("Slot" + newSize);
+				if (CONFIG.useEconomy() && BackpackPlugin.getInstance().getHooks().getPermHook().has(player.getWorld().getName(), player.getName(), "backpack.noupgradecost")) {
+					if (!BackpackPlugin.getInstance().getHooks().getEconHook().has(player.getName(), cost)) {
+						//TODO let the user know they don't have enough money (maybe Vault does).
+						return true;
+					} else {
+						BackpackPlugin.getInstance().getHooks().getEconHook().withdrawPlayer(player.getName(), cost);
+					}
+				}
+				Inventory newBackpack = Bukkit.createInventory(player, newSize, "Backpack");
+				newBackpack.setContents(backpack.getContents());
+				BackpackPlugin.getInstance().getStore().save(player, player.getWorld(), newBackpack);
 			} else {
 				commandSender.sendMessage("[Backpack] Must be in-game to utilize player-only commands!");
 			}

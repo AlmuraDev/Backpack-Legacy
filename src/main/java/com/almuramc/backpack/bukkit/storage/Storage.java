@@ -55,10 +55,10 @@ public abstract class Storage {
 
 	public final Inventory get(Player player, World world) {
 		HashMap<String, Inventory> map = INVENTORIES.get(world.getUID());
-		int size = PermissionHelper.getSizeByPermFor(player);
-		Inventory current = contains(player, world) ? map.get(player.getName()) : Bukkit.createInventory(player, size, "Backpack");
-		if (size != current.getSize()) {
-			current = InventoryHelper.resizeInventory(player, world, current, size);
+		int maxSize = PermissionHelper.getSizeByPermFor(player);
+		Inventory current = contains(player, world) ? map.get(player.getName()) : Bukkit.createInventory(player, maxSize, "Backpack");
+		if (current.getSize() > maxSize) {
+			current = InventoryHelper.resizeInventory(player, world, current, maxSize);
 		}
 		return current;
 	}

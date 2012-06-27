@@ -32,3 +32,6 @@ permissions:
     backpack.noblacklist:
         description: Allows users to bypass items listed in blacklist.yml
         default: false
+    backpack.noupgradecost:
+        description: Allows users to bypass the upgrade cost.
+        default: false
