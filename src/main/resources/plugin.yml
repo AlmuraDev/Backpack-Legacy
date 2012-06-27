@@ -5,7 +5,8 @@ author: ${project.organization.name}
 website: ${project.organization.url}
 
 main: com.almuramc.backpack.bukkit.BackpackPlugin
-softdepend: [Spout, Vault]
+depend: [Vault]
+softdepend: [Spout]
 load: POSTWORLD
 
 commands:
@@ -28,3 +29,6 @@ permissions:
     backpack.workbench:
         description: Allows users to use workbench if it exists in the users backpack or inventory.
         default: op
+    backpack.noblacklist:
+        description: Allows users to bypass items listed in blacklist.yml
+        default: false

@@ -26,6 +26,8 @@
  */
 package com.almuramc.backpack.bukkit.input;
 
+import com.almuramc.backpack.bukkit.BackpackPlugin;
+
 import org.getspout.spoutapi.event.input.KeyBindingEvent;
 import org.getspout.spoutapi.gui.ScreenType;
 import org.getspout.spoutapi.keyboard.BindingExecutionDelegate;
@@ -43,7 +45,7 @@ public class WorkbenchInputHandler implements BindingExecutionDelegate {
 		if (!keyBindingEvent.getScreenType().equals(ScreenType.GAME_SCREEN)) {
 			return;
 		}
-		if (player.hasPermission("backpack.workbench")) {
+		if (BackpackPlugin.getInstance().getHooks().getPermHook().has(player.getWorld().getName(), player.getName(), "backpack.workbench")) {
 			player.openWorkbench(null, true);
 		}
 	}

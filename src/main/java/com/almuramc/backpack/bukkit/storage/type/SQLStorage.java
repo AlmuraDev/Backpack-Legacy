@@ -24,14 +24,27 @@
  * <http://www.gnu.org/licenses/> for the GNU General Public License and
  * the GNU Lesser Public License.
  */
-package com.almuramc.backpack.bukkit.util.exception;
+package com.almuramc.backpack.bukkit.storage.type;
 
-public class InvalidDependencyException extends Exception {
-	public InvalidDependencyException() {
-		super("Invalid dependency encountered!");
+import com.almuramc.backpack.bukkit.storage.Storage;
+
+import org.bukkit.World;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+
+public class SQLStorage extends Storage {
+	@Override
+	public void initialize() {
+
 	}
 
-	public InvalidDependencyException(String message) {
-		super(message);
+	@Override
+	public Inventory load(Player player, World world) {
+		return null;
+	}
+
+	@Override
+	public void save(Player player, World world, Inventory inventory) {
+
 	}
 }

@@ -27,55 +27,95 @@
 package com.almuramc.backpack.bukkit.listener;
 
 import com.almuramc.backpack.bukkit.BackpackPlugin;
-import com.almuramc.backpack.bukkit.util.InventoryUtil;
-import com.almuramc.backpack.bukkit.util.StorageUtil;
+import com.almuramc.backpack.bukkit.storage.Storage;
+import com.almuramc.backpack.bukkit.util.InventoryHelper;
+import com.almuramc.backpack.bukkit.util.PermissionHelper;
+
+import org.getspout.spoutapi.player.SpoutPlayer;
 
 import org.bukkit.Bukkit;
-import org.bukkit.World;
+import org.bukkit.Material;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.PlayerKickEvent;
-import org.bukkit.event.player.PlayerTeleportEvent;
-import org.bukkit.event.server.PluginEnableEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.world.WorldLoadEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 
 public class BackpackListener implements Listener {
+	private static final Storage store = BackpackPlugin.getInstance().getStore();
+
+	@EventHandler
+	public void onEntityDeath(EntityDeathEvent event) {
+		if (event.getEntity() instanceof Player) {
+			Player player = (Player) event.getEntity();
+			if (BackpackPlugin.getInstance().getHooks().getPermHook().has(player.getWorld().getName(), player.getName(), "backpack.keepitems")) {
+				return;
+			}
+			Inventory inventory = store.load(player, player.getWorld());
+			ItemStack[] contents = InventoryHelper.getAllValidItems(inventory);
+			if (contents == null) {
+				return;
+			}
+			for (ItemStack toDrop : contents) {
+				player.getWorld().dropItemNaturally(player.getLocation(), toDrop);
+			}
+			store.save(player, player.getWorld(), Bukkit.createInventory(player, PermissionHelper.getSizeByPermFor(player), "Backpack"));
+		}
+	}
+
+	@EventHandler
+	public void onInventoryClick(InventoryClickEvent event) {
+		if (event.isCancelled()) {
+			event.setCancelled(true);
+			return;
+		}
+		Player who = (Player) event.getWhoClicked();
+		if (!event.getView().getTopInventory().getTitle().equals("Backpack") || BackpackPlugin.getInstance().getHooks().getPermHook().has(who.getWorld().getName(), who.getName(), "backpack.noblacklist")) {
+			return;
+		}
+		Material material = event.getCurrentItem().getType();
+		String mat = material.name();
+		for (String name : BackpackPlugin.getInstance().getCached().getBlacklistedItems()) {
+			if (name.equalsIgnoreCase(mat)) {
+				if (BackpackPlugin.getInstance().getCached().useSpout()) {
+					((SpoutPlayer) who).sendNotification("Backpack", "Item is blacklisted", material);
+				} else {
+					who.sendMessage("[Backpack] " + mat + " is blacklisted!");
+				}
+				event.setCancelled(true);
+				return;
+			}
+		}
+	}
+
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onInventoryClose(InventoryCloseEvent event) {
-		onBackpackClose(event.getView(), (Player) event.getPlayer());
+		onBackpackClose(event.getView(), event.getPlayer());
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onInventoryOpen(InventoryOpenEvent event) {
-		if(event.isCancelled()) {
+		if (event.isCancelled()) {
 			event.setCancelled(true);
 			return;
 		}
 		Player player = (Player) event.getPlayer();
-		InventoryView viewer = event.getView();
-		String windowTitle = event.getView().getTopInventory().getTitle();
-		if (viewer.getPlayer().equals(player)) {
-			if (windowTitle.equals("Backpack")) {
-
-			} else if (windowTitle.contains("Backpack")) {
-				String name = windowTitle.split("\\s+")[0].split("'")[0];
-				Player other = Bukkit.getPlayer(name);
-				if (other != null) {
-					World world = other.getWorld();
-					if (Bukkit.getWorlds().contains(world)) {
-						viewer.getTopInventory().setContents(StorageUtil.get(other, world).getContents());
-					}
-				}
-			}
+		if (!BackpackPlugin.getInstance().getHooks().getPermHook().has(player.getWorld().getName(), player.getName(), "backpack.use")) {
+			event.setCancelled(true);
+			return;
 		}
 	}
+
 	@EventHandler
 	public void onPlayerKick(PlayerKickEvent event) {
 		if (event.isCancelled()) {
@@ -86,37 +126,21 @@ public class BackpackListener implements Listener {
 	}
 
 	@EventHandler
-	public void onEntityDeath(EntityDeathEvent event) {
-		if (event.getEntity() instanceof Player) {
-			Player player = (Player) event.getEntity();
-			if (player.hasPermission("backpack.keepitems")) {
-				return;
-			}
-			Inventory inventory = StorageUtil.get(player, player.getWorld());
-			if (inventory == null) {
-				return;
-			}
-			ItemStack[] contents = InventoryUtil.getAllValidItems(inventory);
-			if (contents == null) {
-				return;
-			}
-			for (ItemStack toDrop : contents) {
-				player.getWorld().dropItemNaturally(player.getLocation(), toDrop);
-			}
-			BackpackPlugin.getInstance().getStore().setBackpackFor(player, player.getWorld(), StorageUtil.put(player, player.getWorld()));
-		}
+	public void onPlayerQuit(PlayerQuitEvent event) {
+		store.put(event.getPlayer(), event.getPlayer().getWorld(), null);
 	}
 
 	@EventHandler
-	public void onPluginEnable(PluginEnableEvent event) {
-		BackpackPlugin.getInstance().getHooks().setup();
+	public void onWorldLoad(WorldLoadEvent event) {
+		store.initialize();
 	}
 
-	private void onBackpackClose(InventoryView viewer, Player player) {
+	private void onBackpackClose(InventoryView viewer, HumanEntity entity) {
+		Player player = (Player) entity;
 		Inventory backpack = viewer.getTopInventory();
 
 		if (backpack.getHolder().equals(player) && backpack.getTitle().equals("Backpack")) {
-			BackpackPlugin.getInstance().getStore().setBackpackFor(player, player.getWorld(), backpack);
+			store.save(player, player.getWorld(), backpack);
 		}
 	}
 }

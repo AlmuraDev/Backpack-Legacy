@@ -27,68 +27,58 @@
 package com.almuramc.backpack.bukkit.command;
 
 import com.almuramc.backpack.bukkit.BackpackPlugin;
+import com.almuramc.backpack.bukkit.util.CachedConfiguration;
 
-import org.bukkit.Bukkit;
+import org.getspout.spoutapi.player.SpoutPlayer;
+
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 
 public class BackpackCommands implements CommandExecutor {
-	//TODO needed
-	public BackpackCommands(BackpackPlugin instance) {
-	}
+	private static final CachedConfiguration CONFIG = BackpackPlugin.getInstance().getCached();
 
 	@Override
 	public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
-		//TODO cleanup
-		if (!(commandSender instanceof Player)) {
-			commandSender.sendMessage("Must be in-game to utilize backpack commands");
-			return false;
-		}
-		Player player = (Player) commandSender;
 		if (command.getName().equalsIgnoreCase("backpack")) {
-			//No additional arguments
-			if (strings.length == 0) {
+			Player player = null;
+			if (commandSender instanceof Player) {
+				player = (Player) commandSender;
+			}
+
+			if (strings.length == 0 && player != null) {
 				return openBackpack(player);
-				//Open argument
-			} else if (strings[0].equalsIgnoreCase("open")) {
-				if (strings.length == 1) {
-					return openBackpack(player);
-				} else if (strings.length == 2) {
-					//TODO cleanup code dupe later
-					Player other = Bukkit.getPlayer(strings[1]);
-					if (other != null && other.getWorld() != null) {
-						Inventory backpack = BackpackPlugin.getInstance().getStore().getBackpackFor(other, other.getWorld());
-						if (backpack != null) {
-							Inventory toView = Bukkit.createInventory(player, backpack.getSize(), other.getName().endsWith("s") ? other.getName() + "' Backpack" : other.getName() + "'s Backpack");
-							toView.setContents(backpack.getContents());
-							player.openInventory(toView);
-							return true;
-						}
+			} else if (strings.length > 0 && strings[0].equalsIgnoreCase("reload")) {
+				CONFIG.reload();
+				if (player != null) {
+					if (CONFIG.useSpout()) {
+						((SpoutPlayer) player).sendNotification("Backpack", "Configuration reloaded", Material.CAKE);
 					}
+				} else {
+					commandSender.sendMessage("[Backpack] Configuration reloaded");
 				}
-			} else if (strings[0].equalsIgnoreCase("workbench")) {
+				return true;
+			} else if (strings[0].equalsIgnoreCase("workbench") && player != null) {
 				return openWorkbench(player);
+			} else {
+				commandSender.sendMessage("[Backpack] Must be in-game to utilize player-only commands!");
 			}
 		}
 		return false;
 	}
 
 	private boolean openBackpack(Player player) {
-		if (player.hasPermission("backpack.use")) {
-			Inventory backpack = BackpackPlugin.getInstance().getStore().getBackpackFor(player, player.getWorld());
-			if (backpack != null) {
-				player.openInventory(backpack);
-				return true;
-			}
+		if (BackpackPlugin.getInstance().getHooks().getPermHook().has(player.getWorld().getName(), player.getName(), "backpack.use")) {
+			player.openInventory(BackpackPlugin.getInstance().getStore().load(player, player.getWorld()));
+			return true;
 		}
 		return false;
 	}
 
 	private boolean openWorkbench(Player player) {
-		if (player.hasPermission("backpack.workbench")) {
+		if (BackpackPlugin.getInstance().getHooks().getPermHook().has(player.getWorld().getName(), player.getName(), "backpack.workbench")) {
 			player.openWorkbench(null, true);
 			return true;
 		}

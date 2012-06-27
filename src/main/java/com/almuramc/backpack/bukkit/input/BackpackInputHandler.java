@@ -32,37 +32,30 @@ import org.getspout.spoutapi.event.input.KeyBindingEvent;
 import org.getspout.spoutapi.gui.ScreenType;
 import org.getspout.spoutapi.keyboard.BindingExecutionDelegate;
 
+import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryView;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 
 public class BackpackInputHandler implements BindingExecutionDelegate {
 	@Override
 	public void keyPressed(KeyBindingEvent keyBindingEvent) {
 		Player player = keyBindingEvent.getPlayer();
 		World world = player.getWorld();
-		if (player.hasPermission("backpack.use")) {
-			//Check if backpack is open, close if so.
-			InventoryView inventory = player.getOpenInventory();
-			if (inventory.getTopInventory().getTitle().equals("Backpack")) {
-				BackpackPlugin.getInstance().getStore().setBackpackFor(player, world, inventory.getTopInventory());
-				player.closeInventory();
-			}
-			//Only open backpack on game screen
-			if (!keyBindingEvent.getScreenType().equals(ScreenType.GAME_SCREEN)) {
-				return;
-			}
-			Inventory backpack = BackpackPlugin.getInstance().getStore().getBackpackFor(player, world);
-			if (backpack == null) {
-				return;
-			}
-			player.openInventory(backpack);
+		if (player.getOpenInventory().getTopInventory().getTitle().equals("Backpack")) {
+			//Thanks Bukkit for this total hack.
+			Bukkit.getPluginManager().callEvent(new InventoryCloseEvent(player.getOpenInventory()));
+			player.closeInventory();
 		}
+		//Only open backpack on game screen
+		if (!keyBindingEvent.getScreenType().equals(ScreenType.GAME_SCREEN)) {
+			return;
+		}
+		player.openInventory(BackpackPlugin.getInstance().getStore().load(player, world));
 	}
 
 	@Override
 	public void keyReleased(KeyBindingEvent keyBindingEvent) {
-		//Do nothing, handled in onInventoryClose within BackpackListener
+		//Do nothing
 	}
 }

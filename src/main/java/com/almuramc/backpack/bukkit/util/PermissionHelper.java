@@ -26,21 +26,18 @@
  */
 package com.almuramc.backpack.bukkit.util;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.List;
 
 import com.almuramc.backpack.bukkit.BackpackPlugin;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
-import org.bukkit.permissions.PermissionAttachmentInfo;
 
 /**
  * Simple class to handle checking of permissions.
  */
-public class PermissionUtil {
+public class PermissionHelper {
 	private static final String[] BACKPACK_SIZE_PERMS = {
 			"backpack.size.9",
 			"backpack.size.18",
@@ -59,18 +56,13 @@ public class PermissionUtil {
 	public static int getSizeByPermFor(Player player) {
 		String found;
 		int size = -1;
-		for (PermissionAttachmentInfo perm : player.getEffectivePermissions()) {
-			for (String sizePerm : BACKPACK_SIZE_PERMS) {
-				//Find a valid size perm
-				if (perm.getPermission().equals(sizePerm)) {
-					//Store the found permission.
-					found = perm.getPermission();
-					//Splice out the size
-					int temp = Integer.parseInt(found.split("backpack.size.")[1]);
-					//Only set biggest size
-					if (temp > size) {
-						size = temp;
-					}
+		for (String perm : BACKPACK_SIZE_PERMS) {
+			if (BackpackPlugin.getInstance().getHooks().getPermHook().has(player.getWorld().getName(), player.getName(), perm)) {
+				found = perm;
+				int temp = Integer.parseInt(found.split("backpack.size.")[1]);
+				//Only set biggest size
+				if (temp > size) {
+					size = temp;
 				}
 			}
 		}
@@ -78,16 +70,6 @@ public class PermissionUtil {
 			return BackpackPlugin.getInstance().getCached().getDefaultSize();
 		}
 		return size;
-	}
-
-	public static boolean canUseBackpackIn(String perm, World world) {
-		if (perm.contains("backpack.") && perm.contains(".use")) {
-			String worldName = perm.split("backpack.")[1].split(".use")[0];
-			if (Bukkit.getWorld(worldName) != null && world.getName().equals(worldName)) {
-				return true;
-			}
-		}
-		return false;
 	}
 
 	public static LinkedList<World> getWorldsToShareTo(String perm) {

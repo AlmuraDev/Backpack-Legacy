@@ -28,9 +28,8 @@ package com.almuramc.backpack.bukkit.gui;
 
 import java.util.logging.Logger;
 
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.player.PlayerQuitEvent;
+import com.almuramc.backpack.bukkit.BackpackPlugin;
+
 import org.getspout.spoutapi.gui.GenericButton;
 import org.getspout.spoutapi.gui.GenericLabel;
 import org.getspout.spoutapi.gui.GenericPopup;
@@ -40,49 +39,47 @@ import org.getspout.spoutapi.gui.Screen;
 import org.getspout.spoutapi.gui.WidgetAnchor;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
-import com.almuramc.backpack.bukkit.BackpackPlugin;
-
 public class UpgradePanel extends GenericPopup {
-	final GenericButton close;	
+	final GenericButton close;
 	private final SpoutPlayer player;
 	public final Logger log = Logger.getLogger("Minecraft");
 
 	public UpgradePanel(SpoutPlayer player) {
-		super();		
+		super();
 		this.player = player;
-	
+
 		// Screen Layout
-		GenericTexture border = new GenericTexture("http://www.almuramc.com/images/backpack.png");		
+		GenericTexture border = new GenericTexture("http://www.almuramc.com/images/backpack.png");
 		border.setAnchor(WidgetAnchor.CENTER_CENTER);
 		border.setPriority(RenderPriority.High);
-		border.setWidth(626).setHeight(240);		
+		border.setWidth(626).setHeight(240);
 		border.shiftXPos(-220).shiftYPos(-128);
-		
+
 		// Screen Title
 		GenericLabel label = new GenericLabel();
 		label.setText("Backpack Upgrade");
 		label.setAnchor(WidgetAnchor.CENTER_CENTER);
-		label.shiftXPos(-35).shiftYPos(-122);		
+		label.shiftXPos(-35).shiftYPos(-122);
 		label.setPriority(RenderPriority.Lowest);
 		label.setWidth(-1).setHeight(-1);
-		
+
 		// Close Button
 		close = new CloseButton(this);
 		close.setAuto(true);
 		close.setAnchor(WidgetAnchor.CENTER_CENTER);
 		close.setHeight(18).setWidth(40);
 		close.shiftXPos(142).shiftYPos(87);
-			
+
 		// Attach Widgets to MainScreen.
 		attachWidget(BackpackPlugin.getInstance(), label);
-		attachWidget(BackpackPlugin.getInstance(), border);		
+		attachWidget(BackpackPlugin.getInstance(), border);
 		attachWidget(BackpackPlugin.getInstance(), close);
 	}
-		
+
 	void onCloseClick() {
-		Screen screen = ((SpoutPlayer) player).getMainScreen();				
+		Screen screen = ((SpoutPlayer) player).getMainScreen();
 		screen.removeWidget(this);
 		//player.getMainScreen().closePopup();
-		player.closeActiveWindow();		
+		player.closeActiveWindow();
 	}
 }

@@ -29,10 +29,10 @@ package com.almuramc.backpack.bukkit;
 import com.almuramc.backpack.bukkit.command.BackpackCommands;
 import com.almuramc.backpack.bukkit.listener.BackpackListener;
 import com.almuramc.backpack.bukkit.storage.Storage;
-import com.almuramc.backpack.bukkit.storage.mode.SQLStorage;
-import com.almuramc.backpack.bukkit.storage.mode.YamlStorage;
-import com.almuramc.backpack.bukkit.util.CachedConfigurationUtil;
-import com.almuramc.backpack.bukkit.util.DependencyUtil;
+import com.almuramc.backpack.bukkit.storage.type.SQLStorage;
+import com.almuramc.backpack.bukkit.storage.type.YamlStorage;
+import com.almuramc.backpack.bukkit.util.CachedConfiguration;
+import com.almuramc.backpack.bukkit.util.Dependency;
 
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -40,19 +40,16 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class BackpackPlugin extends JavaPlugin {
 	private static BackpackPlugin instance;
 	private static Storage store;
-	private static CachedConfigurationUtil cached;
-	private static DependencyUtil hooks;
+	private static CachedConfiguration cached;
+	private static Dependency hooks;
 	private BackpackCommands executor;
 
 	@Override
 	public void onDisable() {
-		if (cached != null) {
-			cached.save();
-			cached = null;
-		}
-		store.onUnload();
+		cached = null;
 		instance = null;
 		store = null;
+		hooks = null;
 	}
 
 	@Override
@@ -60,7 +57,7 @@ public class BackpackPlugin extends JavaPlugin {
 		//Assign plugin instance
 		instance = this;
 		//Setup config
-		cached = new CachedConfigurationUtil();
+		cached = new CachedConfiguration();
 		//Assign configured storage
 		if (cached.useSQL()) {
 			store = new SQLStorage();
@@ -68,13 +65,14 @@ public class BackpackPlugin extends JavaPlugin {
 			store = new YamlStorage(getDataFolder());
 		}
 		//Setup storage
-		store.onLoad();
+		store.initialize();
 		//Setup dependencies
-		hooks = new DependencyUtil();
+		hooks = new Dependency();
+		hooks.setup();
 		//Register events
 		Bukkit.getServer().getPluginManager().registerEvents(new BackpackListener(), this);
 		//Register commands
-		executor = new BackpackCommands(this);
+		executor = new BackpackCommands();
 		getCommand("backpack").setExecutor(executor);
 	}
 
@@ -86,11 +84,11 @@ public class BackpackPlugin extends JavaPlugin {
 		return store;
 	}
 
-	public final CachedConfigurationUtil getCached() {
+	public final CachedConfiguration getCached() {
 		return cached;
 	}
 
-	public final DependencyUtil getHooks() {
+	public final Dependency getHooks() {
 		return hooks;
 	}
 }

@@ -34,32 +34,18 @@ import org.getspout.spoutapi.gui.ScreenType;
 import org.getspout.spoutapi.keyboard.BindingExecutionDelegate;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
-import org.bukkit.World;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.InventoryView;
-
 public class PanelInputHandler implements BindingExecutionDelegate {
 	@Override
 	public void keyPressed(KeyBindingEvent keyBindingEvent) {
-		Player player = keyBindingEvent.getPlayer();
-		World world = player.getWorld();
-		SpoutPlayer sPlayer = keyBindingEvent.getPlayer();
-		if (player.hasPermission("backpack.admin")) {
-			//Check if backpack is open, close if so.
-			InventoryView inventory = player.getOpenInventory();
-			if (inventory.getTopInventory().getTitle().equals("Backpack")) {
-				BackpackPlugin.getInstance().getStore().setBackpackFor(player, world, inventory.getTopInventory());
-				player.closeInventory();
-			}
-			//Only open backpack on game screen
-			if (!keyBindingEvent.getScreenType().equals(ScreenType.GAME_SCREEN)) {
-				return;
-			}
-			
-			sPlayer.getMainScreen().attachPopupScreen(new UpgradePanel(sPlayer));	
-			// Call Panel GUI
+		SpoutPlayer player = keyBindingEvent.getPlayer();
+		if (BackpackPlugin.getInstance().getHooks().getPermHook().has(player.getWorld().getName(), player.getName(), "backpack.admin")) {
 
 		}
+		if (!keyBindingEvent.getScreenType().equals(ScreenType.GAME_SCREEN)) {
+			return;
+		}
+
+		player.getMainScreen().attachPopupScreen(new UpgradePanel(player));
 	}
 
 	@Override

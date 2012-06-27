@@ -29,6 +29,7 @@ package com.almuramc.backpack.bukkit.util;
 import java.util.ArrayList;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -37,7 +38,7 @@ import org.bukkit.inventory.ItemStack;
 /**
  * Simple class to handle inventory transactions.
  */
-public class InventoryUtil {
+public class InventoryHelper {
 	public static final Inventory resizeInventory(Player player, World world, Inventory inventory, int size) {
 		if (player == null || world == null || inventory == null) {
 			return null;
@@ -65,45 +66,23 @@ public class InventoryUtil {
 		}
 		ItemStack[] contents = inventory.getContents();
 		for (int i = 0; i < contents.length; i++) {
-			if (contents[i] != null) {
-				return true;
+			if (contents[i] == null || (contents[i] != null && contents[i].equals(Material.AIR))) {
+				continue;
 			}
+			return true;
 		}
 		return false;
 	}
 
-	public static final Inventory filterIllegalItemsFromInventory(ArrayList<ItemStack> blacklist, Inventory inventory) {
-		ItemStack[] contents = inventory.getContents();
-		Inventory inv = inventory;
-		//Sanity checks
-		if (inventory == null) {
-			return null;
-		}
-		if (blacklist == null) {
-			return inventory;
-		}
-		for (int i = 0; i < contents.length; i++) {
-			for (int j = 0; j < i; j++) {
-				if (!contents[i].equals(blacklist.get(j))) {
-					continue;
-				}
-				//If blacklisted item, null the entry
-				contents[i] = null;
-			}
-		}
-		inv.setContents(contents);
-		return inv;
-	}
-
 	public static final ItemStack[] getAllValidItems(Inventory inventory) {
-		if (inventory == null || !InventoryUtil.hasActualContents(inventory)) {
+		if (inventory == null || !InventoryHelper.hasActualContents(inventory)) {
 			return null;
 		}
 		ItemStack[] contents = inventory.getContents();
 		ArrayList<ItemStack> items = new ArrayList<ItemStack>();
 		for (int i = 0; i < contents.length; i++) {
 			ItemStack current = contents[i];
-			if (current == null) {
+			if (current == null || (current != null && current.equals(Material.AIR))) {
 				continue;
 			}
 			items.add(current);

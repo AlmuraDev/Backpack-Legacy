@@ -30,9 +30,9 @@ import com.almuramc.backpack.bukkit.BackpackPlugin;
 import com.almuramc.backpack.bukkit.input.BackpackInputHandler;
 import com.almuramc.backpack.bukkit.input.PanelInputHandler;
 import com.almuramc.backpack.bukkit.input.WorkbenchInputHandler;
-import com.almuramc.backpack.bukkit.util.exception.InvalidDependencyException;
 
 import net.milkbowl.vault.economy.Economy;
+import net.milkbowl.vault.permission.Permission;
 import org.getspout.spoutapi.SpoutManager;
 import org.getspout.spoutapi.keyboard.Keyboard;
 
@@ -42,14 +42,13 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 /**
  * Simple class to handle dependencies
  */
-public class DependencyUtil {
-	private static CachedConfigurationUtil cached;
-	private static boolean spoutWasSetup = false;
-	private static boolean vaultWasSetup = false;
+public class Dependency {
+	private static CachedConfiguration cached;
 	private Economy econ;
+	private Permission perm;
 	private PluginManager pm;
 
-	public DependencyUtil() {
+	public Dependency() {
 		cached = BackpackPlugin.getInstance().getCached();
 		pm = BackpackPlugin.getInstance().getServer().getPluginManager();
 	}
@@ -62,23 +61,19 @@ public class DependencyUtil {
 		return pm.isPluginEnabled("Vault");
 	}
 
-	public Economy getEconHook() throws InvalidDependencyException {
-		if (econ == null) {
-			throw new InvalidDependencyException("Attempted to access Vault economy hook but Vault was null!");
-		}
+	public Economy getEconHook() {
 		return econ;
+	}
+
+	public Permission getPermHook() {
+		return perm;
 	}
 
 	/**
 	 * Spout adds keybinding support so we set that up here
 	 */
 	public void setupSpout() {
-		//SpoutPlugin has an instance in this plugin so return as that means this has been ran before.
-		if (spoutWasSetup) {
-			return;
-		}
 		if (cached.useSpout() && isSpoutEnabled()) {
-			spoutWasSetup = true;
 			SpoutManager.getKeyBindingManager().registerBinding("Backpack", Keyboard.valueOf(cached.getBackpackHotkey()), "Opens the backpack", new BackpackInputHandler(), BackpackPlugin.getInstance());
 			SpoutManager.getKeyBindingManager().registerBinding("Portable Workbench", Keyboard.valueOf(cached.getWorkbenchHotkey()), "Opens portable workbench", new WorkbenchInputHandler(), BackpackPlugin.getInstance());
 			SpoutManager.getKeyBindingManager().registerBinding("Backpack Panel", Keyboard.valueOf(cached.getPanelHotkey()), "Opens Backpack Panel", new PanelInputHandler(), BackpackPlugin.getInstance());
@@ -87,16 +82,18 @@ public class DependencyUtil {
 	}
 
 	public void setupVault() {
-		if (vaultWasSetup) {
-			return;
-		}
-		if (cached.useEconomy() && isVaultEnabled()) {
-			RegisteredServiceProvider<Economy> economyProvider = BackpackPlugin.getInstance().getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
+		if (cached.useEconomy()) {
+			RegisteredServiceProvider<Economy> economyProvider = BackpackPlugin.getInstance().getServer().getServicesManager().getRegistration(Economy.class);
 			if (economyProvider != null) {
-				vaultWasSetup = true;
 				econ = economyProvider.getProvider();
 				BackpackPlugin.getInstance().getLogger().info("Sucessfully hooked into Vault for economy transactions");
 			}
+		}
+
+		RegisteredServiceProvider<Permission> rsp = BackpackPlugin.getInstance().getServer().getServicesManager().getRegistration(Permission.class);
+		if (rsp != null) {
+			perm = rsp.getProvider();
+			BackpackPlugin.getInstance().getLogger().info("Sucessfully hooked into Vault for permissions");
 		}
 	}
 
