@@ -29,6 +29,7 @@ package com.almuramc.backpack.bukkit.storage;
 import java.util.HashMap;
 import java.util.UUID;
 
+import com.almuramc.backpack.bukkit.BackpackPlugin;
 import com.almuramc.backpack.bukkit.util.InventoryHelper;
 import com.almuramc.backpack.bukkit.util.PermissionHelper;
 
@@ -56,7 +57,7 @@ public abstract class Storage {
 	public final Inventory get(Player player, World world) {
 		HashMap<String, Inventory> map = INVENTORIES.get(world.getUID());
 		int maxSize = PermissionHelper.getSizeByPermFor(player);
-		Inventory current = contains(player, world) ? map.get(player.getName()) : Bukkit.createInventory(player, maxSize, "Backpack");
+		Inventory current = contains(player, world) ? map.get(player.getName()) : Bukkit.createInventory(player, BackpackPlugin.getInstance().getCached().getDefaultSize(), "Backpack");
 		if (current.getSize() > maxSize) {
 			current = InventoryHelper.resizeInventory(player, world, current, maxSize);
 		}
