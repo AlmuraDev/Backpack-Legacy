@@ -47,7 +47,7 @@ public abstract class Storage {
 		}
 		HashMap<String, Inventory> current = INVENTORIES.get(world.getUID());
 		if (inventory == null && contains(player, world)) {
-			INVENTORIES.get(world.getUID()).remove(player);
+			INVENTORIES.get(world.getUID()).remove(player.getName());
 			return;
 		}
 		current.put(player.getName(), inventory);
@@ -59,7 +59,7 @@ public abstract class Storage {
 		int maxSize = PermissionHelper.getSizeByPermFor(player);
 		Inventory current = contains(player, world) ? map.get(player.getName()) : Bukkit.createInventory(player, BackpackPlugin.getInstance().getCached().getDefaultSize(), "Backpack");
 		if (current.getSize() > maxSize) {
-			current = InventoryHelper.resizeInventory(player, world, current, maxSize);
+			current = InventoryHelper.resizeInventory(player, player.getWorld(), current, maxSize);
 		}
 		return current;
 	}

@@ -27,9 +27,12 @@
 package com.almuramc.backpack.bukkit.command;
 
 import com.almuramc.backpack.bukkit.BackpackPlugin;
+import com.almuramc.backpack.bukkit.storage.Storage;
 import com.almuramc.backpack.bukkit.util.CachedConfiguration;
 import com.almuramc.backpack.bukkit.util.PermissionHelper;
 
+import net.milkbowl.vault.economy.Economy;
+import net.milkbowl.vault.permission.Permission;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 import org.bukkit.Bukkit;
@@ -41,7 +44,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
 public class BackpackCommands implements CommandExecutor {
+	private static final Storage STORE = BackpackPlugin.getInstance().getStore();
 	private static final CachedConfiguration CONFIG = BackpackPlugin.getInstance().getCached();
+	private static final Economy ECON = BackpackPlugin.getInstance().getHooks().getEconHook();
+	private static final Permission PERM = BackpackPlugin.getInstance().getHooks().getPermHook();
 
 	@Override
 	public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
@@ -66,31 +72,30 @@ public class BackpackCommands implements CommandExecutor {
 			} else if (strings[0].equalsIgnoreCase("workbench") && player != null) {
 				return openWorkbench(player);
 			} else if (strings[0].equalsIgnoreCase("upgrade") && player != null) {
-				if (!BackpackPlugin.getInstance().getHooks().getPermHook().has(player.getWorld().getName(), player.getName(), "backpack.upgrade")) {
+				if (!PERM.has(player.getWorld().getName(), player.getName(), "backpack.upgrade")) {
 					 return true;
 				}
-				Inventory backpack = BackpackPlugin.getInstance().getStore().get(player, player.getWorld());
+				Inventory backpack = STORE.get(player, player.getWorld());
 				if (backpack.getSize() >= 54) {
-					//TODO let user know Backpack can't be upgraded further
+					commandSender.sendMessage("{Backpack] You already have the maximun size of backpack allowed!");
 					return true;
 				}
 				int newSize = backpack.getSize() + 9;
 				if (newSize > PermissionHelper.getSizeByPermFor(player)) {
-					//TODO let user know they can't upgrade further cause of perms
+					commandSender.sendMessage("{Backpack] You already have the maximun size of backpack allowed for your server's permissions!");
 					return true;
 				}
-				double cost = CONFIG.getUpgradeCosts().get("Slot" + newSize);
-				if (CONFIG.useEconomy() && BackpackPlugin.getInstance().getHooks().getPermHook().has(player.getWorld().getName(), player.getName(), "backpack.noupgradecost")) {
-					if (!BackpackPlugin.getInstance().getHooks().getEconHook().has(player.getName(), cost)) {
-						//TODO let the user know they don't have enough money (maybe Vault does).
+				if (CONFIG.useEconomy() && !PERM.has(player.getWorld().getName(), player.getName(), "backpack.noupgradecost")) {
+					double cost = CONFIG.getUpgradeCosts().get("Slot" + newSize);
+					if (!ECON.has(player.getName(), cost)) {
+						commandSender.sendMessage("{Backpack] You do not have enough money!");
 						return true;
-					} else {
-						BackpackPlugin.getInstance().getHooks().getEconHook().withdrawPlayer(player.getName(), cost);
 					}
+					ECON.withdrawPlayer(player.getName(), cost);
 				}
 				Inventory newBackpack = Bukkit.createInventory(player, newSize, "Backpack");
 				newBackpack.setContents(backpack.getContents());
-				BackpackPlugin.getInstance().getStore().save(player, player.getWorld(), newBackpack);
+				STORE.save(player, player.getWorld(), newBackpack);
 			} else {
 				commandSender.sendMessage("[Backpack] Must be in-game to utilize player-only commands!");
 			}
@@ -99,15 +104,15 @@ public class BackpackCommands implements CommandExecutor {
 	}
 
 	private boolean openBackpack(Player player) {
-		if (BackpackPlugin.getInstance().getHooks().getPermHook().has(player.getWorld().getName(), player.getName(), "backpack.use")) {
-			player.openInventory(BackpackPlugin.getInstance().getStore().load(player, player.getWorld()));
+		if (PERM.has(player.getWorld().getName(), player.getName(), "backpack.use")) {
+			player.openInventory(STORE.load(player, player.getWorld()));
 			return true;
 		}
 		return false;
 	}
 
 	private boolean openWorkbench(Player player) {
-		if (BackpackPlugin.getInstance().getHooks().getPermHook().has(player.getWorld().getName(), player.getName(), "backpack.workbench")) {
+		if (PERM.has(player.getWorld().getName(), player.getName(), "backpack.workbench")) {
 			player.openWorkbench(null, true);
 			return true;
 		}
