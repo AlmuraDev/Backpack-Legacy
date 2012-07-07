@@ -69,9 +69,9 @@ public class BackpackCommands implements CommandExecutor {
 					commandSender.sendMessage("[Backpack] Configuration reloaded");
 				}
 				return true;
-			} else if (strings[0].equalsIgnoreCase("workbench") && player != null) {
+			} else if (strings.length > 0 && strings[0].equalsIgnoreCase("workbench") && player != null) {
 				return openWorkbench(player);
-			} else if (strings[0].equalsIgnoreCase("upgrade") && player != null) {
+			} else if (strings.length > 0 && strings[0].equalsIgnoreCase("upgrade") && player != null) {
 				if (!PERM.has(player.getWorld().getName(), player.getName(), "backpack.upgrade")) {
 					 return true;
 				}

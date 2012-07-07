@@ -29,80 +29,74 @@ package com.almuramc.backpack.bukkit.storage;
 import java.util.HashMap;
 import java.util.UUID;
 
-import com.almuramc.backpack.bukkit.BackpackPlugin;
-import com.almuramc.backpack.bukkit.util.InventoryHelper;
-import com.almuramc.backpack.bukkit.util.PermissionHelper;
+import com.almuramc.backpack.bukkit.inventory.BackpackInventory;
 
-import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
 public abstract class Storage {
-	private static final HashMap<UUID, HashMap<String, Inventory>> INVENTORIES = new HashMap<UUID, HashMap<String, Inventory>>();
+	private static final HashMap<UUID, HashMap<UUID, BackpackInventory>> BACKPACKS = new HashMap<UUID, HashMap<UUID, BackpackInventory>>();
 
-	public final void put(Player player, World world, Inventory inventory) {
+	public final void store(Player player, World world, BackpackInventory toStore) {
 		if (player == null || world == null) {
 			return;
 		}
-		HashMap<String, Inventory> current = INVENTORIES.get(world.getUID());
-		if (inventory == null && contains(player, world)) {
-			INVENTORIES.get(world.getUID()).remove(player.getName());
+		HashMap<UUID, BackpackInventory> playerMap = BACKPACKS.get(world.getUID());
+		if (!has(world) && (has(player, world) && toStore.getInventory() != null)) {
+			playerMap = new HashMap<UUID, BackpackInventory>();
+			playerMap.put(player.getUniqueId(), toStore);
+			BACKPACKS.put(world.getUID(), playerMap);
 			return;
 		}
-		current.put(player.getName(), inventory);
-		INVENTORIES.put(world.getUID(), current);
-	}
-
-	public final Inventory get(Player player, World world) {
-		HashMap<String, Inventory> map = INVENTORIES.get(world.getUID());
-		int maxSize = PermissionHelper.getSizeByPermFor(player);
-		Inventory current = contains(player, world) ? map.get(player.getName()) : Bukkit.createInventory(player, BackpackPlugin.getInstance().getCached().getDefaultSize(), "Backpack");
-		if (current.getSize() > maxSize) {
-			current = InventoryHelper.resizeInventory(player, player.getWorld(), current, maxSize);
+		if (has(world) && (!has(player, world) || toStore.getInventory() == null)) {
+			playerMap.remove(player.getUniqueId());
+			BACKPACKS.put(world.getUID(), playerMap);
+			return;
 		}
-		return current;
+		BackpackInventory stored = playerMap.get(player.getUniqueId());
+		if (!stored.equals(toStore)) {
+			playerMap.put(player.getUniqueId(), toStore);
+			BACKPACKS.put(world.getUID(), playerMap);
+		}
 	}
 
-	public final HashMap<UUID, Inventory> getAll(Player player) {
-		if (player == null) {
+	public final Inventory fetch(Player player, World world) {
+		if (player == null || world == null) {
 			return null;
 		}
-		HashMap<UUID, Inventory> playerInventories = new HashMap<UUID, Inventory>();
-		for (World world : Bukkit.getWorlds()) {
-			playerInventories.put(world.getUID(), get(player, world));
+		HashMap<UUID, BackpackInventory> playerMap = BACKPACKS.get(world.getUID());
+		if (playerMap == null) {
+			return null;
 		}
-
-		return playerInventories;
+		BackpackInventory backpack = playerMap.get(player.getUniqueId());
+		if (backpack == null) {
+			return null;
+		}
+		return backpack;
 	}
 
-	public final boolean contains(Player player, World world) {
-		if (player == null || world == null || !contains(world)) {
-			return false;
-		}
-		HashMap<String, Inventory> worldMap = INVENTORIES.get(world.getUID());
-		if (worldMap.containsKey(player.getName())) {
-			return true;
-		}
-		return false;
+	public final boolean has(World world) {
+		return BACKPACKS.get(world.getUID()) != null;
 	}
 
-	public final boolean contains(World world) {
-		if (world == null || (world != null && INVENTORIES.get(world.getUID()) == null)) {
-			return false;
-		}
-		return true;
+	public final boolean has(Player player, World world) {
+		return BACKPACKS.get(world.getUID()).get(player.getUniqueId()) != null;
 	}
 
-	public void initialize() {
-		for (World world : Bukkit.getWorlds()) {
-			if (!contains(world)) {
-				INVENTORIES.put(world.getUID(), new HashMap<String, Inventory>());
+	public final HashMap<UUID, BackpackInventory> fetchAll(Player player) {
+		HashMap<UUID, BackpackInventory> fetched = new HashMap<UUID, BackpackInventory>();
+		for (UUID entry: BACKPACKS.keySet()) {
+			if (BACKPACKS.get(entry).containsKey(player.getUniqueId())) {
+				fetched.put(entry, BACKPACKS.get(entry).get(player.getUniqueId()));
 			}
 		}
+		return fetched;
 	}
 
-	public abstract Inventory load(Player player, World world);
+	public abstract void initWorld(World world);
 
-	public abstract void save(Player player, World world, Inventory inventory);
+	public abstract BackpackInventory load(Player player, World world);
+
+	public abstract void save(Player player, World world, BackpackInventory backpack);
 }

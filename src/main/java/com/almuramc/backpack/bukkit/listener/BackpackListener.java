@@ -28,7 +28,7 @@ package com.almuramc.backpack.bukkit.listener;
 
 import com.almuramc.backpack.bukkit.BackpackPlugin;
 import com.almuramc.backpack.bukkit.storage.Storage;
-import com.almuramc.backpack.bukkit.util.InventoryHelper;
+import com.almuramc.backpack.bukkit.storage.type.YamlStorage;
 import com.almuramc.backpack.bukkit.util.PermissionHelper;
 
 import net.milkbowl.vault.permission.Permission;
@@ -53,8 +53,11 @@ import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 
 public class BackpackListener implements Listener {
-	private static final Storage STORE = BackpackPlugin.getInstance().getStore();
-	private static final Permission PERM = BackpackPlugin.getInstance().getHooks().getPermHook();
+	private final BackpackPlugin plugin;
+
+	public BackpackListener(BackpackPlugin plugin) {
+		this.plugin = plugin;
+	}
 
 	@EventHandler
 	public void onEntityDeath(EntityDeathEvent event) {
@@ -134,7 +137,7 @@ public class BackpackListener implements Listener {
 
 	@EventHandler
 	public void onWorldLoad(WorldLoadEvent event) {
-		STORE.initialize();
+		plugin.getStore().initWorld(event.getWorld());
 	}
 
 	private void onBackpackClose(InventoryView viewer, HumanEntity entity) {

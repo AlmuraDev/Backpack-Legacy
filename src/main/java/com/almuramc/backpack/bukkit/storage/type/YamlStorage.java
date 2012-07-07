@@ -32,8 +32,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Set;
 
+import com.almuramc.backpack.bukkit.inventory.BackpackInventory;
 import com.almuramc.backpack.bukkit.storage.Storage;
-import com.almuramc.backpack.bukkit.util.InventoryHelper;
 import com.almuramc.backpack.bukkit.util.PermissionHelper;
 
 import org.bukkit.Bukkit;
@@ -47,118 +47,99 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 public class YamlStorage extends Storage {
-	private static File store_dir;
+	private static File STORAGE_DIR;
 	private static final YamlConfiguration READER = new YamlConfiguration();
 
 	public YamlStorage(File parentDir) {
-		store_dir = new File(parentDir, "backpacks");
+		STORAGE_DIR = new File(parentDir, "backpacks");
 	}
 
 	@Override
-	public void initialize() {
-		super.initialize();
-		if (!store_dir.exists()) {
-			store_dir.mkdir();
-		}
-		for (World world : Bukkit.getWorlds()) {
-			File subdir;
-			try {
-				subdir = new File(store_dir.getCanonicalPath(), world.getName());
-				if (!subdir.exists()) {
-					subdir.mkdir();
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+	public void initWorld(World world) {
+		File worldDir = new File(STORAGE_DIR, world.getName());
+		if (!worldDir.exists()) {
+			worldDir.mkdirs();
 		}
 	}
 
 	@Override
-	public Inventory load(Player player, World world) {
-		Inventory backpack = get(player, world);
-		if (InventoryHelper.hasActualContents(backpack)) {
-			return backpack;
-		}
-		Inventory toReturn = loadFromFile(player, world);
-		return toReturn == null ? backpack : toReturn;
+	public BackpackInventory load(Player player, World world) {
+
 	}
 
 	@Override
-	public void save(Player player, World world, Inventory inventory) {
-		put(player, world, inventory);
-		saveToFile(player, world, inventory);
+	public void save(Player player, World world, BackpackInventory backpack) {
+
 	}
 
-	private Inventory loadFromFile(Player player, World world) {
-		File worldDir = new File(store_dir, world.getName());
+	private BackpackInventory loadFromFile(Player player, World world) {
+		File worldDir = new File(STORAGE_DIR, world.getName());
 		File playerDat = null;
 		for (File file : worldDir.listFiles()) {
-			if (!file.getName().contains(".yml")) {
-				continue;
+			if (file.getName().contains(".yml") && file.getName().startsWith(player.getName())) {
+				playerDat = new File(worldDir, file.getName());
+				break;
 			}
-			String name = (file.getName().split(".yml"))[0];
-			if (!name.equals(player.getName())) {
-				continue;
-			}
-			playerDat = new File(worldDir, file.getName());
 		}
 
 		//File found, lets load in contents
-		if (playerDat != null) {
-			try {
-				READER.load(playerDat);
-				ArrayList<ItemStack> items = new ArrayList<ItemStack>();
-				ConfigurationSection parent = READER.getConfigurationSection("backpack");
-				Set<String> temp = parent.getKeys(false);
-				String[] keys = temp.toArray(new String[temp.size()]);
-				int psize = PermissionHelper.getSizeByPermFor(player);
-				int size = READER.getInt("contents-amount", psize);
-				if (size > psize) {
-					size = psize;
-				}
-				for (int i = 0; i < size; i++) {
-					if (i >= keys.length) {
-						items.add(null);
-					} else {
-						ConfigurationSection sub = parent.getConfigurationSection(keys[i]);
-						ItemStack item = sub.getItemStack("ItemStack", new ItemStack(Material.AIR));
-						items.add(item);
-					}
-				}
-				Inventory backpack = Bukkit.createInventory(player, size, "Backpack");
-				backpack.setContents(items.toArray(new ItemStack[items.size()]));
-				return backpack;
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			} catch (InvalidConfigurationException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+		if (playerDat == null) {
+			return null;
 		}
-		return null;
+
+		try {
+			READER.load(playerDat);
+			ArrayList<ItemStack> items = new ArrayList<ItemStack>();
+			ConfigurationSection parent;
+			if (READER.getConfigurationSection("backpack") == null) {
+				parent = READER.getDefaultSection();
+			} else {
+				parent = READER.getConfigurationSection("backpack");
+			}
+			Set<String> temp = parent.getKeys(false);
+			String[] keys = temp.toArray(new String[temp.size()]);
+			int psize = PermissionHelper.getSizeByPermFor(player);
+			int size = READER.getInt("contents-amount", psize);
+			if (size > psize) {
+				size = psize;
+			}
+			for (int i = 0; i < size; i++) {
+				if (i >= keys.length) {
+					break;
+				} else {
+					items.add(parent.getConfigurationSection(keys[i]).getItemStack("ItemStack", new ItemStack(Material.AIR)));
+				}
+			}
+			BackpackInventory backpack = new BackpackInventory(player, Bukkit.createInventory(player, size, "Backpack"));
+			backpack.setContents(items.toArray(new ItemStack[items.size()]));
+			return backpack;
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (InvalidConfigurationException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
-	private void saveToFile(Player player, World world, Inventory backpack) {
+	private void saveToFile(Player player, World world, BackpackInventory backpack) {
 		File playerBackpack = new File(store_dir + File.separator + world.getName(), player.getName() + ".yml");
 		try {
 			if (!playerBackpack.exists()) {
 				playerBackpack.createNewFile();
-				READER.load(playerBackpack);
-				READER.createSection("backpack");
 			} else {
 				READER.load(playerBackpack);
 			}
-			ItemStack[] contents = backpack.getContents();
+			if (READER.getConfigurationSection()) {
+				ItemStack[] contents = backpack.getContents();
+			}
 			READER.set("contents-amount", contents.length);
-			ConfigurationSection parent = READER.getConfigurationSection("backpack");
 			for (int i = 0; i < 54; i++) {
-				//Slot doesn't exist
 				ConfigurationSection slot;
 				if (!READER.isConfigurationSection("Slot " + i)) {
-					slot = parent.createSection("Slot " + i);
+					slot = READER.createSection("Slot " + i);
 				} else {
-					slot = parent.getConfigurationSection("Slot " + i);
+					slot = READER.getConfigurationSection("Slot " + i);
 				}
 				if (i >= contents.length) {
 					continue;
@@ -171,5 +152,9 @@ public class YamlStorage extends Storage {
 		} catch (InvalidConfigurationException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public File getStorageDirectory() {
+		return STORAGE_DIR;
 	}
 }

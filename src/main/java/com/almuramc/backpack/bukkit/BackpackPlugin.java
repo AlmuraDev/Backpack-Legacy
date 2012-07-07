@@ -54,6 +54,16 @@ public class BackpackPlugin extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
+		//Setup dependencies
+		hooks = new Dependency();
+		hooks.setup();
+		//Register commands
+		executor = new BackpackCommands();
+		getCommand("backpack").setExecutor(executor);
+	}
+
+	@Override
+	public void onLoad() {
 		//Assign plugin instance
 		instance = this;
 		//Setup config
@@ -64,16 +74,8 @@ public class BackpackPlugin extends JavaPlugin {
 		} else {
 			store = new YamlStorage(getDataFolder());
 		}
-		//Setup storage
-		store.initialize();
-		//Setup dependencies
-		hooks = new Dependency();
-		hooks.setup();
 		//Register events
 		Bukkit.getServer().getPluginManager().registerEvents(new BackpackListener(), this);
-		//Register commands
-		executor = new BackpackCommands();
-		getCommand("backpack").setExecutor(executor);
 	}
 
 	public static final BackpackPlugin getInstance() {

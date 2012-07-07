@@ -32,7 +32,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 
 import com.almuramc.backpack.bukkit.BackpackPlugin;
 
@@ -88,12 +87,7 @@ public final class CachedConfiguration {
 	}
 
 	public int getDefaultSize() {
-		int size = cachedConfig.getInt("backpack.no-perm-default-size");
-		if (MathHelper.isValidBackpackSize(size)) {
-			return size;
-		}
-		plugin.getLogger().warning("Invalid backpack size specified for no-perm-default-size. Defaulting to 9");
-		return 9;
+		return cachedConfig.getInt("backpack.no-perm-default-size");
 	}
 
 	public HashSet<String> getBlacklistedItems() {

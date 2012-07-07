@@ -43,7 +43,7 @@ import org.bukkit.plugin.RegisteredServiceProvider;
  * Simple class to handle dependencies
  */
 public class Dependency {
-	private static CachedConfiguration cached;
+	private CachedConfiguration cached;
 	private Economy econ;
 	private Permission perm;
 	private PluginManager pm;
@@ -55,10 +55,6 @@ public class Dependency {
 
 	public boolean isSpoutEnabled() {
 		return pm.isPluginEnabled("Spout");
-	}
-
-	public boolean isVaultEnabled() {
-		return pm.isPluginEnabled("Vault");
 	}
 
 	public Economy getEconHook() {
