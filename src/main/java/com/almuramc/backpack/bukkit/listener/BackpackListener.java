@@ -26,6 +26,10 @@
  */
 package com.almuramc.backpack.bukkit.listener;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+
 import com.almuramc.backpack.bukkit.BackpackPlugin;
 import com.almuramc.backpack.bukkit.inventory.BackpackInventory;
 import com.almuramc.backpack.bukkit.storage.Storage;
@@ -80,32 +84,6 @@ public class BackpackListener implements Listener {
 		}
 	}
 
-	@EventHandler
-	public void onInventoryClick(InventoryClickEvent event) {
-		if (event.isCancelled()) {
-			event.setCancelled(true);
-			return;
-		}
-		Player who = (Player) event.getWhoClicked();
-		if (!event.getView().getTopInventory().getTitle().equals("Backpack") || PERM.has(who.getWorld().getName(), who.getName(), "backpack.noblacklist") || !event.getSlotType().equals(InventoryType.SlotType.CONTAINER)) {
-			return;
-		}
-		System.out.println(event.getSlotType().toString());
-		Material material = event.getCursor().getType();
-		String mat = material.name();
-		for (String name : CONFIG.getBlacklistedItems()) {
-			if (name.equalsIgnoreCase(mat)) {
-				if (CONFIG.useSpout()) {
-					((SpoutPlayer) who).sendNotification("Backpack", "Item is blacklisted", material);
-				} else {
-					who.sendMessage("[Backpack] " + mat + " is blacklisted!");
-				}
-				event.setCancelled(true);
-				return;
-			}
-		}
-	}
-
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onInventoryClose(InventoryCloseEvent event) {
 		onBackpackClose(event.getView(), event.getPlayer());
@@ -145,9 +123,15 @@ public class BackpackListener implements Listener {
 
 	private void onBackpackClose(InventoryView viewer, HumanEntity entity) {
 		Player player = (Player) entity;
-		Inventory backpack = viewer.getTopInventory();
+		Inventory inventory = viewer.getTopInventory();
 
-		if (backpack.getHolder().equals(player) && backpack.getTitle().equals("Backpack")) {
+		if (inventory.getHolder().equals(player) && inventory.getTitle().equals("Backpack")) {
+			BackpackInventory backpack = new BackpackInventory(inventory);
+			List<ItemStack> blacklistedItems = backpack.getIllegalItems(CONFIG.getBlacklistedItems());
+			for (ItemStack item : blacklistedItems) {
+				player.getWorld().dropItemNaturally(player.getLocation(), item);
+			}
+			backpack.filterIllegalItems();
 			STORE.save(player, player.getWorld(), new BackpackInventory(backpack));
 		}
 	}

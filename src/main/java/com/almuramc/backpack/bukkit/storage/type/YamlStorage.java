@@ -69,9 +69,9 @@ public class YamlStorage extends Storage {
 		if (backpack == null) {
 			backpack = loadFromFile(player, world);
 		}
-		//No file found, just create a new one with a size from permissions
+		//No file found, just create a new one with a size from the config
 		if (backpack == null) {
-			backpack = new BackpackInventory(Bukkit.createInventory(player, PermissionHelper.getSizeByPermFor(player), "Backpack"));
+			backpack = new BackpackInventory(Bukkit.createInventory(player, BackpackPlugin.getInstance().getCached().getDefaultSize(), "Backpack"));
 		}
 		return backpack;
 	}
@@ -129,8 +129,8 @@ public class YamlStorage extends Storage {
 			} else {
 				READER.load(playerBackpack);
 			}
-			ItemStack[] contents = backpack.getContents();
-			READER.set("contents-amount", contents.length);
+			ItemStack[] contents = backpack.getVisibleContents();
+			READER.set("contents-amount", backpack.getSize());
 			for (int i = 0; i < 54; i++) {
 				ConfigurationSection slot;
 				if (!READER.isConfigurationSection("Slot " + i)) {

@@ -3,8 +3,11 @@ package com.almuramc.backpack.bukkit.inventory;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.ListIterator;
+
+import com.almuramc.backpack.bukkit.BackpackPlugin;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -272,6 +275,33 @@ public class BackpackInventory implements Inventory {
 			visibleContents.add(is);
 		}
 		return visibleContents.toArray(new ItemStack[visibleContents.size()]);
+	}
+
+	public List<ItemStack> getIllegalItems(HashSet<String> blacklistedMats) {
+		ArrayList<ItemStack> illegalItems = new ArrayList<ItemStack>(Arrays.asList(inventory.getContents()));
+		for (String name : blacklistedMats) {
+			for (ItemStack item : inventory.getContents()) {
+				if (item.getType().name().equals(name)) {
+					illegalItems.remove(item);
+				}
+			}
+		}
+		return illegalItems;
+	}
+
+	public void filterIllegalItems() {
+		List<ItemStack> items = getIllegalItems(BackpackPlugin.getInstance().getCached().getBlacklistedItems());
+		List<ItemStack> contents = Arrays.asList(inventory.getContents());
+		ArrayList<ItemStack> newContents = new ArrayList<ItemStack>();
+
+		for (ItemStack outer : contents) {
+			for (ItemStack inner : items) {
+				if (!inner.getType().name().equals(outer.getType().name())) {
+					newContents.add(outer);
+				}
+			}
+		}
+		inventory.setContents(newContents.toArray(new ItemStack[newContents.size()]));
 	}
 
 	/**
