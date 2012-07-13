@@ -60,6 +60,8 @@ public class BackpackPlugin extends JavaPlugin {
 		//Register commands
 		executor = new BackpackCommands();
 		getCommand("backpack").setExecutor(executor);
+		//Register events
+		Bukkit.getServer().getPluginManager().registerEvents(new BackpackListener(), this);
 	}
 
 	@Override
@@ -74,8 +76,6 @@ public class BackpackPlugin extends JavaPlugin {
 		} else {
 			store = new YamlStorage(getDataFolder());
 		}
-		//Register events
-		Bukkit.getServer().getPluginManager().registerEvents(new BackpackListener(), this);
 	}
 
 	public static final BackpackPlugin getInstance() {
