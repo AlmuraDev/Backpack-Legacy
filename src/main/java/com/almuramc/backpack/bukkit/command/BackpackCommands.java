@@ -102,7 +102,7 @@ public class BackpackCommands implements CommandExecutor {
 
 	private boolean openBackpack(Player player) {
 		if (PERM.has(player.getWorld().getName(), player.getName(), "backpack.use")) {
-			player.openInventory(STORE.load(player, player.getWorld()));
+			player.openInventory(STORE.load(player, player.getWorld()).getInventory());
 			return true;
 		}
 		return false;
