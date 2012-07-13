@@ -87,9 +87,10 @@ public class BackpackListener implements Listener {
 			return;
 		}
 		Player who = (Player) event.getWhoClicked();
-		if ((!event.getView().getTopInventory().getTitle().equals("Backpack") || PERM.has(who.getWorld().getName(), who.getName(), "backpack.noblacklist")) && !event.getSlotType().equals(InventoryType.SlotType.CONTAINER)) {
+		if (!event.getView().getTopInventory().getTitle().equals("Backpack") || PERM.has(who.getWorld().getName(), who.getName(), "backpack.noblacklist") || !event.getSlotType().equals(InventoryType.SlotType.CONTAINER)) {
 			return;
 		}
+		System.out.println(event.getSlotType().toString());
 		Material material = event.getCursor().getType();
 		String mat = material.name();
 		for (String name : CONFIG.getBlacklistedItems()) {
