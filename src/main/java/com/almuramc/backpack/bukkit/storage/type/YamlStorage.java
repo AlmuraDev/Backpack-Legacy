@@ -33,6 +33,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Set;
 
+import com.almuramc.backpack.bukkit.BackpackPlugin;
 import com.almuramc.backpack.bukkit.inventory.BackpackInventory;
 import com.almuramc.backpack.bukkit.storage.Storage;
 import com.almuramc.backpack.bukkit.util.PermissionHelper;
@@ -101,7 +102,7 @@ public class YamlStorage extends Storage {
 			Set<String> temp = parent.getKeys(false);
 			String[] keys = temp.toArray(new String[temp.size()]);
 			int psize = PermissionHelper.getSizeByPermFor(player);
-			int size = READER.getInt("contents-amount", psize);
+			int size = READER.getInt("contents-amount", BackpackPlugin.getInstance().getCached().getDefaultSize());
 			if (size > psize) {
 				size = psize;
 			}
