@@ -27,6 +27,7 @@
 package com.almuramc.backpack.bukkit.command;
 
 import com.almuramc.backpack.bukkit.BackpackPlugin;
+import com.almuramc.backpack.bukkit.inventory.BackpackInventory;
 import com.almuramc.backpack.bukkit.storage.Storage;
 import com.almuramc.backpack.bukkit.util.CachedConfiguration;
 import com.almuramc.backpack.bukkit.util.PermissionHelper;
@@ -41,7 +42,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 
 public class BackpackCommands implements CommandExecutor {
 	private static final Storage STORE = BackpackPlugin.getInstance().getStore();
@@ -69,13 +69,11 @@ public class BackpackCommands implements CommandExecutor {
 					commandSender.sendMessage("[Backpack] Configuration reloaded");
 				}
 				return true;
-			} else if (strings.length > 0 && strings[0].equalsIgnoreCase("workbench") && player != null) {
-				return openWorkbench(player);
 			} else if (strings.length > 0 && strings[0].equalsIgnoreCase("upgrade") && player != null) {
 				if (!PERM.has(player.getWorld().getName(), player.getName(), "backpack.upgrade")) {
-					 return true;
+					return true;
 				}
-				Inventory backpack = STORE.get(player, player.getWorld());
+				BackpackInventory backpack = STORE.fetch(player, player.getWorld());
 				if (backpack.getSize() >= 54) {
 					commandSender.sendMessage("{Backpack] You already have the maximun size of backpack allowed!");
 					return true;
@@ -93,9 +91,9 @@ public class BackpackCommands implements CommandExecutor {
 					}
 					ECON.withdrawPlayer(player.getName(), cost);
 				}
-				Inventory newBackpack = Bukkit.createInventory(player, newSize, "Backpack");
-				newBackpack.setContents(backpack.getContents());
-				STORE.save(player, player.getWorld(), newBackpack);
+				backpack.setSize(player, newSize);
+				STORE.save(player, player.getWorld(), backpack);
+				return true;
 			} else {
 				commandSender.sendMessage("[Backpack] Must be in-game to utilize player-only commands!");
 			}
@@ -106,14 +104,6 @@ public class BackpackCommands implements CommandExecutor {
 	private boolean openBackpack(Player player) {
 		if (PERM.has(player.getWorld().getName(), player.getName(), "backpack.use")) {
 			player.openInventory(STORE.load(player, player.getWorld()));
-			return true;
-		}
-		return false;
-	}
-
-	private boolean openWorkbench(Player player) {
-		if (PERM.has(player.getWorld().getName(), player.getName(), "backpack.workbench")) {
-			player.openWorkbench(null, true);
 			return true;
 		}
 		return false;

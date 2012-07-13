@@ -29,7 +29,6 @@ package com.almuramc.backpack.bukkit.util;
 import com.almuramc.backpack.bukkit.BackpackPlugin;
 import com.almuramc.backpack.bukkit.input.BackpackInputHandler;
 import com.almuramc.backpack.bukkit.input.PanelInputHandler;
-import com.almuramc.backpack.bukkit.input.WorkbenchInputHandler;
 
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
@@ -71,7 +70,6 @@ public class Dependency {
 	public void setupSpout() {
 		if (cached.useSpout() && isSpoutEnabled()) {
 			SpoutManager.getKeyBindingManager().registerBinding("Backpack", Keyboard.valueOf(cached.getBackpackHotkey()), "Opens the backpack", new BackpackInputHandler(), BackpackPlugin.getInstance());
-			SpoutManager.getKeyBindingManager().registerBinding("Portable Workbench", Keyboard.valueOf(cached.getWorkbenchHotkey()), "Opens portable workbench", new WorkbenchInputHandler(), BackpackPlugin.getInstance());
 			SpoutManager.getKeyBindingManager().registerBinding("Backpack Panel", Keyboard.valueOf(cached.getPanelHotkey()), "Opens Backpack Panel", new PanelInputHandler(), BackpackPlugin.getInstance());
 			BackpackPlugin.getInstance().getLogger().info("Sucessfully hooked into SpoutPlugin for keybindings");
 		}

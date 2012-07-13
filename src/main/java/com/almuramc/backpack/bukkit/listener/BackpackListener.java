@@ -27,15 +27,16 @@
 package com.almuramc.backpack.bukkit.listener;
 
 import com.almuramc.backpack.bukkit.BackpackPlugin;
+import com.almuramc.backpack.bukkit.inventory.BackpackInventory;
 import com.almuramc.backpack.bukkit.storage.Storage;
-import com.almuramc.backpack.bukkit.storage.type.YamlStorage;
-import com.almuramc.backpack.bukkit.util.PermissionHelper;
+import com.almuramc.backpack.bukkit.util.CachedConfiguration;
 
 import net.milkbowl.vault.permission.Permission;
+
 import org.getspout.spoutapi.player.SpoutPlayer;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -54,6 +55,9 @@ import org.bukkit.inventory.ItemStack;
 
 public class BackpackListener implements Listener {
 	private final BackpackPlugin plugin;
+	private static final Storage STORE = BackpackPlugin.getInstance().getStore();
+	private static final CachedConfiguration CONFIG = BackpackPlugin.getInstance().getCached();
+	private static final Permission PERM = BackpackPlugin.getInstance().getHooks().getPermHook();
 
 	public BackpackListener(BackpackPlugin plugin) {
 		this.plugin = plugin;
@@ -63,18 +67,20 @@ public class BackpackListener implements Listener {
 	public void onEntityDeath(EntityDeathEvent event) {
 		if (event.getEntity() instanceof Player) {
 			Player player = (Player) event.getEntity();
-			if (PERM.has(player.getWorld().getName(), player.getName(), "backpack.keepitems")) {
+			World world = player.getWorld();
+			if (PERM.has(world.getName(), player.getName(), "backpack.keepitems")) {
 				return;
 			}
-			Inventory inventory = STORE.load(player, player.getWorld());
-			ItemStack[] contents = InventoryHelper.getAllValidItems(inventory);
+			BackpackInventory backpack = STORE.load(player, world);
+			ItemStack[] contents = backpack.getVisibleContents();
 			if (contents == null) {
 				return;
 			}
 			for (ItemStack toDrop : contents) {
-				player.getWorld().dropItemNaturally(player.getLocation(), toDrop);
+				world.dropItemNaturally(player.getLocation(), toDrop);
 			}
-			STORE.save(player, player.getWorld(), Bukkit.createInventory(player, PermissionHelper.getSizeByPermFor(player), "Backpack"));
+			backpack.clear();
+			STORE.save(player, world, backpack);
 		}
 	}
 
@@ -85,14 +91,14 @@ public class BackpackListener implements Listener {
 			return;
 		}
 		Player who = (Player) event.getWhoClicked();
-		if (!event.getView().getTopInventory().getTitle().equals("Backpack") || PERM.has(who.getWorld().getName(), who.getName(), "backpack.noblacklist")) {
+		if (!(event.getView().getTopInventory() instanceof BackpackInventory) || PERM.has(who.getWorld().getName(), who.getName(), "backpack.noblacklist")) {
 			return;
 		}
-		Material material = event.getCurrentItem().getType();
+		Material material = event.getCursor().getType();
 		String mat = material.name();
-		for (String name : BackpackPlugin.getInstance().getCached().getBlacklistedItems()) {
+		for (String name : CONFIG.getBlacklistedItems()) {
 			if (name.equalsIgnoreCase(mat)) {
-				if (BackpackPlugin.getInstance().getCached().useSpout()) {
+				if (CONFIG.useSpout()) {
 					((SpoutPlayer) who).sendNotification("Backpack", "Item is blacklisted", material);
 				} else {
 					who.sendMessage("[Backpack] " + mat + " is blacklisted!");
@@ -132,7 +138,7 @@ public class BackpackListener implements Listener {
 
 	@EventHandler
 	public void onPlayerQuit(PlayerQuitEvent event) {
-		STORE.put(event.getPlayer(), event.getPlayer().getWorld(), null);
+		STORE.save(event.getPlayer(), event.getPlayer().getWorld(), null);
 	}
 
 	@EventHandler
@@ -144,8 +150,8 @@ public class BackpackListener implements Listener {
 		Player player = (Player) entity;
 		Inventory backpack = viewer.getTopInventory();
 
-		if (backpack.getHolder().equals(player) && backpack.getTitle().equals("Backpack")) {
-			STORE.save(player, player.getWorld(), backpack);
+		if (backpack.getHolder().equals(player) && backpack instanceof BackpackInventory) {
+			STORE.save(player, player.getWorld(), new BackpackInventory(backpack));
 		}
 	}
 }

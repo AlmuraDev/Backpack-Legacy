@@ -26,12 +26,8 @@
  */
 package com.almuramc.backpack.bukkit.util;
 
-import java.util.LinkedList;
-
 import com.almuramc.backpack.bukkit.BackpackPlugin;
 
-import org.bukkit.Bukkit;
-import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 /**
@@ -70,37 +66,5 @@ public class PermissionHelper {
 			return BackpackPlugin.getInstance().getCached().getDefaultSize();
 		}
 		return size;
-	}
-
-	public static LinkedList<World> getWorldsToShareTo(String perm) {
-		LinkedList<World> worlds = new LinkedList<World>();
-		//Check if valid perm
-		if (perm.contains("backpack.share")) {
-			//Check to see if any entries past share
-			if (perm.split("backpack.share.").length != 0) {
-				String[] nodes = perm.split("backpack.share.")[1].toString().split(".");
-				//Loop through all nodes in the perm split by ., example: backpack.share.world.world_nether is now [world] [world_nether]
-				for (int i = 0; i < nodes.length; i++) {
-					//perm is backpack.share.world.*, share to all
-					if (i > 0 && nodes[i].equals("*")) {
-						for (World world : Bukkit.getWorlds()) {
-							if (worlds.contains(world)) {
-								continue;
-							}
-							worlds.add(world);
-							//Encountered star node, break out.
-							break;
-						}
-					} else {
-						//perm is backpack.share.world.world_nether.world_end etc
-						World world = Bukkit.getWorld(nodes[i]);
-						if (world != null) {
-							worlds.add(world);
-						}
-					}
-				}
-			}
-		}
-		return worlds;
 	}
 }

@@ -216,7 +216,7 @@ public class BackpackInventory implements Inventory {
 				return false;
 			}
 			if (!contents[i].equals(otherContents[i])) {
-				 return false;
+				return false;
 			}
 		}
 		return true;
@@ -225,6 +225,19 @@ public class BackpackInventory implements Inventory {
 	@Override
 	public String toString() {
 		return inventory.toString();
+	}
+
+	public void setSize(Player player, int newSize) {
+		if (getSize() == newSize || newSize > 54) {
+			return;
+		}
+		int size = newSize;
+		if (!isValidSize(size)) {
+			size = getNextMultiple(size, 9);
+		}
+		Inventory newInventory = Bukkit.createInventory(player, size, getTitle());
+		newInventory.setContents(Arrays.copyOf(inventory.getContents(), size));
+		inventory = newInventory;
 	}
 
 	public Inventory getInventory() {
@@ -237,19 +250,6 @@ public class BackpackInventory implements Inventory {
 
 	public boolean hasValidSize() {
 		return isValidSize(getSize());
-	}
-
-	public void resize(Player player, int newSize) {
-		if (getSize() == newSize || newSize > 54) {
-			return;
-		}
-		int size = newSize;
-		if (!isValidSize(size)) {
-			size = getNextMultiple(size, 9);
-		}
-		Inventory newInventory = Bukkit.createInventory(player, size, getTitle());
-		newInventory.setContents(Arrays.copyOf(inventory.getContents(), size));
-		inventory = newInventory;
 	}
 
 	public boolean hasVisibleContents() {
@@ -277,7 +277,6 @@ public class BackpackInventory implements Inventory {
 	/**
 	 * Backpack-specific static helpers
 	 */
-
 	public static boolean isValidSize(int size) {
 		if (size > 54 || size < 9 || size % 9 != 0) {
 			return false;

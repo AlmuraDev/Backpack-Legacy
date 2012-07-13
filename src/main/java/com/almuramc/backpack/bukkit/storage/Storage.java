@@ -33,7 +33,6 @@ import com.almuramc.backpack.bukkit.inventory.BackpackInventory;
 
 import org.bukkit.World;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 
 public abstract class Storage {
 	private static final HashMap<UUID, HashMap<UUID, BackpackInventory>> BACKPACKS = new HashMap<UUID, HashMap<UUID, BackpackInventory>>();
@@ -43,25 +42,19 @@ public abstract class Storage {
 			return;
 		}
 		HashMap<UUID, BackpackInventory> playerMap = BACKPACKS.get(world.getUID());
-		if (!has(world) && (has(player, world) && toStore.getInventory() != null)) {
+		if (playerMap == null) {
 			playerMap = new HashMap<UUID, BackpackInventory>();
-			playerMap.put(player.getUniqueId(), toStore);
-			BACKPACKS.put(world.getUID(), playerMap);
-			return;
 		}
-		if (has(world) && (!has(player, world) || toStore.getInventory() == null)) {
+		if (playerMap.containsKey(player.getUniqueId()) && toStore == null || toStore.getInventory() == null) {
 			playerMap.remove(player.getUniqueId());
 			BACKPACKS.put(world.getUID(), playerMap);
 			return;
 		}
-		BackpackInventory stored = playerMap.get(player.getUniqueId());
-		if (!stored.equals(toStore)) {
-			playerMap.put(player.getUniqueId(), toStore);
-			BACKPACKS.put(world.getUID(), playerMap);
-		}
+		playerMap.put(player.getUniqueId(), toStore);
+		BACKPACKS.put(world.getUID(), playerMap);
 	}
 
-	public final Inventory fetch(Player player, World world) {
+	public final BackpackInventory fetch(Player player, World world) {
 		if (player == null || world == null) {
 			return null;
 		}
@@ -81,14 +74,16 @@ public abstract class Storage {
 	}
 
 	public final boolean has(Player player, World world) {
-		return BACKPACKS.get(world.getUID()).get(player.getUniqueId()) != null;
+		HashMap<UUID, BackpackInventory> map = BACKPACKS.get(world.getUID());
+		return map != null && map.get(player.getUniqueId()) != null;
 	}
 
 	public final HashMap<UUID, BackpackInventory> fetchAll(Player player) {
 		HashMap<UUID, BackpackInventory> fetched = new HashMap<UUID, BackpackInventory>();
-		for (UUID entry: BACKPACKS.keySet()) {
-			if (BACKPACKS.get(entry).containsKey(player.getUniqueId())) {
-				fetched.put(entry, BACKPACKS.get(entry).get(player.getUniqueId()));
+		for (UUID entry : BACKPACKS.keySet()) {
+			HashMap<UUID, BackpackInventory> map = BACKPACKS.get(entry);
+			if (map.containsKey(player.getUniqueId())) {
+				fetched.put(entry, map.get(player.getUniqueId()));
 			}
 		}
 		return fetched;
