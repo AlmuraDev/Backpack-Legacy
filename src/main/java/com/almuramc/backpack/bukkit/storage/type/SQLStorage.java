@@ -26,25 +26,25 @@
  */
 package com.almuramc.backpack.bukkit.storage.type;
 
+import com.almuramc.backpack.bukkit.inventory.BackpackInventory;
 import com.almuramc.backpack.bukkit.storage.Storage;
 
 import org.bukkit.World;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 
 public class SQLStorage extends Storage {
 	@Override
-	public void initialize() {
+	public void initWorld(World world) {
 
 	}
 
 	@Override
-	public Inventory load(Player player, World world) {
+	public BackpackInventory load(Player player, World world) {
 		return null;
 	}
 
 	@Override
-	public void save(Player player, World world, Inventory inventory) {
+	public void save(Player player, World world, BackpackInventory backpack) {
 
 	}
 }

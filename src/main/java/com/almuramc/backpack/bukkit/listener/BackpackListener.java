@@ -32,7 +32,6 @@ import com.almuramc.backpack.bukkit.storage.Storage;
 import com.almuramc.backpack.bukkit.util.CachedConfiguration;
 
 import net.milkbowl.vault.permission.Permission;
-
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 import org.bukkit.Material;
@@ -54,14 +53,10 @@ import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 
 public class BackpackListener implements Listener {
-	private final BackpackPlugin plugin;
+	private static final BackpackPlugin plugin = BackpackPlugin.getInstance();
 	private static final Storage STORE = BackpackPlugin.getInstance().getStore();
 	private static final CachedConfiguration CONFIG = BackpackPlugin.getInstance().getCached();
 	private static final Permission PERM = BackpackPlugin.getInstance().getHooks().getPermHook();
-
-	public BackpackListener(BackpackPlugin plugin) {
-		this.plugin = plugin;
-	}
 
 	@EventHandler
 	public void onEntityDeath(EntityDeathEvent event) {
