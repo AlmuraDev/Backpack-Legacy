@@ -33,15 +33,19 @@ import org.getspout.spoutapi.event.input.KeyBindingEvent;
 import org.getspout.spoutapi.gui.ScreenType;
 import org.getspout.spoutapi.keyboard.BindingExecutionDelegate;
 
+import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 
 public class BackpackInputHandler implements BindingExecutionDelegate {
 	@Override
 	public void keyPressed(KeyBindingEvent keyBindingEvent) {
 		Player player = keyBindingEvent.getPlayer();
 		World world = player.getWorld();
-		if (player.getOpenInventory().getTopInventory() instanceof BackpackInventory) {
+		if (player.getOpenInventory().getTopInventory().getTitle().equals("Backpack")) {
+			//Me am Bukkit, Me like hacks, Me do hacks!
+			Bukkit.getPluginManager().callEvent(new InventoryCloseEvent(player.getOpenInventory()));
 			player.closeInventory();
 		}
 		//Only open backpack on game screen

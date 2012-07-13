@@ -86,7 +86,7 @@ public class BackpackListener implements Listener {
 			return;
 		}
 		Player who = (Player) event.getWhoClicked();
-		if (!(event.getView().getTopInventory() instanceof BackpackInventory) || PERM.has(who.getWorld().getName(), who.getName(), "backpack.noblacklist")) {
+		if (!(event.getView().getTopInventory().getTitle().equals("Backpack") || PERM.has(who.getWorld().getName(), who.getName(), "backpack.noblacklist"))) {
 			return;
 		}
 		Material material = event.getCursor().getType();
@@ -145,7 +145,7 @@ public class BackpackListener implements Listener {
 		Player player = (Player) entity;
 		Inventory backpack = viewer.getTopInventory();
 
-		if (backpack.getHolder().equals(player) && backpack instanceof BackpackInventory) {
+		if (backpack.getHolder().equals(player) && backpack.getTitle().equals("Backpack")) {
 			STORE.save(player, player.getWorld(), new BackpackInventory(backpack));
 		}
 	}

@@ -115,12 +115,7 @@ public class YamlStorage extends Storage {
 			BackpackInventory backpack = new BackpackInventory(Bukkit.createInventory(player, size, "Backpack"));
 			backpack.setContents(items.toArray(new ItemStack[items.size()]));
 			return backpack;
-			//Return nulls for the exceptions as we will just send back an empty backpack for the player
-		} catch (FileNotFoundException e) {
-			return null;
-		} catch (InvalidConfigurationException e) {
-			return null;
-		} catch (IOException e) {
+		} catch (Exception e) {
 			return null;
 		}
 	}
@@ -148,9 +143,7 @@ public class YamlStorage extends Storage {
 				slot.set("ItemStack", contents[i]);
 			}
 			READER.save(playerBackpack);
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (InvalidConfigurationException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
