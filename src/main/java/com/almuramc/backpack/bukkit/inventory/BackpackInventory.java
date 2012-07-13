@@ -278,11 +278,11 @@ public class BackpackInventory implements Inventory {
 	}
 
 	public List<ItemStack> getIllegalItems(HashSet<String> blacklistedMats) {
-		ArrayList<ItemStack> illegalItems = new ArrayList<ItemStack>(Arrays.asList(inventory.getContents()));
+		ArrayList<ItemStack> illegalItems = new ArrayList<ItemStack>();
 		for (String name : blacklistedMats) {
 			for (ItemStack item : inventory.getContents()) {
 				if (item.getType().name().equals(name)) {
-					illegalItems.remove(item);
+					illegalItems.add(item);
 				}
 			}
 		}

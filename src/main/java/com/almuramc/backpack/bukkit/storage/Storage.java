@@ -45,7 +45,7 @@ public abstract class Storage {
 		if (playerMap == null) {
 			playerMap = new HashMap<UUID, BackpackInventory>();
 		}
-		if (playerMap.containsKey(player.getUniqueId()) && toStore == null || toStore.getInventory() == null) {
+		if (playerMap.containsKey(player.getUniqueId()) && (toStore == null || toStore.getInventory() == null)) {
 			playerMap.remove(player.getUniqueId());
 			BACKPACKS.put(world.getUID(), playerMap);
 			return;
