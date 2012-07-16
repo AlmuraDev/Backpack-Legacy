@@ -36,7 +36,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.inventory.Inventory;
 
 public class BackpackInputHandler implements BindingExecutionDelegate {
 	@Override
@@ -52,8 +51,7 @@ public class BackpackInputHandler implements BindingExecutionDelegate {
 		if (!keyBindingEvent.getScreenType().equals(ScreenType.GAME_SCREEN)) {
 			return;
 		}
-		Inventory inventory = BackpackPlugin.getInstance().getStore().load(player, world).getInventory();
-		player.openInventory(inventory);
+		player.openInventory(BackpackPlugin.getInstance().getStore().load(player, world).getInventory());
 	}
 
 	@Override

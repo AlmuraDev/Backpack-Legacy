@@ -30,12 +30,10 @@ import com.almuramc.backpack.bukkit.BackpackPlugin;
 import com.almuramc.backpack.bukkit.inventory.BackpackInventory;
 import com.almuramc.backpack.bukkit.storage.Storage;
 import com.almuramc.backpack.bukkit.util.CachedConfiguration;
-import com.almuramc.backpack.bukkit.util.MessageHelper;
 import com.almuramc.backpack.bukkit.util.PermissionHelper;
 
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
-import org.getspout.spoutapi.SpoutManager;
 
 import org.bukkit.Material;
 import org.bukkit.command.Command;
