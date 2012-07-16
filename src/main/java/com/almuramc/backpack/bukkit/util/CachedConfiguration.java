@@ -58,10 +58,6 @@ public final class CachedConfiguration {
 		return cachedConfig.getString("backpack.hotkey");
 	}
 
-	public String getWorkbenchHotkey() {
-		return cachedConfig.getString("workbench.hotkey");
-	}
-
 	public String getPanelHotkey() {
 		return cachedConfig.getString("admin.hotkey");
 	}
@@ -87,7 +83,11 @@ public final class CachedConfiguration {
 	}
 
 	public int getDefaultSize() {
-		return cachedConfig.getInt("backpack.no-perm-default-size");
+		return cachedConfig.getInt("backpack.default-size");
+	}
+
+	public int getMaximumSize() {
+		return cachedConfig.getInt("backpack.maximum-no-perm-size");
 	}
 
 	public HashSet<String> getBlacklistedItems() {

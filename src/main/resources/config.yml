@@ -34,13 +34,14 @@
 #
 general:
   use-economy: false
-  use-spout: false
+  use-spout: true
   use-sql: false
 admin:
   control-panel: false
   hotkey: KEY_V
 backpack:
-  no-perm-default-size: 9
+  default-size: 9
+  maximum-no-perm-size: 54
   hotkey: KEY_B
   cost:
     slot18: 0

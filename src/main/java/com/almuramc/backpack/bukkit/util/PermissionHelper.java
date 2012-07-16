@@ -45,11 +45,11 @@ public class PermissionHelper {
 
 	/**
 	 * Checks the permissions of a player and compares it to an array of size perms. This method
-	 * will return the size of a backpack or -1 if no size perm was found.
+	 * will return the size of a backpack.
 	 * @param player
 	 * @return
 	 */
-	public static int getSizeByPermFor(Player player) {
+	public static int getMaxSizeFor(Player player) {
 		String found;
 		int size = -1;
 		for (String perm : BACKPACK_SIZE_PERMS) {
@@ -63,7 +63,7 @@ public class PermissionHelper {
 			}
 		}
 		if (size == -1) {
-			return BackpackPlugin.getInstance().getCached().getDefaultSize();
+			return BackpackPlugin.getInstance().getCached().getMaximumSize();
 		}
 		return size;
 	}

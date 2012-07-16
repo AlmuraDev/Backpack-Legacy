@@ -1,3 +1,29 @@
+/*
+ * This file is part of Backpack.
+ *
+ * Copyright (c) 2012, AlmuraDev <http://www.almuramc.com/>
+ * Backpack is licensed under the Almura Development License version 1.
+ *
+ * Backpack is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * As an exception, all classes which do not reference GPL licensed code
+ * are hereby licensed under the GNU Lesser Public License, as described
+ * in Almura Development License version 1.
+ *
+ * Backpack is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License,
+ * the GNU Lesser Public License (for classes that fulfill the exception)
+ * and the Almura Development License version 1 along with this program. If not, see
+ * <http://www.gnu.org/licenses/> for the GNU General Public License and
+ * the GNU Lesser Public License.
+ */
 package com.almuramc.backpack.bukkit.inventory;
 
 import java.util.ArrayList;
@@ -22,6 +48,12 @@ public class BackpackInventory implements Inventory {
 	private Inventory inventory;
 
 	public BackpackInventory(Inventory inventory) {
+		if (inventory == null) {
+			throw new NullPointerException("Wrapped inventory cannot be null!");
+		}
+		if (inventory instanceof BackpackInventory) {
+			throw new IllegalStateException("Inner inventory cannot be an instance of wrapper BackpackInventory");
+		}
 		this.inventory = inventory;
 	}
 
@@ -269,7 +301,7 @@ public class BackpackInventory implements Inventory {
 	public ItemStack[] getVisibleContents() {
 		ArrayList<ItemStack> visibleContents = new ArrayList<ItemStack>();
 		for (ItemStack is : inventory.getContents()) {
-			if (is.equals(Material.AIR)) {
+			if (is == null || is.equals(Material.AIR)) {
 				continue;
 			}
 			visibleContents.add(is);
@@ -279,9 +311,12 @@ public class BackpackInventory implements Inventory {
 
 	public List<ItemStack> getIllegalItems(HashSet<String> blacklistedMats) {
 		ArrayList<ItemStack> illegalItems = new ArrayList<ItemStack>();
-		for (String name : blacklistedMats) {
-			for (ItemStack item : inventory.getContents()) {
-				if (item.getType().name().equals(name)) {
+		for (ItemStack item : inventory.getContents()) {
+			if (item == null || item.getType().equals(Material.AIR)) {
+				continue;
+			}
+			for (String name : blacklistedMats) {
+				if (item.getType().name().equals(name.toUpperCase())) {
 					illegalItems.add(item);
 				}
 			}
@@ -290,15 +325,16 @@ public class BackpackInventory implements Inventory {
 	}
 
 	public void filterIllegalItems() {
-		List<ItemStack> items = getIllegalItems(BackpackPlugin.getInstance().getCached().getBlacklistedItems());
-		List<ItemStack> contents = Arrays.asList(inventory.getContents());
 		ArrayList<ItemStack> newContents = new ArrayList<ItemStack>();
-
-		for (ItemStack outer : contents) {
-			for (ItemStack inner : items) {
-				if (!inner.getType().name().equals(outer.getType().name())) {
-					newContents.add(outer);
+		for (ItemStack item : inventory.getContents()) {
+			if (item == null || item.getType().equals(Material.AIR)) {
+				continue;
+			}
+			for (String name : BackpackPlugin.getInstance().getCached().getBlacklistedItems()) {
+				if (item.getType().name().equals(name.toUpperCase())) {
+					continue;
 				}
+				newContents.add(item);
 			}
 		}
 		inventory.setContents(newContents.toArray(new ItemStack[newContents.size()]));

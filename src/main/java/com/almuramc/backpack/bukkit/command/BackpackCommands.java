@@ -30,17 +30,20 @@ import com.almuramc.backpack.bukkit.BackpackPlugin;
 import com.almuramc.backpack.bukkit.inventory.BackpackInventory;
 import com.almuramc.backpack.bukkit.storage.Storage;
 import com.almuramc.backpack.bukkit.util.CachedConfiguration;
+import com.almuramc.backpack.bukkit.util.MessageHelper;
 import com.almuramc.backpack.bukkit.util.PermissionHelper;
 
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
-import org.getspout.spoutapi.player.SpoutPlayer;
+import org.getspout.spoutapi.SpoutManager;
 
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import static com.almuramc.backpack.bukkit.util.MessageHelper.sendMessage;
 
 public class BackpackCommands implements CommandExecutor {
 	private static final Storage STORE = BackpackPlugin.getInstance().getStore();
@@ -57,53 +60,56 @@ public class BackpackCommands implements CommandExecutor {
 			}
 
 			if (strings.length == 0 && player != null) {
-				return openBackpack(player);
+				if (PERM.has(player.getWorld().getName(), player.getName(), "backpack.use")) {
+					player.openInventory(STORE.load(player, player.getWorld()).getInventory());
+					return true;
+				}
+				return false;
 			} else if (strings.length > 0 && strings[0].equalsIgnoreCase("reload")) {
 				CONFIG.reload();
-				if (player != null) {
-					if (CONFIG.useSpout()) {
-						((SpoutPlayer) player).sendNotification("Backpack", "Configuration reloaded", Material.CAKE);
-					}
+				if (CONFIG.useSpout()) {
+					sendMessage(commandSender, "Configuration reloaded", "Backpack", Material.CAKE);
 				} else {
-					commandSender.sendMessage("[Backpack] Configuration reloaded");
+					sendMessage(commandSender, "[Backpack] Configuration reloaded");
 				}
 				return true;
 			} else if (strings.length > 0 && strings[0].equalsIgnoreCase("upgrade") && player != null) {
 				if (!PERM.has(player.getWorld().getName(), player.getName(), "backpack.upgrade")) {
 					return true;
 				}
-				BackpackInventory backpack = STORE.fetch(player, player.getWorld());
-				if (backpack.getSize() >= 54) {
-					commandSender.sendMessage("{Backpack] You already have the maximun size of backpack allowed!");
-					return true;
-				}
+				BackpackInventory backpack = STORE.load(player, player.getWorld());
 				int newSize = backpack.getSize() + 9;
-				if (newSize > PermissionHelper.getSizeByPermFor(player)) {
-					commandSender.sendMessage("{Backpack] You already have the maximun size of backpack allowed for your server's permissions!");
+				if (backpack.getSize() >= 54 || newSize > PermissionHelper.getMaxSizeFor(player)) {
+					if (CONFIG.useSpout()) {
+						sendMessage(commandSender, "Max size reached!", "Backpack", Material.LAVA_BUCKET);
+					} else {
+						sendMessage(commandSender, "{Backpack] You already have the maximum size for a backpack allowed!");
+					}
 					return true;
 				}
 				if (CONFIG.useEconomy() && !PERM.has(player.getWorld().getName(), player.getName(), "backpack.noupgradecost")) {
 					double cost = CONFIG.getUpgradeCosts().get("Slot" + newSize);
 					if (!ECON.has(player.getName(), cost)) {
-						commandSender.sendMessage("{Backpack] You do not have enough money!");
+						if (CONFIG.useSpout()) {
+							sendMessage(commandSender, "Not enough money!", "Backpack", Material.BONE);
+						} else {
+							sendMessage(commandSender, "{Backpack] You do not have enough money!");
+						}
 						return true;
 					}
 					ECON.withdrawPlayer(player.getName(), cost);
 				}
 				backpack.setSize(player, newSize);
 				STORE.save(player, player.getWorld(), backpack);
+				if (CONFIG.useSpout()) {
+					sendMessage(commandSender, "Upgraded to " + newSize + " slots", "Backpack", Material.CHEST);
+				} else {
+					sendMessage(commandSender, "[Backpack] Your backpack has been upgraded to " + newSize + " slots!");
+				}
 				return true;
 			} else {
-				commandSender.sendMessage("[Backpack] Must be in-game to utilize player-only commands!");
+				sendMessage(commandSender, "[Backpack] Must be in-game to utilize player-only commands!");
 			}
-		}
-		return false;
-	}
-
-	private boolean openBackpack(Player player) {
-		if (PERM.has(player.getWorld().getName(), player.getName(), "backpack.use")) {
-			player.openInventory(STORE.load(player, player.getWorld()).getInventory());
-			return true;
 		}
 		return false;
 	}

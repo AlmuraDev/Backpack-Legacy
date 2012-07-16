@@ -45,7 +45,7 @@ public abstract class Storage {
 		if (playerMap == null) {
 			playerMap = new HashMap<UUID, BackpackInventory>();
 		}
-		if (playerMap.containsKey(player.getUniqueId()) && (toStore == null || toStore.getInventory() == null)) {
+		if (playerMap.containsKey(player.getUniqueId()) && toStore == null) {
 			playerMap.remove(player.getUniqueId());
 			BACKPACKS.put(world.getUID(), playerMap);
 			return;
@@ -76,17 +76,6 @@ public abstract class Storage {
 	public final boolean has(Player player, World world) {
 		HashMap<UUID, BackpackInventory> map = BACKPACKS.get(world.getUID());
 		return map != null && map.get(player.getUniqueId()) != null;
-	}
-
-	public final HashMap<UUID, BackpackInventory> fetchAll(Player player) {
-		HashMap<UUID, BackpackInventory> fetched = new HashMap<UUID, BackpackInventory>();
-		for (UUID entry : BACKPACKS.keySet()) {
-			HashMap<UUID, BackpackInventory> map = BACKPACKS.get(entry);
-			if (map.containsKey(player.getUniqueId())) {
-				fetched.put(entry, map.get(player.getUniqueId()));
-			}
-		}
-		return fetched;
 	}
 
 	public abstract void initWorld(World world);

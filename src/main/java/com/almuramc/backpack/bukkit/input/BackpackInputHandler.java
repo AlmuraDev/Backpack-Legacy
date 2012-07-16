@@ -27,7 +27,6 @@
 package com.almuramc.backpack.bukkit.input;
 
 import com.almuramc.backpack.bukkit.BackpackPlugin;
-import com.almuramc.backpack.bukkit.inventory.BackpackInventory;
 
 import org.getspout.spoutapi.event.input.KeyBindingEvent;
 import org.getspout.spoutapi.gui.ScreenType;
@@ -37,6 +36,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.inventory.Inventory;
 
 public class BackpackInputHandler implements BindingExecutionDelegate {
 	@Override
@@ -52,7 +52,8 @@ public class BackpackInputHandler implements BindingExecutionDelegate {
 		if (!keyBindingEvent.getScreenType().equals(ScreenType.GAME_SCREEN)) {
 			return;
 		}
-		player.openInventory(BackpackPlugin.getInstance().getStore().load(player, world).getInventory());
+		Inventory inventory = BackpackPlugin.getInstance().getStore().load(player, world).getInventory();
+		player.openInventory(inventory);
 	}
 
 	@Override

@@ -26,8 +26,6 @@
  */
 package com.almuramc.backpack.bukkit.listener;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 import com.almuramc.backpack.bukkit.BackpackPlugin;
@@ -36,7 +34,6 @@ import com.almuramc.backpack.bukkit.storage.Storage;
 import com.almuramc.backpack.bukkit.util.CachedConfiguration;
 
 import net.milkbowl.vault.permission.Permission;
-import org.getspout.spoutapi.player.SpoutPlayer;
 
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -46,16 +43,16 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
-import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.world.WorldLoadEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
+
+import static com.almuramc.backpack.bukkit.util.MessageHelper.sendMessage;
 
 public class BackpackListener implements Listener {
 	private static final BackpackPlugin plugin = BackpackPlugin.getInstance();
@@ -124,15 +121,25 @@ public class BackpackListener implements Listener {
 	private void onBackpackClose(InventoryView viewer, HumanEntity entity) {
 		Player player = (Player) entity;
 		Inventory inventory = viewer.getTopInventory();
-
 		if (inventory.getHolder().equals(player) && inventory.getTitle().equals("Backpack")) {
 			BackpackInventory backpack = new BackpackInventory(inventory);
 			List<ItemStack> blacklistedItems = backpack.getIllegalItems(CONFIG.getBlacklistedItems());
+			boolean hadIllegalItems = false;
 			for (ItemStack item : blacklistedItems) {
+				if (!hadIllegalItems) {
+					hadIllegalItems = true;
+				}
 				player.getWorld().dropItemNaturally(player.getLocation(), item);
 			}
 			backpack.filterIllegalItems();
-			STORE.save(player, player.getWorld(), new BackpackInventory(backpack));
+			if (hadIllegalItems) {
+				if (CONFIG.useSpout()) {
+					sendMessage(player, "Dropping illegal items!", "Backpack", Material.LAVA);
+				} else {
+					sendMessage(player, "[Backpack] Found illegal items in your Backpack! Dropping them around you...");
+				}
+			}
+			STORE.save(player, player.getWorld(), new BackpackInventory(backpack.getInventory()));
 		}
 	}
 }
