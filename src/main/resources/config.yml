@@ -49,8 +49,6 @@ backpack:
     slot36: 0
     slot45: 0
     slot54: 0
-workbench:  
-  hotkey: KEY_N
 sql:
   host: localhost
   port: 3306

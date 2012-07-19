@@ -32,9 +32,11 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.almuramc.backpack.bukkit.BackpackPlugin;
 
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -105,8 +107,11 @@ public final class CachedConfiguration {
 
 	public HashMap<String, Double> getUpgradeCosts() {
 		HashMap<String, Double> costMap = new HashMap<String, Double>();
-		for (String key : cachedConfig.getStringList("backpack.cost")) {
-			costMap.put(key, cachedConfig.getDouble("backpack.cost." + key, 0));
+		ConfigurationSection parent = cachedConfig.getConfigurationSection("backpack.cost");
+		Set<String> keys = parent.getKeys(false);
+		for (String key : keys) {
+			System.out.println(key.toString());
+			costMap.put(key, parent.getDouble(key, 0));
 		}
 		return costMap;
 	}
