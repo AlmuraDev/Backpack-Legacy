@@ -111,8 +111,8 @@ public final class CachedConfiguration {
 		Set<String> keys = parent.getKeys(false);
 		for (String key : keys) {
 			System.out.println(key.toString());
-			System.out.println(parent.getCurrentPath() + key);
-			costMap.put(key, parent.getDouble(parent.getCurrentPath() + key, 0));
+			System.out.println(parent.getCurrentPath() + "." + key);
+			costMap.put(key, parent.getDouble(parent.getCurrentPath() + "." + key, 0));
 		}
 		return costMap;
 	}
