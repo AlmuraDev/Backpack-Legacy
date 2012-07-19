@@ -96,6 +96,10 @@ public final class CachedConfiguration {
 			return new HashSet<String>();
 		}
 		elements.removeAll(Collections.singletonList(null));
+		for (int i = 0; i < elements.size(); i ++) {
+			String t = elements.get(i);
+			elements.set(i, t.toUpperCase());
+		}
 		return new HashSet<String>(elements);
 	}
 
