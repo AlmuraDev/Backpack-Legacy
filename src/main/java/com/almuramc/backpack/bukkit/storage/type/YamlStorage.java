@@ -83,9 +83,10 @@ public class YamlStorage extends Storage {
 		//Store this backpack to memory
 		store(player, world, backpack);
 		//Save to file
-		if (has(player, world)) {
-			saveToFile(player, world, backpack);
+		if (!has(player, world)) {
+			return;
 		}
+		saveToFile(player, world, backpack);
 	}
 
 	private BackpackInventory loadFromFile(Player player, World world) {
@@ -133,7 +134,7 @@ public class YamlStorage extends Storage {
 			} else {
 				READER.load(playerBackpack);
 			}
-			ItemStack[] contents = backpack.getVisibleContents();
+			ItemStack[] contents = backpack.getContents();
 			READER.set("contents-amount", backpack.getSize());
 			ConfigurationSection parent = READER.getConfigurationSection("backpack");
 			if (parent == null) {

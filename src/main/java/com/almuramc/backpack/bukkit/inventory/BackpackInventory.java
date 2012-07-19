@@ -268,7 +268,7 @@ public class BackpackInventory implements Inventory {
 		}
 		int size = newSize;
 		if (!isValidSize(size)) {
-			size = getNextMultiple(size, 9);
+			size = getNextMultiple(size, 9, 54);
 		}
 		Inventory newInventory = Bukkit.createInventory(player, size, getTitle());
 		newInventory.setContents(Arrays.copyOf(inventory.getContents(), size));
@@ -327,17 +327,19 @@ public class BackpackInventory implements Inventory {
 	public void filterIllegalItems() {
 		ArrayList<ItemStack> newContents = new ArrayList<ItemStack>();
 		for (ItemStack item : inventory.getContents()) {
-			if (item == null || item.getType().equals(Material.AIR)) {
+			if (item == null) {
+				newContents.add(null);
 				continue;
 			}
 			for (String name : BackpackPlugin.getInstance().getCached().getBlacklistedItems()) {
 				if (item.getType().name().equals(name.toUpperCase())) {
+					newContents.add(null);
 					continue;
 				}
 				newContents.add(item);
 			}
 		}
-		inventory.setContents(newContents.toArray(new ItemStack[newContents.size()]));
+		inventory.setContents(newContents.toArray(new ItemStack[inventory.getSize()]));
 	}
 
 	/**
@@ -351,7 +353,8 @@ public class BackpackInventory implements Inventory {
 		return true;
 	}
 
-	public static int getNextMultiple(int num, int multiple) {
-		return ((num / multiple + 1)) * multiple;
+	public static int getNextMultiple(int num, int multiple, int max) {
+		int nm = ((num / multiple + 1)) * multiple;
+		return nm <= max ? nm : max;
 	}
 }
