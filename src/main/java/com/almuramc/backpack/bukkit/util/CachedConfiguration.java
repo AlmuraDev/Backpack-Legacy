@@ -110,10 +110,7 @@ public final class CachedConfiguration {
 		ConfigurationSection parent = cachedConfig.getConfigurationSection("backpack.cost");
 		Set<String> keys = parent.getKeys(false);
 		for (String key : keys) {
-			System.out.println(key.toString());
-			System.out.println(parent.getCurrentPath() + "." + key);
-			System.out.println(parent.getDouble(parent.getCurrentPath() + "." + key, 0));
-			costMap.put(key, parent.getDouble(parent.getCurrentPath() + "." + key, 0));
+			costMap.put(key, parent.getDouble(key, 0));
 		}
 		return costMap;
 	}
