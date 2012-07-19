@@ -325,21 +325,16 @@ public class BackpackInventory implements Inventory {
 	}
 
 	public void filterIllegalItems() {
-		ArrayList<ItemStack> newContents = new ArrayList<ItemStack>();
-		for (ItemStack item : inventory.getContents()) {
-			if (item == null) {
-				newContents.add(null);
+		HashSet<String> blacklisted = BackpackPlugin.getInstance().getCached().getBlacklistedItems();
+		ItemStack[] newContents = inventory.getContents().clone();
+
+		for (int i = 0; i < inventory.getContents().length; i++) {
+			if (newContents[i] == null || !blacklisted.contains(newContents[i].getType().name().toUpperCase())) {
 				continue;
 			}
-			for (String name : BackpackPlugin.getInstance().getCached().getBlacklistedItems()) {
-				if (item.getType().name().equals(name.toUpperCase())) {
-					newContents.add(null);
-					continue;
-				}
-				newContents.add(item);
-			}
+			newContents[i] = null;
 		}
-		inventory.setContents(newContents.toArray(new ItemStack[inventory.getSize()]));
+		inventory.setContents(newContents);
 	}
 
 	/**
