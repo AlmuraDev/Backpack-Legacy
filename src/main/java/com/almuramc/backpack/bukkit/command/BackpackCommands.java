@@ -87,6 +87,7 @@ public class BackpackCommands implements CommandExecutor {
 				}
 				if (CONFIG.useEconomy() && !PERM.has(player.getWorld().getName(), player.getName(), "backpack.noupgradecost")) {
 					double cost = CONFIG.getUpgradeCosts().get("slot" + newSize);
+					System.out.println(cost);
 					if (!ECON.has(player.getName(), cost)) {
 						if (CONFIG.useSpout()) {
 							sendMessage(commandSender, "Not enough money!", "Backpack", Material.BONE);
