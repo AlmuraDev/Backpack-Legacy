@@ -29,16 +29,16 @@ package com.almuramc.backpack.bukkit.gui;
 import org.getspout.spoutapi.event.screen.ButtonClickEvent;
 import org.getspout.spoutapi.gui.GenericButton;
 
-public class CloseButton extends GenericButton {
+public class Buy54Button extends GenericButton {
 	private UpgradePanel guicon;
 
-	public CloseButton(UpgradePanel guicon) {
-		super("Close");	
+	public Buy54Button(UpgradePanel guicon) {
+		super("Buy");	
 		this.guicon = guicon;
 	}
 
 	@Override
 	public void onButtonClick(ButtonClickEvent event) {
-		guicon.onCloseClick();
+		guicon.onBuy54Click();
 	}
 }
