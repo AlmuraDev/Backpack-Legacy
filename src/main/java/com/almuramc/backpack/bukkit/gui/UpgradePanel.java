@@ -210,7 +210,7 @@ public class UpgradePanel extends GenericPopup {
 			GenericLabel notAvailable = new GenericLabel();
 			notAvailable.setText("You already have your Max Size!");			
 			notAvailable.setAnchor(WidgetAnchor.CENTER_CENTER);
-			notAvailable.shiftXPos(xLoc+35).shiftYPos(nextLoc);		
+			notAvailable.shiftXPos(xLoc+10).shiftYPos(nextLoc);		
 			notAvailable.setPriority(RenderPriority.Lowest);
 			notAvailable.setWidth(5).setHeight(18);
 			attachWidgets(BackpackPlugin.getInstance(), notAvailable);		
