@@ -125,7 +125,7 @@ public final class CachedConfiguration {
 		ConfigurationSection parent = cachedShare.getConfigurationSection("share");
 		for (String worldName : parent.getKeys(false)) {
 			Bukkit.getLogger().info(worldName);
-			List<String> children = parent.getStringList(parent.getCurrentPath() + "." + worldName);
+			List<String> children = parent.getStringList(worldName);
 			if (children != null && !children.isEmpty()) {
 				Bukkit.getLogger().info(children.toString());
 				entries.put(worldName, convertToLowercase(children));
