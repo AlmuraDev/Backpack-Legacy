@@ -26,7 +26,12 @@
  */
 package com.almuramc.backpack.bukkit.input;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 import com.almuramc.backpack.bukkit.BackpackPlugin;
+import com.almuramc.backpack.bukkit.util.PermissionHelper;
 
 import org.getspout.spoutapi.event.input.KeyBindingEvent;
 import org.getspout.spoutapi.gui.ScreenType;
@@ -41,7 +46,6 @@ public class BackpackInputHandler implements BindingExecutionDelegate {
 	@Override
 	public void keyPressed(KeyBindingEvent keyBindingEvent) {
 		Player player = keyBindingEvent.getPlayer();
-		World world = player.getWorld();
 		if (player.getOpenInventory().getTopInventory().getTitle().equals("Backpack")) {
 			//Me am Bukkit, Me like hacks, Me do hacks!
 			Bukkit.getPluginManager().callEvent(new InventoryCloseEvent(player.getOpenInventory()));
@@ -51,7 +55,13 @@ public class BackpackInputHandler implements BindingExecutionDelegate {
 		if (!keyBindingEvent.getScreenType().equals(ScreenType.GAME_SCREEN)) {
 			return;
 		}
-		player.openInventory(BackpackPlugin.getInstance().getStore().load(player, world).getInventory());
+		World world = player.getWorld();
+		if (BackpackPlugin.getInstance().getHooks().getPermHook().has(world, player.getName(), "backpack.share")) {
+			//Can share...but with what world?
+			HashMap<String, List<String>> shares = BackpackPlugin.getInstance().getCached().getShareEntries();
+
+		}
+		player.openInventory(BackpackPlugin.getInstance().getStore().load(player, PermissionHelper.getWorldToOpen(player, world)).getInventory());
 	}
 
 	@Override

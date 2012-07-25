@@ -1,0 +1,4 @@
+  share:
+    world:
+      - world_nether
+      - world_end

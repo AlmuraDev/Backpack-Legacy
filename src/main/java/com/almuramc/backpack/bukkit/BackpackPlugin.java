@@ -55,11 +55,7 @@ public class BackpackPlugin extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		//Assign configured storage
-		if (cached.useSQL()) {
-			store = new SQLStorage();
-		} else {
-			store = new YamlStorage(getDataFolder());
-		}
+		store = new YamlStorage(getDataFolder());
 		//Setup dependencies
 		hooks = new Dependency();
 		hooks.setup();

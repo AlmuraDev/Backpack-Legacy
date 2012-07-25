@@ -61,7 +61,7 @@ public class BackpackCommands implements CommandExecutor {
 
 			if (strings.length == 0 && player != null) {
 				if (PERM.has(player.getWorld().getName(), player.getName(), "backpack.use")) {
-					player.openInventory(STORE.load(player, player.getWorld()).getInventory());
+					player.openInventory(STORE.load(player, PermissionHelper.getWorldToOpen(player, player.getWorld())).getInventory());
 					return true;
 				}
 				return false;

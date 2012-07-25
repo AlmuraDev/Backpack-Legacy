@@ -27,7 +27,6 @@
 package com.almuramc.backpack.bukkit.util;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -37,19 +36,18 @@ import java.util.Set;
 import com.almuramc.backpack.bukkit.BackpackPlugin;
 
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 
-/**
- * Utility helper config class that uses a cached config instance to access the config
- * file. Helper methods are provided for config entries.
- */
 public final class CachedConfiguration {
 	private final Plugin plugin;
 	private FileConfiguration cachedConfig;
 	private FileConfiguration cachedBlacklist;
+	private FileConfiguration cachedShare;
+	private HashMap<String, List<String>> entries = null;
+	private HashMap<String, Double> costMap = null;
+	private HashSet<String> elements = null;
 
 	public CachedConfiguration() {
 		plugin = BackpackPlugin.getInstance();
@@ -73,15 +71,7 @@ public final class CachedConfiguration {
 	}
 
 	public boolean useSpout() {
-		return cachedConfig.getBoolean("general.use-spout");
-	}
-
-	public boolean useSQL() {
-		return cachedConfig.getBoolean("general.use-sql");
-	}
-
-	public String getSQLHost() {
-		return cachedConfig.getString("sql.host");
+		return cachedConfig.getBoolean("general.use-spoutplugin");
 	}
 
 	public int getDefaultSize() {
@@ -93,31 +83,57 @@ public final class CachedConfiguration {
 	}
 
 	public HashSet<String> getBlacklistedItems() {
-		List<String> elements = (List<String>) cachedBlacklist.getList("blacklist", Collections.emptyList());
-		if (elements == null || (elements != null && elements.isEmpty())) {
+		if (elements != null) {
+			return elements;
+		}
+		List<String> temp = (List<String>) cachedBlacklist.getList("blacklist", Collections.emptyList());
+		if (temp == null || temp.isEmpty()) {
 			return new HashSet<String>();
 		}
-		elements.removeAll(Collections.singletonList(null));
-		for (int i = 0; i < elements.size(); i ++) {
-			String t = elements.get(i);
-			elements.set(i, t.toUpperCase());
+		temp.removeAll(Collections.singletonList(null));
+		for (int i = 0; i < temp.size(); i ++) {
+			String t = temp.get(i);
+			temp.set(i, t.toUpperCase());
 		}
-		return new HashSet<String>(elements);
+		elements = new HashSet<String>(temp);
+		return elements;
 	}
 
 	public HashMap<String, Double> getUpgradeCosts() {
-		HashMap<String, Double> costMap = new HashMap<String, Double>();
+		if (costMap != null) {
+			return costMap;
+		}
+		costMap = new HashMap<String, Double>();
 		ConfigurationSection parent = cachedConfig.getConfigurationSection("backpack.cost");
 		Set<String> keys = parent.getKeys(false);
 		for (String key : keys) {
 			costMap.put(key, parent.getDouble(key, 0));
 		}
-		return costMap;
+		if (!costMap.isEmpty()) {
+			return costMap;
+		}
+		return null;
 	}
 
-	/**
-	 * Reloads the cached config. Configs files are always guaranteed to be present.
-	 */
+	public HashMap<String, List<String>> getShareEntries() {
+		if (entries != null) {
+			return entries;
+		}
+		entries = new HashMap<String, List<String>>();
+		ConfigurationSection parent = cachedShare.getConfigurationSection("share");
+		for (String worldName : parent.getKeys(false)) {
+			List<String> children = parent.getStringList(parent.getCurrentPath() + "." + worldName);
+			if (children != null || !children.isEmpty()) {
+				entries.put(worldName, children);
+			}
+		}
+		if (!entries.isEmpty()) {
+			return entries;
+		}
+
+		return null;
+	}
+
 	public void reload() {
 		try {
 			if (!setupConfig()) {
@@ -127,22 +143,26 @@ public final class CachedConfiguration {
 			if (!setupBlacklist()) {
 				cachedBlacklist = YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder(), "blacklist.yml"));
 			}
-		} catch (InvalidConfigurationException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
+			if (!setupShare()) {
+				cachedShare = YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder(), "share.yml"));
+			}
+			//Set the storage to null so they can be re-generated when called for after the reload.
+			entries = null;
+			costMap = null;
+			elements = null;
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	/**
-	 * Simple config setup method.
-	 */
 	private void setup() {
 		try {
 			setupConfig();
 			setupBlacklist();
+			setupShare();
 			cachedConfig = plugin.getConfig();
 			cachedBlacklist = YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder(), "blacklist.yml"));
+			cachedShare = YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder(), "share.yml"));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -156,9 +176,17 @@ public final class CachedConfiguration {
 		return false;
 	}
 
-	private boolean setupBlacklist() throws IOException, InvalidConfigurationException {
+	private boolean setupBlacklist() {
 		if (!new File(plugin.getDataFolder(), "blacklist.yml").exists()) {
 			plugin.saveResource("blacklist.yml", true);
+			return true;
+		}
+		return false;
+	}
+
+	private boolean setupShare() {
+		if (!new File(plugin.getDataFolder(), "share.yml").exists()) {
+			plugin.saveResource("share.yml", true);
 			return true;
 		}
 		return false;

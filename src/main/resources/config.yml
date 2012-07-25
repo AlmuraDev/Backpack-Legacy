@@ -1,41 +1,20 @@
 # Backpack Configuration File
 #
-# general:
+# General
 #   use-economy:
 #       false - will not charge users to upgrade their backpacks.
 #       true - users will be charges for backpack upgrades according to upgrade pricing below.
-#   use-spout:
-#       true/false - Enables or disables hotkeys/additional guis support.
-#   use-sql:
-#       false - data storage will take place as flat PLAYERNAME.yml files.
-#       true - data will be stored in sql database format.
+#   use-spout: Set to either true or false, this enables or disables hotkeys/additional guis support.
 #
-# admin:
-#   control-panel:
-#       true/false - Enables or disables the Control Panel Interface for Backpack for easy upgrading and other functions. use-spout *MUST* be enabled for this to work.
-#   hotkey:
-#       Default Value - KEY_V, this value can be changed to pre-set the hotkey to open the control panel. use-spout *MUST* be enabled for this to work.
+# Admin
+#   control-panel: Set to either true or false, this enables or disables the Control Panel Interface for Backpack for easy upgrading and other functions. use-spout *MUST* be enabled for this to work.
+#   hotkey: Default value is set to KEY_V, this value can be changed to pre-set the hotkey to open the control panel. use-spout *MUST* be enabled for this to work.
 #
-# backpack:
-#   hotkey:
-#       Default Value - KEY_B, this value can be changed to pre-set the hotkey to open your backpack. use-spout *MUST* be enabled for this to work.
-#
-# storage:
-#   host:
-#       Typically this is localhost.
-#   port:
-#       default port for mysql is 3306.
-#   database:
-#       database or schema name.
-#   username:
-#       username with sufficient privileges to access and make changes to db.
-#   password:
-#       password for above username.
-#
+# Backpack
+#   hotkey: Default value is set to KEY_B, this value can be changed to pre-set the hotkey to open your backpack. use-spout *MUST* be enabled for this to work.
 general:
   use-economy: false
-  use-spout: true
-  use-sql: false
+  use-spoutplugin: true
 admin:
   control-panel: false
   hotkey: KEY_V
@@ -49,9 +28,3 @@ backpack:
     slot36: 0
     slot45: 0
     slot54: 0
-sql:
-  host: localhost
-  port: 3306
-  database: minecraft
-  username: root
-  password: password

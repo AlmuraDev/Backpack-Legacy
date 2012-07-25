@@ -26,9 +26,16 @@
  */
 package com.almuramc.backpack.bukkit.util;
 
+import java.util.HashMap;
+import java.util.List;
+
 import com.almuramc.backpack.bukkit.BackpackPlugin;
 
+import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
+
+import org.spout.api.protocol.builtin.codec.WorldChangeCodec;
 
 /**
  * Simple class to handle checking of permissions.
@@ -66,5 +73,34 @@ public class PermissionHelper {
 			return BackpackPlugin.getInstance().getCached().getMaximumSize();
 		}
 		return size;
+	}
+
+	public static World getWorldToOpen(Player player, World world) {
+		HashMap<String, List<String>> shares = BackpackPlugin.getInstance().getCached().getShareEntries();
+		/**
+		 * Shares has no entries
+		 * Player doesn't have share permission
+		 * Shares contains the world being shared to as a parent(key)
+		 */
+		if (shares == null || !BackpackPlugin.getInstance().getHooks().getPermHook().has(world, player.getName(), "backpack.share") || shares.containsKey(world.getName().toLowerCase())) {
+			return world;
+		}
+
+		/**
+		 * None of the above conditions checked out, lets see if it is a child
+		 */
+		World w = null;
+		for (String key : shares.keySet()) {
+			List<String> temp = shares.get(key);
+			if (temp == null) {
+				continue;
+			}
+			//If the children list of worlds has either a wildcard or the world passed in return the parent
+			if (temp.contains("*") || temp.contains(world.getName().toLowerCase())) {
+				w = Bukkit.getWorld(key.toLowerCase());
+				break;
+			}
+		}
+		return w;
 	}
 }
