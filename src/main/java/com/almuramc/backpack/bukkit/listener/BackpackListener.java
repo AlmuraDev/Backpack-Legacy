@@ -32,6 +32,7 @@ import com.almuramc.backpack.bukkit.BackpackPlugin;
 import com.almuramc.backpack.bukkit.inventory.BackpackInventory;
 import com.almuramc.backpack.bukkit.storage.Storage;
 import com.almuramc.backpack.bukkit.util.CachedConfiguration;
+import com.almuramc.backpack.bukkit.util.PermissionHelper;
 
 import net.milkbowl.vault.permission.Permission;
 
@@ -139,7 +140,7 @@ public class BackpackListener implements Listener {
 					sendMessage(player, "[Backpack] Found illegal items in your Backpack! Dropping them around you...");
 				}
 			}
-			STORE.save(player, player.getWorld(), new BackpackInventory(backpack.getInventory()));
+			STORE.save(player, PermissionHelper.getWorldToOpen(player, player.getWorld()), new BackpackInventory(backpack.getInventory()));
 		}
 	}
 }

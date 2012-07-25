@@ -36,6 +36,7 @@ import java.util.Set;
 
 import com.almuramc.backpack.bukkit.BackpackPlugin;
 
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -123,8 +124,10 @@ public final class CachedConfiguration {
 		entries = new HashMap<String, List<String>>();
 		ConfigurationSection parent = cachedShare.getConfigurationSection("share");
 		for (String worldName : parent.getKeys(false)) {
+			Bukkit.getLogger().info(worldName);
 			List<String> children = parent.getStringList(parent.getCurrentPath() + "." + worldName);
-			if (children != null || !children.isEmpty()) {
+			if (children != null && !children.isEmpty()) {
+				Bukkit.getLogger().info(children.toString());
 				entries.put(worldName, convertToLowercase(children));
 			}
 		}

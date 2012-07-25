@@ -80,7 +80,7 @@ public class BackpackCommands implements CommandExecutor {
 				if (CONFIG.useSpout()) {
 					((SpoutPlayer) commandSender).getMainScreen().attachPopupScreen(new UpgradePanel((SpoutPlayer) commandSender));
 				} else {
-					BackpackInventory backpack = STORE.load(player, player.getWorld());
+					BackpackInventory backpack = STORE.load(player, PermissionHelper.getWorldToOpen(player, player.getWorld()));
 					int newSize = backpack.getSize() + 9;
 					if (backpack.getSize() >= 54 || newSize > PermissionHelper.getMaxSizeFor(player)) {
 						if (CONFIG.useSpout()) {
