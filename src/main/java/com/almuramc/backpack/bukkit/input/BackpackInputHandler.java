@@ -26,9 +26,6 @@
  */
 package com.almuramc.backpack.bukkit.input;
 
-import java.util.HashMap;
-import java.util.List;
-
 import com.almuramc.backpack.bukkit.BackpackPlugin;
 import com.almuramc.backpack.bukkit.util.PermissionHelper;
 
@@ -37,7 +34,6 @@ import org.getspout.spoutapi.gui.ScreenType;
 import org.getspout.spoutapi.keyboard.BindingExecutionDelegate;
 
 import org.bukkit.Bukkit;
-import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 
