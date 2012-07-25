@@ -35,8 +35,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
-import org.spout.api.protocol.builtin.codec.WorldChangeCodec;
-
 /**
  * Simple class to handle checking of permissions.
  */

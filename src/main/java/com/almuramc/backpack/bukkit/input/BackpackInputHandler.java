@@ -26,7 +26,6 @@
  */
 package com.almuramc.backpack.bukkit.input;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -59,7 +58,6 @@ public class BackpackInputHandler implements BindingExecutionDelegate {
 		if (BackpackPlugin.getInstance().getHooks().getPermHook().has(world, player.getName(), "backpack.share")) {
 			//Can share...but with what world?
 			HashMap<String, List<String>> shares = BackpackPlugin.getInstance().getCached().getShareEntries();
-
 		}
 		player.openInventory(BackpackPlugin.getInstance().getStore().load(player, PermissionHelper.getWorldToOpen(player, world)).getInventory());
 	}

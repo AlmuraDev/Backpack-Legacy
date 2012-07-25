@@ -29,7 +29,6 @@ package com.almuramc.backpack.bukkit;
 import com.almuramc.backpack.bukkit.command.BackpackCommands;
 import com.almuramc.backpack.bukkit.listener.BackpackListener;
 import com.almuramc.backpack.bukkit.storage.Storage;
-import com.almuramc.backpack.bukkit.storage.type.SQLStorage;
 import com.almuramc.backpack.bukkit.storage.type.YamlStorage;
 import com.almuramc.backpack.bukkit.util.CachedConfiguration;
 import com.almuramc.backpack.bukkit.util.Dependency;

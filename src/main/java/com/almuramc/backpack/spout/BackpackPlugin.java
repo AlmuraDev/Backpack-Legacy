@@ -29,7 +29,6 @@ package com.almuramc.backpack.spout;
 import org.spout.api.plugin.CommonPlugin;
 
 public class BackpackPlugin extends CommonPlugin {
-
 	@Override
 	public void onLoad() {
 	}
