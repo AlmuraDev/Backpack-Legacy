@@ -27,6 +27,7 @@
 package com.almuramc.backpack.bukkit.util;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -124,7 +125,7 @@ public final class CachedConfiguration {
 		for (String worldName : parent.getKeys(false)) {
 			List<String> children = parent.getStringList(parent.getCurrentPath() + "." + worldName);
 			if (children != null || !children.isEmpty()) {
-				entries.put(worldName, children);
+				entries.put(worldName, convertToLowercase(children));
 			}
 		}
 		if (!entries.isEmpty()) {
@@ -190,5 +191,13 @@ public final class CachedConfiguration {
 			return true;
 		}
 		return false;
+	}
+
+	private List<String> convertToLowercase(List<String> toConvert) {
+		ArrayList<String> entries = new ArrayList<String>();
+		for (String str : toConvert) {
+			entries.add(str.toLowerCase());
+		}
+		return entries;
 	}
 }
