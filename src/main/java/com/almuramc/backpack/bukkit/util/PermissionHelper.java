@@ -101,6 +101,6 @@ public class PermissionHelper {
 				break;
 			}
 		}
-		return w;
+		return w == null ? world : w;
 	}
 }

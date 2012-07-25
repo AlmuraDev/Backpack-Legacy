@@ -52,8 +52,8 @@ public class Dependency {
 		pm = BackpackPlugin.getInstance().getServer().getPluginManager();
 	}
 
-	public boolean isSpoutEnabled() {
-		return pm.isPluginEnabled("Spout");
+	public boolean hasSpout() {
+		return pm.getPlugin("Spout") != null;
 	}
 
 	public Economy getEconHook() {
@@ -68,10 +68,10 @@ public class Dependency {
 	 * Spout adds keybinding support so we set that up here
 	 */
 	public void setupSpout() {
-		if (cached.useSpout() && isSpoutEnabled()) {
+		if (cached.useSpout() && hasSpout()) {
 			SpoutManager.getKeyBindingManager().registerBinding("Backpack", Keyboard.valueOf(cached.getBackpackHotkey()), "Opens the backpack", new BackpackInputHandler(), BackpackPlugin.getInstance());
 			SpoutManager.getKeyBindingManager().registerBinding("Backpack Panel", Keyboard.valueOf(cached.getPanelHotkey()), "Opens Backpack Panel", new PanelInputHandler(), BackpackPlugin.getInstance());
-			BackpackPlugin.getInstance().getLogger().info("Sucessfully hooked into SpoutPlugin for keybindings");
+			BackpackPlugin.getInstance().getLogger().info("Successfully hooked into SpoutPlugin for keybindings");
 		}
 	}
 
@@ -80,14 +80,14 @@ public class Dependency {
 			RegisteredServiceProvider<Economy> economyProvider = BackpackPlugin.getInstance().getServer().getServicesManager().getRegistration(Economy.class);
 			if (economyProvider != null) {
 				econ = economyProvider.getProvider();
-				BackpackPlugin.getInstance().getLogger().info("Sucessfully hooked into Vault for economy transactions");
+				BackpackPlugin.getInstance().getLogger().info("Successfully hooked into Vault for economy transactions");
 			}
 		}
 
 		RegisteredServiceProvider<Permission> rsp = BackpackPlugin.getInstance().getServer().getServicesManager().getRegistration(Permission.class);
 		if (rsp != null) {
 			perm = rsp.getProvider();
-			BackpackPlugin.getInstance().getLogger().info("Sucessfully hooked into Vault for permissions");
+			BackpackPlugin.getInstance().getLogger().info("Successfully hooked into Vault for permissions");
 		}
 	}
 
