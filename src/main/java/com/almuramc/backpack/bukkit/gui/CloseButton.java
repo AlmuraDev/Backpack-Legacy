@@ -33,7 +33,7 @@ public class CloseButton extends GenericButton {
 	private UpgradePanel guicon;
 
 	public CloseButton(UpgradePanel guicon) {
-		super("Close");	
+		super("Close");
 		this.guicon = guicon;
 	}
 

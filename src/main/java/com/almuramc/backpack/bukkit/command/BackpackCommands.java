@@ -27,21 +27,21 @@
 package com.almuramc.backpack.bukkit.command;
 
 import com.almuramc.backpack.bukkit.BackpackPlugin;
+import com.almuramc.backpack.bukkit.gui.UpgradePanel;
 import com.almuramc.backpack.bukkit.inventory.BackpackInventory;
 import com.almuramc.backpack.bukkit.storage.Storage;
 import com.almuramc.backpack.bukkit.util.CachedConfiguration;
 import com.almuramc.backpack.bukkit.util.PermissionHelper;
-import com.almuramc.backpack.bukkit.gui.UpgradePanel;
 
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
+import org.getspout.spoutapi.player.SpoutPlayer;
 
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.getspout.spoutapi.player.SpoutPlayer;
 
 import static com.almuramc.backpack.bukkit.util.MessageHelper.sendMessage;
 
@@ -78,7 +78,7 @@ public class BackpackCommands implements CommandExecutor {
 					return true;
 				}
 				if (CONFIG.useSpout()) {
-					((SpoutPlayer) commandSender).getMainScreen().attachPopupScreen(new UpgradePanel((SpoutPlayer) commandSender));	    	
+					((SpoutPlayer) commandSender).getMainScreen().attachPopupScreen(new UpgradePanel((SpoutPlayer) commandSender));
 				} else {
 					BackpackInventory backpack = STORE.load(player, player.getWorld());
 					int newSize = backpack.getSize() + 9;
@@ -91,7 +91,7 @@ public class BackpackCommands implements CommandExecutor {
 						return true;
 					}
 					if (CONFIG.useEconomy() && !PERM.has(player.getWorld().getName(), player.getName(), "backpack.noupgradecost")) {
-						double cost = CONFIG.getUpgradeCosts().get("slot" + newSize);					
+						double cost = CONFIG.getUpgradeCosts().get("slot" + newSize);
 						if (!ECON.has(player.getName(), cost)) {
 							if (CONFIG.useSpout()) {
 								sendMessage(commandSender, "Not enough money!", "Backpack", Material.BONE);
@@ -101,12 +101,12 @@ public class BackpackCommands implements CommandExecutor {
 							return true;
 						}
 						ECON.withdrawPlayer(player.getName(), cost);
-						sendMessage(commandSender, "[Backpack] Your account has been deducted by: " + cost );
+						sendMessage(commandSender, "[Backpack] Your account has been deducted by: " + cost);
 					}
 					backpack.setSize(player, newSize);
 					STORE.save(player, player.getWorld(), backpack);
 					if (CONFIG.useSpout()) {
-						sendMessage(commandSender, "Upgraded to " + newSize + " slots", "Backpack", Material.CHEST);					
+						sendMessage(commandSender, "Upgraded to " + newSize + " slots", "Backpack", Material.CHEST);
 					} else {
 						sendMessage(commandSender, "[Backpack] Your backpack has been upgraded to " + newSize + " slots!");
 					}

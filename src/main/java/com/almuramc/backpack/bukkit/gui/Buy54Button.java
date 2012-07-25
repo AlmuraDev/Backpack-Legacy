@@ -33,7 +33,7 @@ public class Buy54Button extends GenericButton {
 	private UpgradePanel guicon;
 
 	public Buy54Button(UpgradePanel guicon) {
-		super("Buy");	
+		super("Buy");
 		this.guicon = guicon;
 	}
 
