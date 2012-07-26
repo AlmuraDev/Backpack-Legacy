@@ -31,6 +31,7 @@ import com.almuramc.backpack.bukkit.gui.UpgradePanel;
 import com.almuramc.backpack.bukkit.inventory.BackpackInventory;
 import com.almuramc.backpack.bukkit.storage.Storage;
 import com.almuramc.backpack.bukkit.util.CachedConfiguration;
+import com.almuramc.backpack.bukkit.util.Dependency;
 import com.almuramc.backpack.bukkit.util.PermissionHelper;
 import com.almuramc.backpack.bukkit.util.SafeSpout;
 
@@ -51,6 +52,7 @@ public class BackpackCommands implements CommandExecutor {
 	private static final CachedConfiguration CONFIG = BackpackPlugin.getInstance().getCached();
 	private static final Economy ECON = BackpackPlugin.getInstance().getHooks().getEconomy();
 	private static final Permission PERM = BackpackPlugin.getInstance().getHooks().getPermissions();
+	private static final Dependency hooks = BackpackPlugin.getInstance().getHooks();
 
 	@Override
 	public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
@@ -78,7 +80,7 @@ public class BackpackCommands implements CommandExecutor {
 				if (!PERM.has(player.getWorld().getName(), player.getName(), "backpack.upgrade")) {
 					return true;
 				}
-				if (CONFIG.useSpout()) {
+				if (CONFIG.useSpout() && hooks.isSpoutPluginEnabled()) {
 					SafeSpout.openUpgradePanel((Player) commandSender);
 				} else {
 					BackpackInventory backpack = STORE.load(player, PermissionHelper.getWorldToOpen(player, player.getWorld()));
