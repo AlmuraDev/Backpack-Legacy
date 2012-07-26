@@ -32,6 +32,7 @@ import com.almuramc.backpack.bukkit.storage.Storage;
 import com.almuramc.backpack.bukkit.storage.type.YamlStorage;
 import com.almuramc.backpack.bukkit.util.CachedConfiguration;
 import com.almuramc.backpack.bukkit.util.Dependency;
+import com.almuramc.backpack.bukkit.util.SpoutSafeBindings;
 
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -55,9 +56,14 @@ public class BackpackPlugin extends JavaPlugin {
 	public void onEnable() {
 		//Assign configured storage
 		store = new YamlStorage(getDataFolder());
-		//Setup dependencies
-		hooks = new Dependency();
-		hooks.setup();
+		if (cached.useEconomy()) {
+			hooks.setupVaultEconomy();
+		}
+		hooks.setupVaultPermissions();
+		//Classloader has SpoutPlugin, Admin wants to use Spout features, and SpoutPlugin has been enabled. Overkill but trying to nail out the issue
+		if (cached.useSpout() && hooks.isSpoutPluginEnabled()) {
+			SpoutSafeBindings.registerSpoutBindings();
+		}
 		//Register commands
 		executor = new BackpackCommands();
 		getCommand("backpack").setExecutor(executor);
@@ -71,6 +77,7 @@ public class BackpackPlugin extends JavaPlugin {
 		instance = this;
 		//Setup config
 		cached = new CachedConfiguration();
+		hooks = new Dependency(this);
 	}
 
 	public static final BackpackPlugin getInstance() {

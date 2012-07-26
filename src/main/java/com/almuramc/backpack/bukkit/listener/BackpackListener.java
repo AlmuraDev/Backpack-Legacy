@@ -59,7 +59,7 @@ public class BackpackListener implements Listener {
 	private static final BackpackPlugin plugin = BackpackPlugin.getInstance();
 	private static final Storage STORE = BackpackPlugin.getInstance().getStore();
 	private static final CachedConfiguration CONFIG = BackpackPlugin.getInstance().getCached();
-	private static final Permission PERM = BackpackPlugin.getInstance().getHooks().getPermHook();
+	private static final Permission PERM = BackpackPlugin.getInstance().getHooks().getPermissions();
 
 	@EventHandler
 	public void onEntityDeath(EntityDeathEvent event) {

@@ -26,76 +26,73 @@
  */
 package com.almuramc.backpack.bukkit.util;
 
-import com.almuramc.backpack.bukkit.BackpackPlugin;
-import com.almuramc.backpack.bukkit.input.BackpackInputHandler;
-import com.almuramc.backpack.bukkit.input.PanelInputHandler;
-
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
-import org.getspout.spoutapi.SpoutManager;
-import org.getspout.spoutapi.keyboard.Keyboard;
 
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
-/**
- * Simple class to handle dependencies
- */
 public class Dependency {
-	private CachedConfiguration cached;
-	private Economy econ;
-	private Permission perm;
-	private PluginManager pm;
+	private final Plugin plugin;
+	private final PluginManager manager;
+	private Permission permHook;
+	private Economy econHook;
 
-	public Dependency() {
-		cached = BackpackPlugin.getInstance().getCached();
-		pm = BackpackPlugin.getInstance().getServer().getPluginManager();
+	public Dependency(Plugin plugin) {
+		this.plugin = plugin;
+		manager = plugin.getServer().getPluginManager();
 	}
 
-	public boolean hasSpout() {
-		return pm.getPlugin("Spout") != null;
+	public boolean hasSpoutPlugin() {
+		return manager.getPlugin("Spout") != null;
 	}
 
-	public Economy getEconHook() {
-		return econ;
+	public boolean hasVaultPlugin() {
+		return manager.getPlugin("Vault") != null;
 	}
 
-	public Permission getPermHook() {
-		return perm;
+	public boolean isSpoutPluginEnabled() {
+		return manager.isPluginEnabled("Spout");
 	}
 
-	/**
-	 * Spout adds keybinding support so we set that up here
-	 */
-	public void setupSpout() {
-		if (cached.useSpout() && hasSpout()) {
-			SpoutManager.getKeyBindingManager().registerBinding("Backpack", Keyboard.valueOf(cached.getBackpackHotkey()), "Opens the backpack", new BackpackInputHandler(), BackpackPlugin.getInstance());
-			SpoutManager.getKeyBindingManager().registerBinding("Backpack Panel", Keyboard.valueOf(cached.getPanelHotkey()), "Opens Backpack Panel", new PanelInputHandler(), BackpackPlugin.getInstance());
-			BackpackPlugin.getInstance().getLogger().info("Successfully hooked into SpoutPlugin for keybindings");
+	public boolean isVaultPluginEnabled() {
+		return hasVaultPlugin() && manager.isPluginEnabled("Vault");
+	}
+
+	public Permission getPermissions() {
+		if (permHook == null) {
+			throw new NullPointerException("Permissions was called but hasn't been setup!");
+		}
+		return permHook;
+	}
+
+	public Economy getEconomy() {
+		if (econHook == null) {
+			throw new NullPointerException("Economy was called but hasn't been setup!");
+		}
+		return econHook;
+	}
+
+	public void setupVaultEconomy() {
+		if (!hasVaultPlugin() || !manager.isPluginEnabled("Vault") || econHook != null) {
+			return;
+		}
+		RegisteredServiceProvider<Economy> economyProvider = plugin.getServer().getServicesManager().getRegistration(Economy.class);
+		if (economyProvider != null) {
+			econHook = economyProvider.getProvider();
+			plugin.getLogger().info("Successfully hooked into Vault for economy transactions");
 		}
 	}
 
-	public void setupVault() {
-		if (cached.useEconomy()) {
-			RegisteredServiceProvider<Economy> economyProvider = BackpackPlugin.getInstance().getServer().getServicesManager().getRegistration(Economy.class);
-			if (economyProvider != null) {
-				econ = economyProvider.getProvider();
-				BackpackPlugin.getInstance().getLogger().info("Successfully hooked into Vault for economy transactions");
-			}
+	public void setupVaultPermissions() {
+		if (!hasVaultPlugin() || !manager.isPluginEnabled("Vault") || permHook != null) {
+			return;
 		}
-
-		RegisteredServiceProvider<Permission> rsp = BackpackPlugin.getInstance().getServer().getServicesManager().getRegistration(Permission.class);
+		RegisteredServiceProvider<Permission> rsp = plugin.getServer().getServicesManager().getRegistration(Permission.class);
 		if (rsp != null) {
-			perm = rsp.getProvider();
-			BackpackPlugin.getInstance().getLogger().info("Successfully hooked into Vault for permissions");
+			permHook = rsp.getProvider();
+			plugin.getLogger().info("Successfully hooked into Vault for permissions");
 		}
-	}
-
-	/**
-	 * General dependency setup method
-	 */
-	public void setup() {
-		setupSpout();
-		setupVault();
 	}
 }

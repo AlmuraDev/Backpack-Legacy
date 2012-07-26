@@ -62,8 +62,8 @@ public class UpgradePanel extends GenericPopup {
 	public final Logger log = Logger.getLogger("Minecraft");
 	private static final Storage STORE = BackpackPlugin.getInstance().getStore();
 	private static final CachedConfiguration CONFIG = BackpackPlugin.getInstance().getCached();
-	private static final Economy ECON = BackpackPlugin.getInstance().getHooks().getEconHook();
-	private static final Permission PERM = BackpackPlugin.getInstance().getHooks().getPermHook();
+	private static final Economy ECON = BackpackPlugin.getInstance().getHooks().getEconomy();
+	private static final Permission PERM = BackpackPlugin.getInstance().getHooks().getPermissions();
 	double cost18 = CONFIG.getUpgradeCosts().get("slot" + 18);
 	double cost27 = CONFIG.getUpgradeCosts().get("slot" + 18) + CONFIG.getUpgradeCosts().get("slot" + 27);
 	double cost36 = CONFIG.getUpgradeCosts().get("slot" + 18) + CONFIG.getUpgradeCosts().get("slot" + 27) + CONFIG.getUpgradeCosts().get("slot" + 36);

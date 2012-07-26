@@ -58,7 +58,7 @@ public class PermissionHelper {
 		String found;
 		int size = -1;
 		for (String perm : BACKPACK_SIZE_PERMS) {
-			if (BackpackPlugin.getInstance().getHooks().getPermHook().has(player.getWorld().getName(), player.getName(), perm)) {
+			if (BackpackPlugin.getInstance().getHooks().getPermissions().has(player.getWorld().getName(), player.getName(), perm)) {
 				found = perm;
 				int temp = Integer.parseInt(found.split("backpack.size.")[1]);
 				//Only set biggest size
@@ -80,7 +80,7 @@ public class PermissionHelper {
 		 * Player doesn't have share permission
 		 * Shares contains the world being shared to as a parent(key)
 		 */
-		if (shares == null || !BackpackPlugin.getInstance().getHooks().getPermHook().has(world, player.getName(), "backpack.share") || shares.containsKey(world.getName().toLowerCase())) {
+		if (shares == null || !BackpackPlugin.getInstance().getHooks().getPermissions().has(world, player.getName(), "backpack.share") || shares.containsKey(world.getName().toLowerCase())) {
 			return world;
 		}
 

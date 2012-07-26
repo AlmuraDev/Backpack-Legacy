@@ -48,8 +48,8 @@ import static com.almuramc.backpack.bukkit.util.MessageHelper.sendMessage;
 public class BackpackCommands implements CommandExecutor {
 	private static final Storage STORE = BackpackPlugin.getInstance().getStore();
 	private static final CachedConfiguration CONFIG = BackpackPlugin.getInstance().getCached();
-	private static final Economy ECON = BackpackPlugin.getInstance().getHooks().getEconHook();
-	private static final Permission PERM = BackpackPlugin.getInstance().getHooks().getPermHook();
+	private static final Economy ECON = BackpackPlugin.getInstance().getHooks().getEconomy();
+	private static final Permission PERM = BackpackPlugin.getInstance().getHooks().getPermissions();
 
 	@Override
 	public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
