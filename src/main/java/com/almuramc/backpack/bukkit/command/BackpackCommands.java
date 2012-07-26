@@ -32,6 +32,7 @@ import com.almuramc.backpack.bukkit.inventory.BackpackInventory;
 import com.almuramc.backpack.bukkit.storage.Storage;
 import com.almuramc.backpack.bukkit.util.CachedConfiguration;
 import com.almuramc.backpack.bukkit.util.PermissionHelper;
+import com.almuramc.backpack.bukkit.util.SafeSpout;
 
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
@@ -78,7 +79,7 @@ public class BackpackCommands implements CommandExecutor {
 					return true;
 				}
 				if (CONFIG.useSpout()) {
-					((SpoutPlayer) commandSender).getMainScreen().attachPopupScreen(new UpgradePanel((SpoutPlayer) commandSender));
+					SafeSpout.openUpgradePanel((Player) commandSender);
 				} else {
 					BackpackInventory backpack = STORE.load(player, PermissionHelper.getWorldToOpen(player, player.getWorld()));
 					int newSize = backpack.getSize() + 9;

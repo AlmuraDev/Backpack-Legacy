@@ -27,19 +27,27 @@
 package com.almuramc.backpack.bukkit.util;
 
 import com.almuramc.backpack.bukkit.BackpackPlugin;
+import com.almuramc.backpack.bukkit.gui.UpgradePanel;
 import com.almuramc.backpack.bukkit.input.BackpackInputHandler;
 import com.almuramc.backpack.bukkit.input.PanelInputHandler;
 
 import org.getspout.spoutapi.SpoutManager;
 import org.getspout.spoutapi.keyboard.Keyboard;
+import org.getspout.spoutapi.player.SpoutPlayer;
+
+import org.bukkit.entity.Player;
 
 /**
  * Safely handles registering SpoutPlugin's bindings when SpoutPlugin may not be existent.
  */
-public class SpoutSafeBindings {
+public class SafeSpout {
 	public static void registerSpoutBindings() {
 		SpoutManager.getKeyBindingManager().registerBinding("Backpack", Keyboard.valueOf(BackpackPlugin.getInstance().getCached().getBackpackHotkey()), "Opens the backpack", new BackpackInputHandler(), BackpackPlugin.getInstance());
 		SpoutManager.getKeyBindingManager().registerBinding("Backpack Panel", Keyboard.valueOf(BackpackPlugin.getInstance().getCached().getPanelHotkey()), "Opens Backpack Panel", new PanelInputHandler(), BackpackPlugin.getInstance());
 		BackpackPlugin.getInstance().getLogger().info("Successfully hooked into SpoutPlugin for keybindings");
+	}
+
+	public static void openUpgradePanel(Player player) {
+		((SpoutPlayer) player).getMainScreen().attachPopupScreen(new UpgradePanel((SpoutPlayer) player));
 	}
 }

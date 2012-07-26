@@ -93,7 +93,7 @@ public final class CachedConfiguration {
 		}
 		temp.removeAll(Collections.singletonList(null));
 		for (int i = 0; i < temp.size(); i++) {
-			String t = temp.get(i);
+			String t = String.valueOf(temp.get(i));
 			temp.set(i, t.toUpperCase());
 		}
 		elements = new HashSet<String>(temp);
