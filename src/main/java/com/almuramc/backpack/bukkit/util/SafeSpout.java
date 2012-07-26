@@ -35,6 +35,7 @@ import org.getspout.spoutapi.SpoutManager;
 import org.getspout.spoutapi.keyboard.Keyboard;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 /**
@@ -49,5 +50,9 @@ public class SafeSpout {
 
 	public static void openUpgradePanel(Player player) {
 		((SpoutPlayer) player).getMainScreen().attachPopupScreen(new UpgradePanel((SpoutPlayer) player));
+	}
+
+	public static void sendMessage(Player player, String message, String title, Material material) {
+		SpoutManager.getPlayer(player).sendNotification(title, message, material);
 	}
 }

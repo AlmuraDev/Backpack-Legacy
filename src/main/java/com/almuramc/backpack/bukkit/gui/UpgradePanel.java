@@ -32,7 +32,9 @@ import com.almuramc.backpack.bukkit.BackpackPlugin;
 import com.almuramc.backpack.bukkit.inventory.BackpackInventory;
 import com.almuramc.backpack.bukkit.storage.Storage;
 import com.almuramc.backpack.bukkit.util.CachedConfiguration;
+import com.almuramc.backpack.bukkit.util.MessageHelper;
 import com.almuramc.backpack.bukkit.util.PermissionHelper;
+import com.almuramc.backpack.bukkit.util.SafeSpout;
 
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
@@ -48,8 +50,6 @@ import org.getspout.spoutapi.gui.WidgetAnchor;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 import org.bukkit.Material;
-
-import static com.almuramc.backpack.bukkit.util.MessageHelper.sendMessage;
 
 public class UpgradePanel extends GenericPopup {
 	final GenericButton close;
@@ -258,15 +258,15 @@ public class UpgradePanel extends GenericPopup {
 		BackpackInventory backpack = STORE.load(player, player.getWorld());
 		if (CONFIG.useEconomy() && !PERM.has(player.getWorld().getName(), player.getName(), "backpack.noupgradecost")) {
 			if (!ECON.has(player.getName(), cost18)) {
-				sendMessage(player, "Not enough money!", "Backpack", Material.BONE);
+				SafeSpout.sendMessage(player, "Not enough money!", "Backpack", Material.BONE);
 				return;
 			}
 			ECON.withdrawPlayer(player.getName(), cost18);
-			sendMessage(player, "[Backpack] Your account has been deducted by: " + cost18);
+			MessageHelper.sendMessage(player, "[Backpack] Your account has been deducted by: " + cost18);
 		}
 		backpack.setSize(player, 18);
 		STORE.save(player, player.getWorld(), backpack);
-		sendMessage(player, "Upgraded to 18 slots", "Backpack", Material.CHEST);
+		SafeSpout.sendMessage(player, "Upgraded to 18 slots", "Backpack", Material.CHEST);
 		onCloseClick();
 	}
 
@@ -274,15 +274,15 @@ public class UpgradePanel extends GenericPopup {
 		BackpackInventory backpack = STORE.load(player, player.getWorld());
 		if (CONFIG.useEconomy() && !PERM.has(player.getWorld().getName(), player.getName(), "backpack.noupgradecost")) {
 			if (!ECON.has(player.getName(), cost27)) {
-				sendMessage(player, "Not enough money!", "Backpack", Material.BONE);
+				SafeSpout.sendMessage(player, "Not enough money!", "Backpack", Material.BONE);
 				return;
 			}
 			ECON.withdrawPlayer(player.getName(), cost27);
-			sendMessage(player, "[Backpack] Your account has been deducted by: " + cost27);
+			MessageHelper.sendMessage(player, "[Backpack] Your account has been deducted by: " + cost27);
 		}
 		backpack.setSize(player, 27);
 		STORE.save(player, player.getWorld(), backpack);
-		sendMessage(player, "Upgraded to 27 slots", "Backpack", Material.CHEST);
+		SafeSpout.sendMessage(player, "Upgraded to 27 slots", "Backpack", Material.CHEST);
 		onCloseClick();
 	}
 
@@ -290,15 +290,15 @@ public class UpgradePanel extends GenericPopup {
 		BackpackInventory backpack = STORE.load(player, player.getWorld());
 		if (CONFIG.useEconomy() && !PERM.has(player.getWorld().getName(), player.getName(), "backpack.noupgradecost")) {
 			if (!ECON.has(player.getName(), cost36)) {
-				sendMessage(player, "Not enough money!", "Backpack", Material.BONE);
+				SafeSpout.sendMessage(player, "Not enough money!", "Backpack", Material.BONE);
 				return;
 			}
 			ECON.withdrawPlayer(player.getName(), cost36);
-			sendMessage(player, "[Backpack] Your account has been deducted by: " + cost36);
+			MessageHelper.sendMessage(player, "[Backpack] Your account has been deducted by: " + cost36);
 		}
 		backpack.setSize(player, 36);
 		STORE.save(player, player.getWorld(), backpack);
-		sendMessage(player, "Upgraded to 36 slots", "Backpack", Material.CHEST);
+		SafeSpout.sendMessage(player, "Upgraded to 36 slots", "Backpack", Material.CHEST);
 		onCloseClick();
 	}
 
@@ -306,15 +306,15 @@ public class UpgradePanel extends GenericPopup {
 		BackpackInventory backpack = STORE.load(player, player.getWorld());
 		if (CONFIG.useEconomy() && !PERM.has(player.getWorld().getName(), player.getName(), "backpack.noupgradecost")) {
 			if (!ECON.has(player.getName(), cost45)) {
-				sendMessage(player, "Not enough money!", "Backpack", Material.BONE);
+				SafeSpout.sendMessage(player, "Not enough money!", "Backpack", Material.BONE);
 				return;
 			}
 			ECON.withdrawPlayer(player.getName(), cost45);
-			sendMessage(player, "[Backpack] Your account has been deducted by: " + cost45);
+			MessageHelper.sendMessage(player, "[Backpack] Your account has been deducted by: " + cost45);
 		}
 		backpack.setSize(player, 45);
 		STORE.save(player, player.getWorld(), backpack);
-		sendMessage(player, "Upgraded to 45 slots", "Backpack", Material.CHEST);
+		SafeSpout.sendMessage(player, "Upgraded to 45 slots", "Backpack", Material.CHEST);
 		onCloseClick();
 	}
 
@@ -322,15 +322,15 @@ public class UpgradePanel extends GenericPopup {
 		BackpackInventory backpack = STORE.load(player, player.getWorld());
 		if (CONFIG.useEconomy() && !PERM.has(player.getWorld().getName(), player.getName(), "backpack.noupgradecost")) {
 			if (!ECON.has(player.getName(), cost54)) {
-				sendMessage(player, "Not enough money!", "Backpack", Material.BONE);
+				SafeSpout.sendMessage(player, "Not enough money!", "Backpack", Material.BONE);
 				return;
 			}
 			ECON.withdrawPlayer(player.getName(), cost54);
-			sendMessage(player, "[Backpack] Your account has been deducted by: " + cost54);
+			MessageHelper.sendMessage(player, "[Backpack] Your account has been deducted by: " + cost54);
 		}
 		backpack.setSize(player, 54);
 		STORE.save(player, player.getWorld(), backpack);
-		sendMessage(player, "Upgraded to 54 slots", "Backpack", Material.CHEST);
+		SafeSpout.sendMessage(player, "Upgraded to 54 slots", "Backpack", Material.CHEST);
 		onCloseClick();
 	}
 }

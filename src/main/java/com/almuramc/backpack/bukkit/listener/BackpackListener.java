@@ -32,7 +32,9 @@ import com.almuramc.backpack.bukkit.BackpackPlugin;
 import com.almuramc.backpack.bukkit.inventory.BackpackInventory;
 import com.almuramc.backpack.bukkit.storage.Storage;
 import com.almuramc.backpack.bukkit.util.CachedConfiguration;
+import com.almuramc.backpack.bukkit.util.MessageHelper;
 import com.almuramc.backpack.bukkit.util.PermissionHelper;
+import com.almuramc.backpack.bukkit.util.SafeSpout;
 
 import net.milkbowl.vault.permission.Permission;
 
@@ -52,8 +54,6 @@ import org.bukkit.event.world.WorldLoadEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
-
-import static com.almuramc.backpack.bukkit.util.MessageHelper.sendMessage;
 
 public class BackpackListener implements Listener {
 	private static final BackpackPlugin plugin = BackpackPlugin.getInstance();
@@ -134,10 +134,10 @@ public class BackpackListener implements Listener {
 			}
 			backpack.filterIllegalItems();
 			if (hadIllegalItems) {
-				if (CONFIG.useSpout()) {
-					sendMessage(player, "Dropping illegal items!", "Backpack", Material.LAVA);
+				if (CONFIG.useSpout() && BackpackPlugin.getInstance().getHooks().isSpoutPluginEnabled()) {
+					SafeSpout.sendMessage(player, "Dropping illegal items!", "Backpack", Material.LAVA);
 				} else {
-					sendMessage(player, "[Backpack] Found illegal items in your Backpack! Dropping them around you...");
+					MessageHelper.sendMessage(player, "[Backpack] Found illegal items in your Backpack! Dropping them around you...");
 				}
 			}
 			STORE.save(player, PermissionHelper.getWorldToOpen(player, player.getWorld()), new BackpackInventory(backpack.getInventory()));
