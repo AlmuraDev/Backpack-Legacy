@@ -262,7 +262,7 @@ public class UpgradePanel extends GenericPopup {
 				return;
 			}
 			ECON.withdrawPlayer(player.getName(), cost18);
-			MessageHelper.sendMessage(player, "[Backpack] Your account has been deducted by: " + cost18);
+			MessageHelper.sendMessage(player, "Your account has been deducted by: " + cost18);
 		}
 		backpack.setSize(player, 18);
 		STORE.save(player, player.getWorld(), backpack);
@@ -278,7 +278,7 @@ public class UpgradePanel extends GenericPopup {
 				return;
 			}
 			ECON.withdrawPlayer(player.getName(), cost27);
-			MessageHelper.sendMessage(player, "[Backpack] Your account has been deducted by: " + cost27);
+			MessageHelper.sendMessage(player, "Your account has been deducted by: " + cost27);
 		}
 		backpack.setSize(player, 27);
 		STORE.save(player, player.getWorld(), backpack);
@@ -294,7 +294,7 @@ public class UpgradePanel extends GenericPopup {
 				return;
 			}
 			ECON.withdrawPlayer(player.getName(), cost36);
-			MessageHelper.sendMessage(player, "[Backpack] Your account has been deducted by: " + cost36);
+			MessageHelper.sendMessage(player, "Your account has been deducted by: " + cost36);
 		}
 		backpack.setSize(player, 36);
 		STORE.save(player, player.getWorld(), backpack);
@@ -310,7 +310,7 @@ public class UpgradePanel extends GenericPopup {
 				return;
 			}
 			ECON.withdrawPlayer(player.getName(), cost45);
-			MessageHelper.sendMessage(player, "[Backpack] Your account has been deducted by: " + cost45);
+			MessageHelper.sendMessage(player, "Your account has been deducted by: " + cost45);
 		}
 		backpack.setSize(player, 45);
 		STORE.save(player, player.getWorld(), backpack);
@@ -326,7 +326,7 @@ public class UpgradePanel extends GenericPopup {
 				return;
 			}
 			ECON.withdrawPlayer(player.getName(), cost54);
-			MessageHelper.sendMessage(player, "[Backpack] Your account has been deducted by: " + cost54);
+			MessageHelper.sendMessage(player, "Your account has been deducted by: " + cost54);
 		}
 		backpack.setSize(player, 54);
 		STORE.save(player, player.getWorld(), backpack);

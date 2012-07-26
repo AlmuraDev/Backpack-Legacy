@@ -137,7 +137,7 @@ public class BackpackListener implements Listener {
 				if (CONFIG.useSpout() && BackpackPlugin.getInstance().getHooks().isSpoutPluginEnabled()) {
 					SafeSpout.sendMessage(player, "Dropping illegal items!", "Backpack", Material.LAVA);
 				} else {
-					MessageHelper.sendMessage(player, "[Backpack] Found illegal items in your Backpack! Dropping them around you...");
+					MessageHelper.sendMessage(player, "Found illegal items in your Backpack! Dropping them around you...");
 				}
 			}
 			STORE.save(player, PermissionHelper.getWorldToOpen(player, player.getWorld()), new BackpackInventory(backpack.getInventory()));

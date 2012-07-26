@@ -87,7 +87,7 @@ public class BackpackCommands implements CommandExecutor {
 						if (CONFIG.useSpout() && HOOKS.isSpoutPluginEnabled()) {
 							SafeSpout.sendMessage(player, "Max size reached!", "Backpack", Material.LAVA_BUCKET);
 						} else {
-							MessageHelper.sendMessage(commandSender, "{Backpack] You already have the maximum size for a backpack allowed!");
+							MessageHelper.sendMessage(commandSender, "You already have the maximum size for a backpack allowed!");
 						}
 						return true;
 					}
@@ -97,24 +97,24 @@ public class BackpackCommands implements CommandExecutor {
 							if (CONFIG.useSpout() && HOOKS.isSpoutPluginEnabled()) {
 								SafeSpout.sendMessage(player, "Not enough money!", "Backpack", Material.BONE);
 							} else {
-								MessageHelper.sendMessage(commandSender, "{Backpack] You do not have enough money!");
+								MessageHelper.sendMessage(commandSender, "You do not have enough money!");
 							}
 							return true;
 						}
 						ECON.withdrawPlayer(player.getName(), cost);
-						MessageHelper.sendMessage(commandSender, "[Backpack] Your account has been deducted by: " + cost);
+						MessageHelper.sendMessage(commandSender, "Your account has been deducted by: " + cost);
 					}
 					backpack.setSize(player, newSize);
 					STORE.save(player, player.getWorld(), backpack);
 					if (CONFIG.useSpout() && HOOKS.isSpoutPluginEnabled()) {
 						SafeSpout.sendMessage(player, "Upgraded to " + newSize + " slots", "Backpack", Material.CHEST);
 					} else {
-						MessageHelper.sendMessage(commandSender, "[Backpack] Your backpack has been upgraded to " + newSize + " slots!");
+						MessageHelper.sendMessage(commandSender, "Your backpack has been upgraded to " + newSize + " slots!");
 					}
 				}
 				return true;
 			} else {
-				MessageHelper.sendMessage(commandSender, "[Backpack] Must be in-game to utilize player-only commands!");
+				MessageHelper.sendMessage(commandSender, "Must be in-game to utilize player-only commands!");
 			}
 		}
 		return false;
