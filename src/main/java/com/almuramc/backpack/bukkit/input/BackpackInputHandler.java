@@ -34,8 +34,10 @@ import org.getspout.spoutapi.gui.ScreenType;
 import org.getspout.spoutapi.keyboard.BindingExecutionDelegate;
 
 import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.inventory.Inventory;
 
 public class BackpackInputHandler implements BindingExecutionDelegate {
 	@Override
@@ -50,7 +52,11 @@ public class BackpackInputHandler implements BindingExecutionDelegate {
 			Bukkit.getPluginManager().callEvent(new InventoryCloseEvent(player.getOpenInventory()));
 			player.closeInventory();
 		}
-		player.openInventory(BackpackPlugin.getInstance().getStore().load(player, PermissionHelper.getWorldToOpen(player, player.getWorld())).getInventory());
+		World target = PermissionHelper.getWorldToOpen(player, player.getWorld());
+		Inventory toOpen = BackpackPlugin.getInstance().getStore().load(player, target);
+		Bukkit.getLogger().info("Player: " + player + "\nWorld: " + target + "\nSize: " + toOpen.getSize());
+		player.openInventory(toOpen);
+
 	}
 
 	@Override
