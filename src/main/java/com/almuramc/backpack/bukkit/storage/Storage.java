@@ -83,4 +83,6 @@ public abstract class Storage {
 	public abstract BackpackInventory load(Player player, World world);
 
 	public abstract void save(Player player, World world, BackpackInventory backpack);
+
+	public abstract void updateSize(Player player, World world, int size);
 }
