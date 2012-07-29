@@ -265,7 +265,8 @@ public class UpgradePanel extends GenericPopup {
 			MessageHelper.sendMessage(player, "Your account has been deducted by: " + cost18);
 		}
 		backpack.setSize(player, 18);
-		STORE.save(player, player.getWorld(), backpack);
+		STORE.store(player, player.getWorld(), backpack);
+		STORE.updateSize(player, player.getWorld(), 18);
 		SafeSpout.sendMessage(player, "Upgraded to 18 slots", "Backpack", Material.CHEST);
 		onCloseClick();
 	}
@@ -281,7 +282,8 @@ public class UpgradePanel extends GenericPopup {
 			MessageHelper.sendMessage(player, "Your account has been deducted by: " + cost27);
 		}
 		backpack.setSize(player, 27);
-		STORE.save(player, player.getWorld(), backpack);
+		STORE.store(player, player.getWorld(), backpack);
+		STORE.updateSize(player, player.getWorld(), 27);
 		SafeSpout.sendMessage(player, "Upgraded to 27 slots", "Backpack", Material.CHEST);
 		onCloseClick();
 	}
@@ -297,7 +299,8 @@ public class UpgradePanel extends GenericPopup {
 			MessageHelper.sendMessage(player, "Your account has been deducted by: " + cost36);
 		}
 		backpack.setSize(player, 36);
-		STORE.save(player, player.getWorld(), backpack);
+		STORE.store(player, player.getWorld(), backpack);
+		STORE.updateSize(player, player.getWorld(), 36);
 		SafeSpout.sendMessage(player, "Upgraded to 36 slots", "Backpack", Material.CHEST);
 		onCloseClick();
 	}
@@ -313,7 +316,8 @@ public class UpgradePanel extends GenericPopup {
 			MessageHelper.sendMessage(player, "Your account has been deducted by: " + cost45);
 		}
 		backpack.setSize(player, 45);
-		STORE.save(player, player.getWorld(), backpack);
+		STORE.store(player, player.getWorld(), backpack);
+		STORE.updateSize(player, player.getWorld(), 45);
 		SafeSpout.sendMessage(player, "Upgraded to 45 slots", "Backpack", Material.CHEST);
 		onCloseClick();
 	}
@@ -329,7 +333,8 @@ public class UpgradePanel extends GenericPopup {
 			MessageHelper.sendMessage(player, "Your account has been deducted by: " + cost54);
 		}
 		backpack.setSize(player, 54);
-		STORE.save(player, player.getWorld(), backpack);
+		STORE.store(player, player.getWorld(), backpack);
+		STORE.updateSize(player, player.getWorld(), 54);
 		SafeSpout.sendMessage(player, "Upgraded to 54 slots", "Backpack", Material.CHEST);
 		onCloseClick();
 	}

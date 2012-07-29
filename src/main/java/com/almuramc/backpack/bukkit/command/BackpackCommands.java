@@ -105,7 +105,8 @@ public class BackpackCommands implements CommandExecutor {
 						MessageHelper.sendMessage(commandSender, "Your account has been deducted by: " + cost);
 					}
 					backpack.setSize(player, newSize);
-					STORE.save(player, player.getWorld(), backpack);
+					STORE.store(player, player.getWorld(), backpack);
+					STORE.updateSize(player, player.getWorld(), newSize);
 					if (CONFIG.useSpout() && HOOKS.isSpoutPluginEnabled()) {
 						SafeSpout.sendMessage(player, "Upgraded to " + newSize + " slots", "Backpack", Material.CHEST);
 					} else {
