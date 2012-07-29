@@ -30,7 +30,17 @@ import org.spout.api.keyboard.Input;
 
 public class BackpackInput implements Input {
 	@Override
+	public boolean isRedirected() {
+		return false;
+	}
+
+	@Override
+	public void setRedirected(boolean redirect) {
+
+	}
+
+	@Override
 	public void bind(String key, String command) {
-		//To change body of implemented methods use File | Settings | File Templates.
+
 	}
 }
