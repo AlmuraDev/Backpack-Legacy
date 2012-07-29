@@ -104,13 +104,7 @@ public class YamlStorage extends Storage {
 			READER.load(file);
 			READER.set("contents-amount", size);
 			READER.save(file);
-		} catch (FileNotFoundException e) {
-			return;
-		} catch (InvalidConfigurationException e) {
-			return;
-		} catch (IOException e) {
-			return;
-		}
+		} catch (Exception ignore) {}
 	}
 
 	private BackpackInventory loadFromFile(Player player, World world) {
