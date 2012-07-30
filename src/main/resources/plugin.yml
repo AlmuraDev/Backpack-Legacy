@@ -19,7 +19,7 @@ permissions:
         default: op
     backpack.use:
         description: Allows users to access backpack.
-        default: true
+        default: false
     backpack.keepitems:
         description: Allows users to keep backpack items on death.
         default: op

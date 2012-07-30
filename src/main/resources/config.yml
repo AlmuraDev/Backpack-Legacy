@@ -20,7 +20,7 @@ admin:
   hotkey: KEY_V
 backpack:
   default-size: 9
-  maximum-no-perm-size: 54
+  maximum-no-perm-size: 9
   hotkey: KEY_B
   cost:
     slot18: 0

@@ -64,19 +64,22 @@ public class BackpackCommands implements CommandExecutor {
 				if (PERM.has(player.getWorld().getName(), player.getName(), "backpack.use")) {
 					player.openInventory(STORE.load(player, PermissionHelper.getWorldToOpen(player, player.getWorld())).getInventory());
 					return true;
+				} else {
+					MessageHelper.sendMessage(commandSender, "Insufficient permissions to use backpack!");
 				}
-				return false;
+				return true;
 			} else if (strings.length > 0 && strings[0].equalsIgnoreCase("reload")) {
 				CONFIG.reload();
 				if (CONFIG.useSpout() && HOOKS.isSpoutPluginEnabled()) {
 					SafeSpout.sendMessage(player, "Configuration reloaded", "Backpack", Material.CAKE);
 				} else {
-					MessageHelper.sendMessage(commandSender, "[Backpack] Configuration reloaded");
+					MessageHelper.sendMessage(commandSender, "Configuration reloaded");
 				}
 				return true;
 			} else if (strings.length > 0 && strings[0].equalsIgnoreCase("upgrade") && player != null) {
 				World target = PermissionHelper.getWorldToOpen(player, player.getWorld());
 				if (!PERM.has(player.getWorld().getName(), player.getName(), "backpack.upgrade")) {
+					MessageHelper.sendMessage(commandSender, "Insufficient permissions to upgrade your backpack!");
 					return true;
 				}
 				if (CONFIG.useSpout() && HOOKS.isSpoutPluginEnabled()) {
@@ -119,6 +122,6 @@ public class BackpackCommands implements CommandExecutor {
 				MessageHelper.sendMessage(commandSender, "Must be in-game to utilize player-only commands!");
 			}
 		}
-		return false;
+		return true;
 	}
 }
