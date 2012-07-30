@@ -94,7 +94,7 @@ public class BackpackListener implements Listener {
 			return;
 		}
 		Player player = (Player) event.getPlayer();
-		if (!PERM.has(player.getWorld().getName(), player.getName(), "backpack.use")) {
+		if (event.getInventory().getTitle().equals("Backpack") && !PERM.has(player.getWorld().getName(), player.getName(), "backpack.use")) {
 			event.setCancelled(true);
 			return;
 		}
