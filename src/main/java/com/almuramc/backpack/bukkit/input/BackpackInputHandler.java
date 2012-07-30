@@ -53,7 +53,7 @@ public class BackpackInputHandler implements BindingExecutionDelegate {
 			player.closeInventory();
 		}
 		World target = PermissionHelper.getWorldToOpen(player, player.getWorld());
-		Inventory toOpen = BackpackPlugin.getInstance().getStore().load(player, target);
+		Inventory toOpen = BackpackPlugin.getInstance().getStore().load(player, target).getInventory();
 		Bukkit.getLogger().info("Player: " + player + "\nWorld: " + target + "\nSize: " + toOpen.getSize());
 		player.openInventory(toOpen);
 
