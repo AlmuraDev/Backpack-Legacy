@@ -75,7 +75,7 @@ public class BackpackListener implements Listener {
 				return;
 			}
 			for (ItemStack toDrop : contents) {
-				world.dropItemNaturally(player.getLocation(), toDrop);
+				player.getWorld().dropItemNaturally(player.getLocation(), toDrop);
 			}
 			backpack.clear();
 			STORE.save(player, world, backpack);
@@ -131,7 +131,7 @@ public class BackpackListener implements Listener {
 				if (!hadIllegalItems) {
 					hadIllegalItems = true;
 				}
-				world.dropItemNaturally(player.getLocation(), item);
+				player.getWorld().dropItemNaturally(player.getLocation(), item);
 			}
 			backpack.filterIllegalItems();
 			if (hadIllegalItems) {
