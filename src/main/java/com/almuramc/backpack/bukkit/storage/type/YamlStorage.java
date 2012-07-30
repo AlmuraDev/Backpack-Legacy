@@ -124,7 +124,7 @@ public class YamlStorage extends Storage {
 			ConfigurationSection parent = READER.getConfigurationSection("backpack");
 			Set<String> temp = parent.getKeys(false);
 			String[] keys = temp.toArray(new String[temp.size()]);
-			int psize = PermissionHelper.getMaxSizeFor(player);
+			int psize = PermissionHelper.getMaxSizeFor(player, world);
 			int size = READER.getInt("contents-amount", BackpackPlugin.getInstance().getCached().getDefaultSize());
 			if (size > psize) {
 				size = psize;
