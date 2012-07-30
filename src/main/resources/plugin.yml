@@ -25,13 +25,25 @@ permissions:
         default: op
     backpack.upgrade:
         description: Allows users to upgrade their backpacks beyond 9 slots.
-        default: op
-    backpack.workbench:
-        description: Allows users to use workbench if it exists in the users backpack or inventory.
-        default: op
+        default: op   
     backpack.noblacklist:
         description: Allows users to bypass items listed in blacklist.yml
         default: false
     backpack.noupgradecost:
         description: Allows users to bypass the upgrade cost.
         default: false
+    backpack.size.18:
+        description: Allows users to have a 18 slot backpack.
+        default: false
+    backpack.size.27:
+        description: Allows users to have a 27 slot backpack.
+        default: false
+    backpack.size.36:
+        description: Allows users to have a 36 slot backpack.
+        default: false
+    backpack.size.45:
+        description: Allows users to have a 45 slot backpack.
+        default: false
+    backpack.size.54:
+        description: Allows users to have a 54 slot backpack.
+        default: op
