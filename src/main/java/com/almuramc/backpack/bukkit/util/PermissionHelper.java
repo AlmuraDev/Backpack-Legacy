@@ -54,11 +54,11 @@ public class PermissionHelper {
 	 * @param player
 	 * @return
 	 */
-	public static int getMaxSizeFor(Player player) {
+	public static int getMaxSizeFor(Player player, World world) {
 		String found;
 		int size = -1;
 		for (String perm : BACKPACK_SIZE_PERMS) {
-			if (BackpackPlugin.getInstance().getHooks().getPermissions().has(player.getWorld().getName(), player.getName(), perm)) {
+			if (BackpackPlugin.getInstance().getHooks().getPermissions().has(world.getName(), player.getName(), perm)) {
 				found = perm;
 				int temp = Integer.parseInt(found.split("backpack.size.")[1]);
 				//Only set biggest size

@@ -279,10 +279,6 @@ public class BackpackInventory implements Inventory {
 		return inventory;
 	}
 
-	public void setInventory(Inventory inventory) {
-		this.inventory = inventory;
-	}
-
 	public boolean hasValidSize() {
 		return isValidSize(getSize());
 	}

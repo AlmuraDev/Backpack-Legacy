@@ -50,6 +50,7 @@ import org.getspout.spoutapi.gui.WidgetAnchor;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 import org.bukkit.Material;
+import org.bukkit.World;
 
 public class UpgradePanel extends GenericPopup {
 	final GenericButton close;
@@ -121,7 +122,9 @@ public class UpgradePanel extends GenericPopup {
 		int nextLoc = -70;
 		int xLoc = -85;
 
-		if (curSize <= 9 && PermissionHelper.getMaxSizeFor(player) >= 18) {
+		World target = PermissionHelper.getWorldToOpen(player, player.getWorld());
+		int maxSize = PermissionHelper.getMaxSizeFor(player, target);
+		if (curSize <= 9 && maxSize >= 18) {
 			GenericLabel Size18 = new GenericLabel();
 			Size18.setText("[18] Slots for : " + cost18);
 			Size18.setAnchor(WidgetAnchor.CENTER_CENTER);
@@ -138,7 +141,7 @@ public class UpgradePanel extends GenericPopup {
 			attachWidgets(BackpackPlugin.getInstance(), buy18, Size18);
 		}
 
-		if (curSize <= 18 && PermissionHelper.getMaxSizeFor(player) >= 27) {
+		if (curSize <= 18 && maxSize >= 27) {
 			GenericLabel Size27 = new GenericLabel();
 			Size27.setText("[27] Slots for : " + cost27);
 			Size27.setAnchor(WidgetAnchor.CENTER_CENTER);
@@ -155,7 +158,7 @@ public class UpgradePanel extends GenericPopup {
 			attachWidgets(BackpackPlugin.getInstance(), buy27, Size27);
 		}
 
-		if (curSize <= 27 && PermissionHelper.getMaxSizeFor(player) >= 36) {
+		if (curSize <= 27 && maxSize >= 36) {
 			GenericLabel Size36 = new GenericLabel();
 			Size36.setText("[36] Slots for : " + cost36);
 			Size36.setAnchor(WidgetAnchor.CENTER_CENTER);
@@ -172,7 +175,7 @@ public class UpgradePanel extends GenericPopup {
 			attachWidgets(BackpackPlugin.getInstance(), buy36, Size36);
 		}
 
-		if (curSize <= 36 && PermissionHelper.getMaxSizeFor(player) >= 45) {
+		if (curSize <= 36 && maxSize >= 45) {
 			GenericLabel Size45 = new GenericLabel();
 			Size45.setText("[45] Slots for : " + cost45);
 			Size45.setAnchor(WidgetAnchor.CENTER_CENTER);
@@ -189,7 +192,7 @@ public class UpgradePanel extends GenericPopup {
 			attachWidgets(BackpackPlugin.getInstance(), buy45, Size45);
 		}
 
-		if (curSize <= 45 && PermissionHelper.getMaxSizeFor(player) >= 54) {
+		if (curSize <= 45 && maxSize >= 54) {
 			GenericLabel Size54 = new GenericLabel();
 			Size54.setText("[54] Slots for : " + cost54);
 			Size54.setAnchor(WidgetAnchor.CENTER_CENTER);
@@ -255,7 +258,8 @@ public class UpgradePanel extends GenericPopup {
 	}
 
 	void onBuy18Click() {
-		BackpackInventory backpack = STORE.load(player, player.getWorld());
+		World target = PermissionHelper.getWorldToOpen(player, player.getWorld());
+		BackpackInventory backpack = STORE.load(player, target);
 		if (CONFIG.useEconomy() && !PERM.has(player.getWorld().getName(), player.getName(), "backpack.noupgradecost")) {
 			if (!ECON.has(player.getName(), cost18)) {
 				SafeSpout.sendMessage(player, "Not enough money!", "Backpack", Material.BONE);
@@ -265,14 +269,15 @@ public class UpgradePanel extends GenericPopup {
 			MessageHelper.sendMessage(player, "Your account has been deducted by: " + cost18);
 		}
 		backpack.setSize(player, 18);
-		STORE.store(player, player.getWorld(), backpack);
-		STORE.updateSize(player, player.getWorld(), 18);
+		STORE.store(player, target, backpack);
+		STORE.updateSize(player, target, 18);
 		SafeSpout.sendMessage(player, "Upgraded to 18 slots", "Backpack", Material.CHEST);
 		onCloseClick();
 	}
 
 	void onBuy27Click() {
-		BackpackInventory backpack = STORE.load(player, player.getWorld());
+		World target = PermissionHelper.getWorldToOpen(player, player.getWorld());
+		BackpackInventory backpack = STORE.load(player, target);
 		if (CONFIG.useEconomy() && !PERM.has(player.getWorld().getName(), player.getName(), "backpack.noupgradecost")) {
 			if (!ECON.has(player.getName(), cost27)) {
 				SafeSpout.sendMessage(player, "Not enough money!", "Backpack", Material.BONE);
@@ -282,14 +287,15 @@ public class UpgradePanel extends GenericPopup {
 			MessageHelper.sendMessage(player, "Your account has been deducted by: " + cost27);
 		}
 		backpack.setSize(player, 27);
-		STORE.store(player, player.getWorld(), backpack);
-		STORE.updateSize(player, player.getWorld(), 27);
+		STORE.store(player, target, backpack);
+		STORE.updateSize(player, target, 27);
 		SafeSpout.sendMessage(player, "Upgraded to 27 slots", "Backpack", Material.CHEST);
 		onCloseClick();
 	}
 
 	void onBuy36Click() {
-		BackpackInventory backpack = STORE.load(player, player.getWorld());
+		World target = PermissionHelper.getWorldToOpen(player, player.getWorld());
+		BackpackInventory backpack = STORE.load(player, target);
 		if (CONFIG.useEconomy() && !PERM.has(player.getWorld().getName(), player.getName(), "backpack.noupgradecost")) {
 			if (!ECON.has(player.getName(), cost36)) {
 				SafeSpout.sendMessage(player, "Not enough money!", "Backpack", Material.BONE);
@@ -299,14 +305,15 @@ public class UpgradePanel extends GenericPopup {
 			MessageHelper.sendMessage(player, "Your account has been deducted by: " + cost36);
 		}
 		backpack.setSize(player, 36);
-		STORE.store(player, player.getWorld(), backpack);
-		STORE.updateSize(player, player.getWorld(), 36);
+		STORE.store(player, target, backpack);
+		STORE.updateSize(player, target, 36);
 		SafeSpout.sendMessage(player, "Upgraded to 36 slots", "Backpack", Material.CHEST);
 		onCloseClick();
 	}
 
 	void onBuy45Click() {
-		BackpackInventory backpack = STORE.load(player, player.getWorld());
+		World target = PermissionHelper.getWorldToOpen(player, player.getWorld());
+		BackpackInventory backpack = STORE.load(player, target);
 		if (CONFIG.useEconomy() && !PERM.has(player.getWorld().getName(), player.getName(), "backpack.noupgradecost")) {
 			if (!ECON.has(player.getName(), cost45)) {
 				SafeSpout.sendMessage(player, "Not enough money!", "Backpack", Material.BONE);
@@ -316,14 +323,15 @@ public class UpgradePanel extends GenericPopup {
 			MessageHelper.sendMessage(player, "Your account has been deducted by: " + cost45);
 		}
 		backpack.setSize(player, 45);
-		STORE.store(player, player.getWorld(), backpack);
-		STORE.updateSize(player, player.getWorld(), 45);
+		STORE.store(player, target, backpack);
+		STORE.updateSize(player, target, 45);
 		SafeSpout.sendMessage(player, "Upgraded to 45 slots", "Backpack", Material.CHEST);
 		onCloseClick();
 	}
 
 	void onBuy54Click() {
-		BackpackInventory backpack = STORE.load(player, player.getWorld());
+		World target = PermissionHelper.getWorldToOpen(player, player.getWorld());
+		BackpackInventory backpack = STORE.load(player, target);
 		if (CONFIG.useEconomy() && !PERM.has(player.getWorld().getName(), player.getName(), "backpack.noupgradecost")) {
 			if (!ECON.has(player.getName(), cost54)) {
 				SafeSpout.sendMessage(player, "Not enough money!", "Backpack", Material.BONE);
@@ -333,8 +341,8 @@ public class UpgradePanel extends GenericPopup {
 			MessageHelper.sendMessage(player, "Your account has been deducted by: " + cost54);
 		}
 		backpack.setSize(player, 54);
-		STORE.store(player, player.getWorld(), backpack);
-		STORE.updateSize(player, player.getWorld(), 54);
+		STORE.store(player, target, backpack);
+		STORE.updateSize(player, target, 54);
 		SafeSpout.sendMessage(player, "Upgraded to 54 slots", "Backpack", Material.CHEST);
 		onCloseClick();
 	}

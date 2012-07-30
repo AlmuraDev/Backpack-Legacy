@@ -39,6 +39,7 @@ import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -50,7 +51,6 @@ public class BackpackCommands implements CommandExecutor {
 	private static final Dependency HOOKS = BackpackPlugin.getInstance().getHooks();
 	private static final Economy ECON = BackpackPlugin.getInstance().getHooks().getEconomy();
 	private static final Permission PERM = BackpackPlugin.getInstance().getHooks().getPermissions();
-	private static final Dependency hooks = BackpackPlugin.getInstance().getHooks();
 
 	@Override
 	public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
@@ -75,15 +75,16 @@ public class BackpackCommands implements CommandExecutor {
 				}
 				return true;
 			} else if (strings.length > 0 && strings[0].equalsIgnoreCase("upgrade") && player != null) {
+				World target = PermissionHelper.getWorldToOpen(player, player.getWorld());
 				if (!PERM.has(player.getWorld().getName(), player.getName(), "backpack.upgrade")) {
 					return true;
 				}
 				if (CONFIG.useSpout() && HOOKS.isSpoutPluginEnabled()) {
 					SafeSpout.openUpgradePanel((Player) commandSender);
 				} else {
-					BackpackInventory backpack = STORE.load(player, PermissionHelper.getWorldToOpen(player, player.getWorld()));
+					BackpackInventory backpack = STORE.load(player, target);
 					int newSize = backpack.getSize() + 9;
-					if (backpack.getSize() >= 54 || newSize > PermissionHelper.getMaxSizeFor(player)) {
+					if (backpack.getSize() >= 54 || newSize > PermissionHelper.getMaxSizeFor(player, target)) {
 						if (CONFIG.useSpout() && HOOKS.isSpoutPluginEnabled()) {
 							SafeSpout.sendMessage(player, "Max size reached!", "Backpack", Material.LAVA_BUCKET);
 						} else {
@@ -105,8 +106,8 @@ public class BackpackCommands implements CommandExecutor {
 						MessageHelper.sendMessage(commandSender, "Your account has been deducted by: " + cost);
 					}
 					backpack.setSize(player, newSize);
-					STORE.store(player, player.getWorld(), backpack);
-					STORE.updateSize(player, player.getWorld(), newSize);
+					STORE.store(player, target, backpack);
+					STORE.updateSize(player, target, newSize);
 					if (CONFIG.useSpout() && HOOKS.isSpoutPluginEnabled()) {
 						SafeSpout.sendMessage(player, "Upgraded to " + newSize + " slots", "Backpack", Material.CHEST);
 					} else {
