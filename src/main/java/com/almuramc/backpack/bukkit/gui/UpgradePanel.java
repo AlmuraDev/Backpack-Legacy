@@ -65,11 +65,11 @@ public class UpgradePanel extends GenericPopup {
 	private static final CachedConfiguration CONFIG = BackpackPlugin.getInstance().getCached();
 	private static final Economy ECON = BackpackPlugin.getInstance().getHooks().getEconomy();
 	private static final Permission PERM = BackpackPlugin.getInstance().getHooks().getPermissions();
-	double cost18 = CONFIG.getUpgradeCosts().get("size" + 18);
-	double cost27 = CONFIG.getUpgradeCosts().get("size" + 18) + CONFIG.getUpgradeCosts().get("size" + 27);
-	double cost36 = CONFIG.getUpgradeCosts().get("size" + 18) + CONFIG.getUpgradeCosts().get("size" + 27) + CONFIG.getUpgradeCosts().get("size" + 36);
-	double cost45 = CONFIG.getUpgradeCosts().get("size" + 18) + CONFIG.getUpgradeCosts().get("size" + 27) + CONFIG.getUpgradeCosts().get("size" + 36) + CONFIG.getUpgradeCosts().get("size" + 45);
-	double cost54 = CONFIG.getUpgradeCosts().get("size" + 18) + CONFIG.getUpgradeCosts().get("size" + 27) + CONFIG.getUpgradeCosts().get("size" + 36) + CONFIG.getUpgradeCosts().get("size" + 45) + CONFIG.getUpgradeCosts().get("size" + 54);
+	double cost18 = CONFIG.getUpgradeCosts().get("slot" + 18);
+	double cost27 = CONFIG.getUpgradeCosts().get("slot" + 18) + CONFIG.getUpgradeCosts().get("slot" + 27);
+	double cost36 = CONFIG.getUpgradeCosts().get("slot" + 18) + CONFIG.getUpgradeCosts().get("slot" + 27) + CONFIG.getUpgradeCosts().get("slot" + 36);
+	double cost45 = CONFIG.getUpgradeCosts().get("slot" + 18) + CONFIG.getUpgradeCosts().get("slot" + 27) + CONFIG.getUpgradeCosts().get("slot" + 36) + CONFIG.getUpgradeCosts().get("slot" + 45);
+	double cost54 = CONFIG.getUpgradeCosts().get("slot" + 18) + CONFIG.getUpgradeCosts().get("slot" + 27) + CONFIG.getUpgradeCosts().get("slot" + 36) + CONFIG.getUpgradeCosts().get("slot" + 45) + CONFIG.getUpgradeCosts().get("slot" + 54);
 
 	public UpgradePanel(SpoutPlayer player) {
 		super();
