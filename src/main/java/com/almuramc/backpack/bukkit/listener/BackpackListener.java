@@ -65,8 +65,8 @@ public class BackpackListener implements Listener {
 	public void onEntityDeath(EntityDeathEvent event) {
 		if (event.getEntity() instanceof Player) {
 			Player player = (Player) event.getEntity();
-			World world = player.getWorld();
-			if (PERM.has(world.getName(), player.getName(), "backpack.keepitems")) {
+			World world = PermissionHelper.getWorldToOpen(player, player.getWorld());
+			if (PERM.has(player.getWorld().getName(), player.getName(), "backpack.keepitems")) {
 				return;
 			}
 			BackpackInventory backpack = STORE.load(player, world);
@@ -125,12 +125,13 @@ public class BackpackListener implements Listener {
 		if (inventory.getHolder().equals(player) && inventory.getTitle().equals("Backpack")) {
 			BackpackInventory backpack = new BackpackInventory(inventory);
 			List<ItemStack> blacklistedItems = backpack.getIllegalItems(CONFIG.getBlacklistedItems());
+			World world = PermissionHelper.getWorldToOpen(player, player.getWorld());
 			boolean hadIllegalItems = false;
 			for (ItemStack item : blacklistedItems) {
 				if (!hadIllegalItems) {
 					hadIllegalItems = true;
 				}
-				player.getWorld().dropItemNaturally(player.getLocation(), item);
+				world.dropItemNaturally(player.getLocation(), item);
 			}
 			backpack.filterIllegalItems();
 			if (hadIllegalItems) {
@@ -140,7 +141,7 @@ public class BackpackListener implements Listener {
 					MessageHelper.sendMessage(player, "Found illegal items in your Backpack! Dropping them around you...");
 				}
 			}
-			STORE.save(player, PermissionHelper.getWorldToOpen(player, player.getWorld()), new BackpackInventory(backpack.getInventory()));
+			STORE.save(player, world, new BackpackInventory(backpack.getInventory()));
 		}
 	}
 }
