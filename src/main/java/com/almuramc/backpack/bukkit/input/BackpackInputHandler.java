@@ -43,14 +43,14 @@ public class BackpackInputHandler implements BindingExecutionDelegate {
 	@Override
 	public void keyPressed(KeyBindingEvent keyBindingEvent) {
 		Player player = keyBindingEvent.getPlayer();
-		//Only toggle state when not on the gamescreen
-		if (!keyBindingEvent.getScreenType().equals(ScreenType.GAME_SCREEN)) {
-			return;
-		}
-		if (player.getOpenInventory().getTopInventory().getTitle().equals("Backpack")) {
+		if (player.getOpenInventory().getTopInventory().getTitle().equals("Backpack") && keyBindingEvent.getScreenType().equals(ScreenType.GAME_SCREEN)) {
 			//Me am Bukkit, Me like hacks, Me do hacks!
 			Bukkit.getPluginManager().callEvent(new InventoryCloseEvent(player.getOpenInventory()));
 			player.closeInventory();
+		}
+		//Only toggle state when not on the gamescreen
+		if (!keyBindingEvent.getScreenType().equals(ScreenType.GAME_SCREEN)) {
+			return;
 		}
 		World target = PermissionHelper.getWorldToOpen(player, player.getWorld());
 		Inventory toOpen = BackpackPlugin.getInstance().getStore().load(player, target).getInventory();		
