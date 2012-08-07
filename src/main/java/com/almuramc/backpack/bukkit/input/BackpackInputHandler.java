@@ -43,7 +43,7 @@ public class BackpackInputHandler implements BindingExecutionDelegate {
 	@Override
 	public void keyPressed(KeyBindingEvent keyBindingEvent) {
 		Player player = keyBindingEvent.getPlayer();
-		if (player.getOpenInventory().getTopInventory().getTitle().equals("Backpack") && keyBindingEvent.getScreenType().equals(ScreenType.GAME_SCREEN)) {
+		if (player.getOpenInventory().getTopInventory().getTitle().equals("Backpack")) {
 			//Me am Bukkit, Me like hacks, Me do hacks!
 			Bukkit.getPluginManager().callEvent(new InventoryCloseEvent(player.getOpenInventory()));
 			player.closeInventory();
