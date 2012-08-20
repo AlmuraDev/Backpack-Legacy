@@ -52,6 +52,7 @@ import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.world.WorldLoadEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 
@@ -122,7 +123,12 @@ public class BackpackListener implements Listener {
 	private void onBackpackClose(InventoryView viewer, HumanEntity entity) {
 		Player player = (Player) entity;
 		Inventory inventory = viewer.getTopInventory();
-		if (inventory.getHolder().equals(player) && inventory.getTitle().equals("Backpack")) {
+		InventoryHolder holder = inventory.getHolder();
+		String title = inventory.getTitle();
+		if (holder == null) {
+			return;
+		}
+		if (holder.equals(player) && title.equals("Backpack")) {
 			BackpackInventory backpack = new BackpackInventory(inventory);
 			List<ItemStack> blacklistedItems = backpack.getIllegalItems(CONFIG.getBlacklistedItems());
 			World world = PermissionHelper.getWorldToOpen(player, player.getWorld());

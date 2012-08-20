@@ -260,7 +260,7 @@ public class UpgradePanel extends GenericPopup {
 	void onBuy18Click() {
 		World target = PermissionHelper.getWorldToOpen(player, player.getWorld());
 		BackpackInventory backpack = STORE.load(player, target);
-		if (CONFIG.useEconomy() && !PERM.has(player.getWorld().getName(), player.getName(), "backpack.noupgradecost")) {
+		if (ECON != null && CONFIG.useEconomy() && !PERM.has(player.getWorld().getName(), player.getName(), "backpack.noupgradecost")) {
 			if (!ECON.has(player.getName(), cost18)) {
 				SafeSpout.sendMessage(player, "Not enough money!", "Backpack", Material.BONE);
 				return;
@@ -278,7 +278,7 @@ public class UpgradePanel extends GenericPopup {
 	void onBuy27Click() {
 		World target = PermissionHelper.getWorldToOpen(player, player.getWorld());
 		BackpackInventory backpack = STORE.load(player, target);
-		if (CONFIG.useEconomy() && !PERM.has(player.getWorld().getName(), player.getName(), "backpack.noupgradecost")) {
+		if (ECON != null && CONFIG.useEconomy() && !PERM.has(player.getWorld().getName(), player.getName(), "backpack.noupgradecost")) {
 			if (!ECON.has(player.getName(), cost27)) {
 				SafeSpout.sendMessage(player, "Not enough money!", "Backpack", Material.BONE);
 				return;
@@ -296,7 +296,7 @@ public class UpgradePanel extends GenericPopup {
 	void onBuy36Click() {
 		World target = PermissionHelper.getWorldToOpen(player, player.getWorld());
 		BackpackInventory backpack = STORE.load(player, target);
-		if (CONFIG.useEconomy() && !PERM.has(player.getWorld().getName(), player.getName(), "backpack.noupgradecost")) {
+		if (ECON != null && CONFIG.useEconomy() && !PERM.has(player.getWorld().getName(), player.getName(), "backpack.noupgradecost")) {
 			if (!ECON.has(player.getName(), cost36)) {
 				SafeSpout.sendMessage(player, "Not enough money!", "Backpack", Material.BONE);
 				return;
@@ -314,7 +314,7 @@ public class UpgradePanel extends GenericPopup {
 	void onBuy45Click() {
 		World target = PermissionHelper.getWorldToOpen(player, player.getWorld());
 		BackpackInventory backpack = STORE.load(player, target);
-		if (CONFIG.useEconomy() && !PERM.has(player.getWorld().getName(), player.getName(), "backpack.noupgradecost")) {
+		if (ECON != null && CONFIG.useEconomy() && !PERM.has(player.getWorld().getName(), player.getName(), "backpack.noupgradecost")) {
 			if (!ECON.has(player.getName(), cost45)) {
 				SafeSpout.sendMessage(player, "Not enough money!", "Backpack", Material.BONE);
 				return;
@@ -332,7 +332,7 @@ public class UpgradePanel extends GenericPopup {
 	void onBuy54Click() {
 		World target = PermissionHelper.getWorldToOpen(player, player.getWorld());
 		BackpackInventory backpack = STORE.load(player, target);
-		if (CONFIG.useEconomy() && !PERM.has(player.getWorld().getName(), player.getName(), "backpack.noupgradecost")) {
+		if (ECON != null && CONFIG.useEconomy() && !PERM.has(player.getWorld().getName(), player.getName(), "backpack.noupgradecost")) {
 			if (!ECON.has(player.getName(), cost54)) {
 				SafeSpout.sendMessage(player, "Not enough money!", "Backpack", Material.BONE);
 				return;

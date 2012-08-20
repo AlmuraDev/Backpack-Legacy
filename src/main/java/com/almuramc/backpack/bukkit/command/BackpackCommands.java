@@ -95,7 +95,7 @@ public class BackpackCommands implements CommandExecutor {
 						}
 						return true;
 					}
-					if (CONFIG.useEconomy() && !PERM.has(player.getWorld().getName(), player.getName(), "backpack.noupgradecost")) {
+					if (ECON != null && CONFIG.useEconomy() && !PERM.has(player.getWorld().getName(), player.getName(), "backpack.noupgradecost")) {
 						double cost = CONFIG.getUpgradeCosts().get("slot" + newSize);
 						if (!ECON.has(player.getName(), cost)) {
 							if (CONFIG.useSpout() && HOOKS.isSpoutPluginEnabled()) {
