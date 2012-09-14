@@ -27,6 +27,7 @@
 package com.almuramc.backpack.bukkit.listener;
 
 import java.util.List;
+import java.util.Random;
 
 import com.almuramc.backpack.bukkit.BackpackPlugin;
 import com.almuramc.backpack.bukkit.inventory.BackpackInventory;
@@ -125,7 +126,6 @@ public class BackpackListener implements Listener {
 
 	@EventHandler
 	public void onItemPickup(PlayerPickupItemEvent event) {
-		Bukkit.getLogger().info("Pickup event fired");
 		if (!PERM.has(event.getPlayer().getWorld(), event.getPlayer().getName(), "backpack.overflow")) {
 			return;
 		}
@@ -136,7 +136,6 @@ public class BackpackListener implements Listener {
 		ItemStack item = event.getItem().getItemStack();
 		World world = PermissionHelper.getWorldToOpen(player, player.getWorld());
 		BackpackInventory inventory = STORE.load(player, world);
-		Bukkit.getLogger().info("Current Backpack items: " + inventory.toString());
 		List<ItemStack> blacklistedItems = inventory.getIllegalItems(CONFIG.getBlacklistedItems());
 		if (blacklistedItems.contains(item)) {
 			if (CONFIG.useSpout() && BackpackPlugin.getInstance().getHooks().isSpoutPluginEnabled()) {
@@ -146,11 +145,11 @@ public class BackpackListener implements Listener {
 			}
 			return;
 		}
-		Bukkit.getLogger().info("Picking up: " + item.toString());
 		inventory.addItem(item);
-		Bukkit.getLogger().info("After pickup Backpack items: " + inventory.toString());
 		STORE.save(player, world, inventory);
 		event.getItem().remove();
+		Random random = new Random();
+		((net.minecraft.server.World) player.getWorld()).makeSound((net.minecraft.server.Entity) event.getItem(), "random.pop", 0.2F, ((random.nextFloat() - random.nextFloat()) * 0.7F + 1.0F) * 2.0F);
 		event.setCancelled(true);
 	}
 
