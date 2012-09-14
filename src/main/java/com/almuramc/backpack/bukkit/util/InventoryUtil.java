@@ -43,7 +43,7 @@ public class InventoryUtil {
 			}
 			count++;
 		}
-		if (count == contents.length - 1) {
+		if (count == inv.getSize() - 1) {
 			return true;
 		}
 		return false;
