@@ -136,6 +136,10 @@ public class BackpackListener implements Listener {
 		ItemStack item = event.getItem().getItemStack();
 		World world = PermissionHelper.getWorldToOpen(player, player.getWorld());
 		BackpackInventory inventory = STORE.load(player, world);
+		//backpack is full, we are done here.
+		if (inventory.firstEmpty() == -1) {
+			return;
+		}
 		List<ItemStack> blacklistedItems = inventory.getIllegalItems(CONFIG.getBlacklistedItems());
 		if (blacklistedItems.contains(item)) {
 			if (CONFIG.useSpout() && BackpackPlugin.getInstance().getHooks().isSpoutPluginEnabled()) {
