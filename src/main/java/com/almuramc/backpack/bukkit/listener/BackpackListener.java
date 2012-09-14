@@ -122,32 +122,6 @@ public class BackpackListener implements Listener {
 		plugin.getStore().initWorld(event.getWorld());
 	}
 
-	@EventHandler
-	public void onItemPickup(PlayerPickupItemEvent event) {
-		Bukkit.getLogger().info("Pickup event fired");
-		if (event.getPlayer().getInventory().firstEmpty() != -1 || !PERM.has(event.getPlayer().getWorld(), event.getPlayer().getName(), "backpack.overflow")) {
-			return;
-		}
-		Player player = event.getPlayer();
-		ItemStack item = event.getItem().getItemStack();
-		World world = PermissionHelper.getWorldToOpen(player, player.getWorld());
-		BackpackInventory inventory = STORE.load(player, world);
-		Bukkit.getLogger().info("Current Backpack items: " + inventory.toString());
-		List<ItemStack> blacklistedItems = inventory.getIllegalItems(CONFIG.getBlacklistedItems());
-		if (blacklistedItems.contains(item)) {
-			if (CONFIG.useSpout() && BackpackPlugin.getInstance().getHooks().isSpoutPluginEnabled()) {
-				SafeSpout.sendMessage(player, "Picking up illegal item(s)!", "Backpack", Material.LAVA);
-			} else {
-				MessageHelper.sendMessage(player, "Trying to pickup illegal item(s)! Stopping the pickup...");
-			}
-			return;
-		}
-		Bukkit.getLogger().info("Picking up: " + item.toString());
-		inventory.addItem(item);
-		Bukkit.getLogger().info("After pickup Backpack items: " + inventory.toString());
-		STORE.save(player, world, inventory);
-	}
-
 	private void onBackpackClose(InventoryView viewer, HumanEntity entity) {
 		Player player = (Player) entity;
 		Inventory inventory = viewer.getTopInventory();
