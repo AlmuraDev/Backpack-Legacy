@@ -32,6 +32,7 @@ import com.almuramc.backpack.bukkit.BackpackPlugin;
 import com.almuramc.backpack.bukkit.inventory.BackpackInventory;
 import com.almuramc.backpack.bukkit.storage.Storage;
 import com.almuramc.backpack.bukkit.util.CachedConfiguration;
+import com.almuramc.backpack.bukkit.util.InventoryUtil;
 import com.almuramc.backpack.bukkit.util.MessageHelper;
 import com.almuramc.backpack.bukkit.util.PermissionHelper;
 import com.almuramc.backpack.bukkit.util.SafeSpout;
@@ -120,6 +121,35 @@ public class BackpackListener implements Listener {
 	@EventHandler
 	public void onWorldLoad(WorldLoadEvent event) {
 		plugin.getStore().initWorld(event.getWorld());
+	}
+
+	@EventHandler
+	public void onItemPickup(PlayerPickupItemEvent event) {
+		Bukkit.getLogger().info("Pickup event fired");
+		if (event.getPlayer().getInventory().firstEmpty() == -1 || !PERM.has(event.getPlayer().getWorld(), event.getPlayer().getName(), "backpack.overflow")) {
+			return;
+		}
+		Player player = event.getPlayer();
+		if (!InventoryUtil.hasOnlyOneFreeSlot(player.getInventory())) {
+			return;
+		}
+		ItemStack item = event.getItem().getItemStack();
+		World world = PermissionHelper.getWorldToOpen(player, player.getWorld());
+		BackpackInventory inventory = STORE.load(player, world);
+		Bukkit.getLogger().info("Current Backpack items: " + inventory.toString());
+		List<ItemStack> blacklistedItems = inventory.getIllegalItems(CONFIG.getBlacklistedItems());
+		if (blacklistedItems.contains(item)) {
+			if (CONFIG.useSpout() && BackpackPlugin.getInstance().getHooks().isSpoutPluginEnabled()) {
+				SafeSpout.sendMessage(player, "Picking up illegal item(s)!", "Backpack", Material.LAVA);
+			} else {
+				MessageHelper.sendMessage(player, "Trying to pickup illegal item(s)! Stopping the pickup...");
+			}
+			return;
+		}
+		Bukkit.getLogger().info("Picking up: " + item.toString());
+		inventory.addItem(item);
+		Bukkit.getLogger().info("After pickup Backpack items: " + inventory.toString());
+		STORE.save(player, world, inventory);
 	}
 
 	private void onBackpackClose(InventoryView viewer, HumanEntity entity) {
