@@ -27,9 +27,7 @@
 package com.almuramc.backpack.bukkit.storage.type;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Set;
 
@@ -41,7 +39,6 @@ import com.almuramc.backpack.bukkit.util.PermissionHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -104,7 +101,8 @@ public class YamlStorage extends Storage {
 			READER.load(file);
 			READER.set("contents-amount", size);
 			READER.save(file);
-		} catch (Exception ignore) {}
+		} catch (Exception ignore) {
+		}
 	}
 
 	private BackpackInventory loadFromFile(Player player, World world) {

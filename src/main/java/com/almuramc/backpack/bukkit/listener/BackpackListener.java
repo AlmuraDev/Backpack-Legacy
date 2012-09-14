@@ -49,6 +49,7 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.PlayerKickEvent;
+import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.world.WorldLoadEvent;
 import org.bukkit.inventory.Inventory;
@@ -118,6 +119,28 @@ public class BackpackListener implements Listener {
 	@EventHandler
 	public void onWorldLoad(WorldLoadEvent event) {
 		plugin.getStore().initWorld(event.getWorld());
+	}
+
+	@EventHandler
+	public void onItemPickup(PlayerPickupItemEvent event) {
+		if (event.getPlayer().getInventory().firstEmpty() != -1 || !PERM.has(event.getPlayer().getWorld(), event.getPlayer().getName(), "backpack.use")) {
+			return;
+		}
+		Player player = event.getPlayer();
+		ItemStack item = event.getItem().getItemStack();
+		World world = PermissionHelper.getWorldToOpen(player, player.getWorld());
+		BackpackInventory inventory = STORE.load(player, world);
+		List<ItemStack> blacklistedItems = inventory.getIllegalItems(CONFIG.getBlacklistedItems());
+		if (blacklistedItems.contains(item)) {
+			if (CONFIG.useSpout() && BackpackPlugin.getInstance().getHooks().isSpoutPluginEnabled()) {
+				SafeSpout.sendMessage(player, "Picking up illegal item(s)!", "Backpack", Material.LAVA);
+			} else {
+				MessageHelper.sendMessage(player, "Trying to pickup illegal item(s)! Stopping the pickup...");
+			}
+			return;
+		}
+		inventory.addItem(item);
+		STORE.save(player, world, inventory);
 	}
 
 	private void onBackpackClose(InventoryView viewer, HumanEntity entity) {
