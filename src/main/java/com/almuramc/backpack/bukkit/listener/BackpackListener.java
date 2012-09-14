@@ -38,6 +38,7 @@ import com.almuramc.backpack.bukkit.util.SafeSpout;
 
 import net.milkbowl.vault.permission.Permission;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.HumanEntity;
@@ -130,6 +131,7 @@ public class BackpackListener implements Listener {
 		ItemStack item = event.getItem().getItemStack();
 		World world = PermissionHelper.getWorldToOpen(player, player.getWorld());
 		BackpackInventory inventory = STORE.load(player, world);
+		Bukkit.getLogger().info("Current Backpack items: " + inventory.toString());
 		List<ItemStack> blacklistedItems = inventory.getIllegalItems(CONFIG.getBlacklistedItems());
 		if (blacklistedItems.contains(item)) {
 			if (CONFIG.useSpout() && BackpackPlugin.getInstance().getHooks().isSpoutPluginEnabled()) {
@@ -139,7 +141,9 @@ public class BackpackListener implements Listener {
 			}
 			return;
 		}
+		Bukkit.getLogger().info("Picking up: " + item.toString());
 		inventory.addItem(item);
+		Bukkit.getLogger().info("After pickup Backpack items: " + inventory.toString());
 		STORE.save(player, world, inventory);
 	}
 
