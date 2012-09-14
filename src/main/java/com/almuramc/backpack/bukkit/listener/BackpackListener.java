@@ -26,6 +26,7 @@
  */
 package com.almuramc.backpack.bukkit.listener;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -139,6 +140,13 @@ public class BackpackListener implements Listener {
 		//backpack is full, we are done here.
 		if (inventory.firstEmpty() == -1) {
 			return;
+		}
+		//Check if the inventory has any items matching the pickup in it, see if we can add it
+		HashMap<Integer, ? extends ItemStack> withinInventory = event.getPlayer().getInventory().all(item);
+		for (ItemStack stack : withinInventory.values()) {
+			if (stack.getAmount() < event.getPlayer().getInventory().getMaxStackSize()) {
+				return;
+			}
 		}
 		List<ItemStack> blacklistedItems = inventory.getIllegalItems(CONFIG.getBlacklistedItems());
 		if (blacklistedItems.contains(item)) {
