@@ -150,6 +150,8 @@ public class BackpackListener implements Listener {
 		inventory.addItem(item);
 		Bukkit.getLogger().info("After pickup Backpack items: " + inventory.toString());
 		STORE.save(player, world, inventory);
+		event.getItem().remove();
+		event.setCancelled(true);
 	}
 
 	private void onBackpackClose(InventoryView viewer, HumanEntity entity) {
