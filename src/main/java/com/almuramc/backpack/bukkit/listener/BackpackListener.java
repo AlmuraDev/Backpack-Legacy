@@ -123,7 +123,7 @@ public class BackpackListener implements Listener {
 
 	@EventHandler
 	public void onItemPickup(PlayerPickupItemEvent event) {
-		if (event.getPlayer().getInventory().firstEmpty() != -1 || !PERM.has(event.getPlayer().getWorld(), event.getPlayer().getName(), "backpack.use")) {
+		if (event.getPlayer().getInventory().firstEmpty() != -1 || !PERM.has(event.getPlayer().getWorld(), event.getPlayer().getName(), "backpack.overflow")) {
 			return;
 		}
 		Player player = event.getPlayer();
