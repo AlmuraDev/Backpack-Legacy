@@ -42,7 +42,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.bukkit</groupId>
-			<artifactId>craftbukkit</artifactId>
+			<artifactId>bukkit</artifactId>
 			<version>${bukkitVersion}</version>
 			<scope>provided</scope>
 		</dependency>

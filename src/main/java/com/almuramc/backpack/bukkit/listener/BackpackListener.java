@@ -42,7 +42,9 @@ import net.milkbowl.vault.permission.Permission;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.World;
+import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -149,7 +151,7 @@ public class BackpackListener implements Listener {
 		STORE.save(player, world, inventory);
 		event.getItem().remove();
 		Random random = new Random();
-		((net.minecraft.server.World) player.getWorld()).makeSound((net.minecraft.server.Entity) event.getItem(), "random.pop", 0.2F, ((random.nextFloat() - random.nextFloat()) * 0.7F + 1.0F) * 2.0F);
+		player.getWorld().playSound(player.getLocation(), Sound.ITEM_PICKUP, 0.2F, ((random.nextFloat() - random.nextFloat()) * 0.7F + 1.0F) * 2.0F);
 		event.setCancelled(true);
 	}
 
