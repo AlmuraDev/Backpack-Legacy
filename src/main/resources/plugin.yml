@@ -20,6 +20,9 @@ permissions:
     backpack.use:
         description: Allows users to access backpack.
         default: false
+    backpack.overflow:
+        description: Allows users which full inventories to have the pickup'd item go straight to the backpack.
+        default: false
     backpack.keepitems:
         description: Allows users to keep backpack items on death.
         default: op
