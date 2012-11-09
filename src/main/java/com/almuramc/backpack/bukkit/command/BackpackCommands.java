@@ -118,8 +118,6 @@ public class BackpackCommands implements CommandExecutor {
 					}
 				}
 				return true;
-			} else {
-				MessageHelper.sendMessage(commandSender, "Must be in-game to utilize player-only commands!");
 			}
 		}
 		return true;
