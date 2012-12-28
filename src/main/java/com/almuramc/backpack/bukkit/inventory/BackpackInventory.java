@@ -138,6 +138,11 @@ public class BackpackInventory implements Inventory {
 	}
 
 	@Override
+	public boolean containsAtLeast(ItemStack itemStack, int i) {
+		return inventory.containsAtLeast(itemStack, i);
+	}
+
+	@Override
 	public HashMap<Integer, ? extends ItemStack> all(int i) {
 		return inventory.all(i);
 	}

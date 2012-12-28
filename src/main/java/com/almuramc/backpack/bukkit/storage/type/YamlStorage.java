@@ -34,7 +34,6 @@ import java.util.Set;
 import com.almuramc.backpack.bukkit.BackpackPlugin;
 import com.almuramc.backpack.bukkit.inventory.BackpackInventory;
 import com.almuramc.backpack.bukkit.storage.Storage;
-import com.almuramc.backpack.bukkit.util.BookItem;
 import com.almuramc.backpack.bukkit.util.PermissionHelper;
 
 import org.bukkit.Bukkit;
@@ -135,22 +134,6 @@ public class YamlStorage extends Storage {
 				} else {
 					final ConfigurationSection section = parent.getConfigurationSection(keys[i]);
 					ItemStack stack = section.getItemStack("ItemStack", null);
-					if (stack != null) {
-						if (stack.getType().equals(Material.WRITTEN_BOOK)) {
-							final BookItem book = new BookItem(stack);
-							book.setAuthor(section.getString("Author"));
-							book.setTitle(section.getString("Title"));
-							final ConfigurationSection pages = section.getConfigurationSection("pages");
-							Set<String> pageNumbers = pages.getKeys(false);
-							String[] numbers = pageNumbers.toArray(new String[temp.size()]);
-							final ArrayList<String> parsedPages = new ArrayList<String>();
-							for (int j = 0; j < numbers.length; j++) {
-								parsedPages.add(pages.getConfigurationSection(numbers[j]).getString("Text"));
-							}
-							book.setPages(parsedPages.toArray(new String[parsedPages.size()]));
-							stack = book.getItemStack();
-						}
-					}
 					items.add(stack);
 				}
 			}
@@ -187,17 +170,6 @@ public class YamlStorage extends Storage {
 				slot.set("ItemStack", stack);
 				if (stack == null) {
 					continue;
-				}
-				if (stack.getType().equals(Material.WRITTEN_BOOK)) {
-					final BookItem book = new BookItem(stack);
-					slot.set("Title", book.getTitle());
-					slot.set("Author", book.getAuthor());
-					final ConfigurationSection pages = slot.createSection("pages");
-					int count = 0;
-					for (String page : book.getPages()) {
-						ConfigurationSection number = pages.createSection("Page " + (count + 1));
-						number.set("Text", page);
-					}
 				}
 			}
 			READER.save(playerBackpack);
