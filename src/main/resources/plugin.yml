@@ -19,10 +19,10 @@ permissions:
         default: op
     backpack.use:
         description: Allows users to access backpack.
-        default: false
+        default: op
     backpack.overflow:
         description: Allows users which full inventories to have the pickup'd item go straight to the backpack.
-        default: false
+        default: op
     backpack.keepitems:
         description: Allows users to keep backpack items on death.
         default: op
@@ -31,10 +31,10 @@ permissions:
         default: op   
     backpack.noblacklist:
         description: Allows users to bypass items listed in blacklist.yml
-        default: false
+        default: op
     backpack.noupgradecost:
         description: Allows users to bypass the upgrade cost.
-        default: false
+        default: op
     backpack.size.18:
         description: Allows users to have a 18 slot backpack.
         default: false
