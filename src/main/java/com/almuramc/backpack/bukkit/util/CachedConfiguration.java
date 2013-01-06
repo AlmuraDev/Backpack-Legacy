@@ -78,7 +78,7 @@ public final class CachedConfiguration {
 	public boolean useSaveOnLogin() {
 		return cachedConfig.getBoolean("general.use-saveonlogin");
 	}
-	
+
 	public int getDefaultSize() {
 		return cachedConfig.getInt("backpack.default-size");
 	}

@@ -28,8 +28,8 @@ package com.almuramc.backpack.bukkit.listener;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
+import java.util.UUID;
 
 import com.almuramc.backpack.bukkit.BackpackPlugin;
 import com.almuramc.backpack.bukkit.inventory.BackpackInventory;
@@ -69,7 +69,7 @@ public class BackpackListener implements Listener {
 	private static final Storage STORE = BackpackPlugin.getInstance().getStore();
 	private static final CachedConfiguration CONFIG = BackpackPlugin.getInstance().getCached();
 	private static final Permission PERM = BackpackPlugin.getInstance().getHooks().getPermissions();
-	private static final Map<Player, InventoryView> PlayerBackpacks = new HashMap<Player, InventoryView>();
+	private static final HashMap<UUID, InventoryView> PlayerBackpacks = new HashMap<UUID, InventoryView>();
 
 	@EventHandler
 	public void onEntityDeath(EntityDeathEvent event) {
@@ -96,11 +96,11 @@ public class BackpackListener implements Listener {
 	public void onInventoryClose(InventoryCloseEvent event) {
 		onBackpackClose(event.getView(), event.getPlayer());
 	}
-	
+
 	@EventHandler()
 	public void onInventoryClick(InventoryClickEvent event) {
-		if(event.getInventory().getTitle().equals("Backpack") && CONFIG.useSaveOnLogin()){
-			PlayerBackpacks.put((Player) event.getWhoClicked(), event.getView());
+		if (event.getInventory().getTitle().equals("Backpack") && CONFIG.useSaveOnLogin()) {
+			PlayerBackpacks.put(((Player) event.getWhoClicked()).getUniqueId(), event.getView());
 		}
 	}
 
@@ -128,21 +128,23 @@ public class BackpackListener implements Listener {
 
 	@EventHandler
 	public void onPlayerQuit(PlayerQuitEvent event) {
-		if(CONFIG.useSaveOnLogin()){
-			if(PlayerBackpacks.get(event.getPlayer()) != null) {
+		if (CONFIG.useSaveOnLogin()) {
+			final InventoryView view = PlayerBackpacks.get(event.getPlayer().getUniqueId());
+			if (view != null) {
 				onBackpackClose(PlayerBackpacks.get(event.getPlayer()), event.getPlayer());
 			}
 		} else {
 			STORE.save(event.getPlayer(), event.getPlayer().getWorld(), null);
 		}
 	}
-	
+
 	@EventHandler
 	public void onPlayerLogin(PlayerLoginEvent event) {
-		if(CONFIG.useSaveOnLogin()){
-			for(Player player: PlayerBackpacks.keySet()){
-				onBackpackClose(PlayerBackpacks.get(player), player);
-				PlayerBackpacks.remove(player);
+		if (CONFIG.useSaveOnLogin()) {
+			final InventoryView view = PlayerBackpacks.get(event.getPlayer().getUniqueId());
+			if (view != null) {
+				onBackpackClose(PlayerBackpacks.get(event.getPlayer()), event.getPlayer());
+				PlayerBackpacks.remove(event.getPlayer());
 			}
 		}
 	}
