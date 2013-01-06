@@ -131,7 +131,7 @@ public class BackpackListener implements Listener {
 		if (CONFIG.useSaveOnLogin()) {
 			final InventoryView view = PlayerBackpacks.get(event.getPlayer().getUniqueId());
 			if (view != null) {
-				onBackpackClose(PlayerBackpacks.get(event.getPlayer()), event.getPlayer());
+				onBackpackClose(view, event.getPlayer());
 			}
 		} else {
 			STORE.save(event.getPlayer(), event.getPlayer().getWorld(), null);
