@@ -5,6 +5,7 @@
 #       false - will not charge users to upgrade their backpacks.
 #       true - users will be charges for backpack upgrades according to upgrade pricing below.
 #   use-spout: Set to either true or false, this enables or disables hotkeys/additional guis support.
+#   use-saveonlogin: saves the backpacks for each player once they login (fixes the dupe glitch but uses more resources)
 #
 # Admin
 #   control-panel: Set to either true or false, this enables or disables the Control Panel Interface for Backpack for easy upgrading and other functions. use-spout *MUST* be enabled for this to work.
@@ -15,6 +16,7 @@
 general:
   use-economy: false
   use-spoutplugin: true
+  use-saveonlogin: false
 admin:
   control-panel: false
   hotkey: KEY_V
