@@ -11,8 +11,8 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<bukkitVersion>1.4.6-R0.2-SNAPSHOT</bukkitVersion>
-		<buildNumber>Unknown</buildNumber>
+		<bukkitVersion>1.5.1-R0.1-SNAPSHOT</bukkitVersion>
+		<buildNumber>b130</buildNumber>
 	</properties>
 
 	<!-- Organization -->
