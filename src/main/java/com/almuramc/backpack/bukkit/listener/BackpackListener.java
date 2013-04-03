@@ -54,6 +54,7 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
@@ -96,11 +97,18 @@ public class BackpackListener implements Listener {
 	public void onInventoryClose(InventoryCloseEvent event) {
 		onBackpackClose(event.getView(), event.getPlayer());
 	}
-
+	
 	@EventHandler()
 	public void onInventoryClick(InventoryClickEvent event) {
-		if (event.getInventory().getTitle().equals("Backpack") && CONFIG.useSaveOnLogin()) {
+		if (event.getInventory().getTitle().equals("Backpack")) {
 			PlayerBackpacks.put(((Player) event.getWhoClicked()).getUniqueId(), event.getView());
+		}
+
+		if (event.getInventory().getTitle().equals("Backpack")) {				
+			if (event.getSlot() < 0 && event.getWhoClicked() instanceof Player) {				
+				Player sPlayer = (Player) event.getWhoClicked();				
+				STORE.save(sPlayer, sPlayer.getWorld(), null);				
+			}
 		}
 	}
 

@@ -239,7 +239,7 @@ public class UpgradePanel extends GenericPopup {
 		close.shiftXPos(80).shiftYPos(nextLoc + 2);
 
 		// Screen Layout
-		GenericTexture border = new GenericTexture("http://www.almuramc.com/images/backpackgui.png");
+		GenericTexture border = new GenericTexture("http://www.almuramc.com/images/playerplus.png");
 		border.setAnchor(WidgetAnchor.CENTER_CENTER);
 		border.setPriority(RenderPriority.High);
 		border.setWidth(270).setHeight(nextLoc + 160);
