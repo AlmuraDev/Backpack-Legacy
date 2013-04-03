@@ -74,7 +74,7 @@ public class UpgradePanel extends GenericPopup {
 	public UpgradePanel(SpoutPlayer player) {
 		super();
 		this.player = player;
-		BackpackInventory backpack = STORE.load(player, player.getWorld());
+		BackpackInventory backpack = STORE.load(player, PermissionHelper.getWorldToOpen(player, player.getWorld()));
 		int curSize = backpack.getSize();
 		buy18 = null;
 		buy27 = null;
@@ -209,7 +209,7 @@ public class UpgradePanel extends GenericPopup {
 		}
 
 		// No Upgrades Available
-		if (nextLoc == -70) {
+		if (nextLoc == -70 && !(curSize <= 45 && maxSize >= 54)) {
 			GenericLabel notAvailable = new GenericLabel();
 			notAvailable.setText("You already have your Max Size!");
 			notAvailable.setAnchor(WidgetAnchor.CENTER_CENTER);
