@@ -9,6 +9,7 @@
 	<url>http://www.almuramc.com</url>
 	<description>Backpack is a plugin for Bukkit/Spout that gives users a handy backpack.</description>
 
+
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<bukkitVersion>1.5.1-R0.1-SNAPSHOT</bukkitVersion>
