@@ -1,132 +1,172 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-	<!-- Project information -->
-	<groupId>com.almuramc</groupId>
-	<artifactId>backpack</artifactId>
-	<version>dev-SNAPSHOT</version>
-	<name>Backpack</name>
-	<url>http://www.almuramc.com</url>
-	<description>Backpack is a plugin for Bukkit/Spout that gives users a handy backpack.</description>
+    <!-- Project information -->
+    <groupId>com.almuradev</groupId>
+    <artifactId>backpack</artifactId>
+    <version>2.0-SNAPSHOT</version>
+    <name>Backpack</name>
+    <url>http://www.almuradev.com</url>
+    <description>The handy portable storage plugin for Bukkit.</description>
 
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <bukkitVersion>1.5-R0.1-SNAPSHOT</bukkitVersion>
+        <mainClass>com.almuradev.backpack.BackpackPlugin</mainClass>
+    </properties>
 
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<bukkitVersion>1.5.1-R0.1-SNAPSHOT</bukkitVersion>
-		<buildNumber>b130</buildNumber>
-	</properties>
+    <!-- Organization -->
+    <organization>
+        <name>AlmuraDev</name>
+        <url>http://www.almuradev.com</url>
+    </organization>
 
-	<!-- Organization -->
-	<organization>
-		<name>AlmuraDev</name>
-		<url>http://www.almuramc.com</url>
-	</organization>
+    <!-- License -->
+    <licenses>
+        <license>
+            <name>GNU General Public License Version 3</name>
+            <url>http://www.gnu.org/licenses/gpl.html</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
 
-	<!-- License -->
-	<licenses>
-		<license>
-			<name>GNU GENERAL PUBLIC LICENSE Version 3</name>
-			<url>http://www.gnu.org/licenses/gpl.html</url>
-			<distribution>repo</distribution>
-		</license>
-	</licenses>
+    <!-- Source code access -->
+    <scm>
+        <developerConnection>scm:git:git@github.com:AlmuraDev/Backpack.git</developerConnection>
+        <connection>scm:git:git://github.com/AlmuraDev/Backpack.git</connection>
+        <url>https://github.com/AlmuraDev/Backpack</url>
+    </scm>
 
-	<!-- Repository locations -->
-	<repositories>
-		<repository>
-			<id>vault-repo</id>
-			<url>http://ci.herocraftonline.com/plugin/repository/everything</url>
-		</repository>	
-		<repository>
-			<id>spout-repo</id>
-			<url>http://repo.spout.org</url>
-		</repository>
-	</repositories>
+    <!-- Repository locations -->
+    <repositories>
+        <repository>
+            <id>spout-repo</id>
+            <url>http://repo.spout.org</url>
+        </repository>
+        <repository>
+            <id>vault-repo</id>
+            <url>http://ci.herocraftonline.com/plugin/repository/everything</url>
+        </repository>
+    </repositories>
 
-	<!-- Dependencies -->
-	<dependencies>
-		<dependency>
-			<groupId>org.bukkit</groupId>
-			<artifactId>bukkit</artifactId>
-			<version>${bukkitVersion}</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.getspout</groupId>
-			<artifactId>spoutplugin</artifactId>
-			<version>dev-SNAPSHOT</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>net.milkbowl.vault</groupId>
-			<artifactId>Vault</artifactId>
-			<version>1.2.23-SNAPSHOT</version>
-			<scope>provided</scope>
-		</dependency>
-	</dependencies>
+    <!-- Dependencies -->
+    <dependencies>
+        <dependency>
+            <groupId>org.bukkit</groupId>
+            <artifactId>bukkit</artifactId>
+            <version>${bukkitVersion}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.getspout</groupId>
+            <artifactId>spoutplugin</artifactId>
+            <version>dev-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.milkbowl.vault</groupId>
+            <artifactId>Vault</artifactId>
+            <version>1.2.23-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
 
-	<build>
-		<defaultGoal>clean install</defaultGoal>
-		<!-- Resources -->
-		<resources>
-			<resource>
-				<targetPath>.</targetPath>
-				<filtering>true</filtering>
-				<directory>${basedir}/src/main/resources</directory>
-				<includes>
-					<include>*.yml</include>
-				</includes>
-			</resource>
-		</resources>
-		<!-- Plugins -->
-		<plugins>
-			<!-- Compile plugin -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.3.2</version>
-				<configuration>
-					<source>1.6</source>
-					<target>1.6</target>
-				</configuration>
-			</plugin>
-			<!-- License header formatting plugin -->
-			<plugin>
-				<groupId>com.mycila.maven-license-plugin</groupId>
-				<artifactId>maven-license-plugin</artifactId>
-				<version>1.10.b1</version>
-				<executions>
-					<execution>
-						<phase>clean</phase>
-						<goals>
-							<goal>format</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<quiet>true</quiet>
-					<encoding>UTF-8</encoding>
-					<strictCheck>true</strictCheck>
-					<header>${basedir}/HEADER.txt</header>
-					<keywords>
-						<keyword>${project.name}</keyword>
-						<keyword>license</keyword>
-					</keywords>
-					<mapping>
-						<java>SLASHSTAR_STYLE</java>
-					</mapping>
-					<properties>
-						<name>${project.name}</name>
-						<url>${project.organization.url}</url>
-						<license>Almura Development License version 1</license>
-						<licenseUrl>http://www.almuramc.com</licenseUrl>
-						<copyright>Copyright (c) 2012, AlmuraDev</copyright>
-					</properties>
-					<includes>
-						<include>src/main/java/**</include>
-					</includes>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
+    <!-- Build configuration -->
+    <build>
+        <defaultGoal>clean install</defaultGoal>
+
+        <!-- Resources to include -->
+        <resources>
+            <!-- Static resources -->
+            <resource>
+                <targetPath>.</targetPath>
+                <filtering>false</filtering>
+                <directory>${basedir}</directory>
+                <includes>
+                    <include>LICENSE.txt</include>
+                </includes>
+            </resource>
+            <resource>
+                <targetPath>.</targetPath>
+                <filtering>false</filtering>
+                <directory>${basedir}/src/main/resources</directory>
+                <includes>
+                    <include>**/*</include>
+                </includes>
+            </resource>
+            <!-- Filtered resources -->
+            <resource>
+                <targetPath>.</targetPath>
+                <filtering>true</filtering>
+                <directory>${basedir}/src/main/resources</directory>
+                <includes>
+                    <include>*.yml</include>
+                </includes>
+            </resource>
+        </resources>
+
+        <!-- Build plugins -->
+        <plugins>
+            <!-- License headers plugin -->
+            <plugin>
+                <groupId>com.mycila.maven-license-plugin</groupId>
+                <artifactId>maven-license-plugin</artifactId>
+                <version>1.10.b1</version>
+                <executions>
+                    <execution>
+                        <configuration>
+                            <quiet>true</quiet>
+                            <encoding>UTF-8</encoding>
+                            <strictCheck>true</strictCheck>
+                            <header>${basedir}/HEADER.txt</header>
+                            <mapping>
+                                <java>SLASHSTAR_STYLE</java>
+                            </mapping>
+                            <properties>
+                                <name>${project.name}</name>
+                                <url>${project.organization.url}</url>
+                                <license>GNU General Public License</license>
+                                <copyright>© 2012-2013 ${project.organization.name}</copyright>
+                            </properties>
+                            <includes>
+                                <include>src/main/java/**</include>
+                                <include>src/test/java/**</include>
+                            </includes>
+                        </configuration>
+                        <phase>clean</phase>
+                        <goals>
+                            <goal>format</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- Source compiler plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.0</version>
+                <configuration>
+                    <source>1.7</source>
+                    <target>1.7</target>
+                    <compilerArguments>
+                        <O>-Xlint:all</O>
+                        <O>-Xlint:-path</O>
+                    </compilerArguments>
+                    <showWarnings>true</showWarnings>
+                    <showDeprecation>true</showDeprecation>
+                </configuration>
+            </plugin>
+            <!-- Reporting plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.12.4</version>
+                <configuration>
+                    <redirectTestOutputToFile>true</redirectTestOutputToFile>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
 </project>
