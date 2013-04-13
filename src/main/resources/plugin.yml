@@ -1,52 +1,10 @@
 name: ${project.name}
-version: ${buildNumber}
+version: ${project.version}
 description: ${project.description}
 author: ${project.organization.name}
 website: ${project.organization.url}
 
-main: com.almuramc.backpack.bukkit.BackpackPlugin
+main: ${mainClass}
 depend: [Vault]
 softdepend: [Spout]
 load: POSTWORLD
-
-commands:
-    backpack:
-        description: Manage Backpacks
-        usage: /backpack [command] [arguments]
-permissions:
-    backpack.admin:
-        description: Gives you access to /backpack clear player
-        default: op
-    backpack.use:
-        description: Allows users to access backpack.
-        default: op
-    backpack.overflow:
-        description: Allows users which full inventories to have the pickup'd item go straight to the backpack.
-        default: op
-    backpack.keepitems:
-        description: Allows users to keep backpack items on death.
-        default: op
-    backpack.upgrade:
-        description: Allows users to upgrade their backpacks beyond 9 slots.
-        default: op   
-    backpack.noblacklist:
-        description: Allows users to bypass items listed in blacklist.yml
-        default: op
-    backpack.noupgradecost:
-        description: Allows users to bypass the upgrade cost.
-        default: op
-    backpack.size.18:
-        description: Allows users to have a 18 slot backpack.
-        default: false
-    backpack.size.27:
-        description: Allows users to have a 27 slot backpack.
-        default: false
-    backpack.size.36:
-        description: Allows users to have a 36 slot backpack.
-        default: false
-    backpack.size.45:
-        description: Allows users to have a 45 slot backpack.
-        default: false
-    backpack.size.54:
-        description: Allows users to have a 54 slot backpack.
-        default: op

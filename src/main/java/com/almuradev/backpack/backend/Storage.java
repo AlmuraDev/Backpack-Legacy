@@ -1,3 +1,29 @@
+/*
+ * This file is part of Backpack.
+ *
+ * © 2012-2013 AlmuraDev <http://www.almuradev.com/>
+ * Backpack is licensed under the GNU General Public License.
+ *
+ * Backpack is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * As an exception, all classes which do not reference GPL licensed code
+ * are hereby licensed under the GNU Lesser Public License, as described
+ * in GNU General Public License.
+ *
+ * Backpack is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License,
+ * the GNU Lesser Public License (for classes that fulfill the exception)
+ * and the GNU General Public License along with this program. If not, see
+ * <http://www.gnu.org/licenses/> for the GNU General Public License and
+ * the GNU Lesser Public License.
+ */
 package com.almuradev.backpack.backend;
 
 import java.io.File;
@@ -13,7 +39,6 @@ import com.almuradev.backpack.BackpackPlugin;
 import com.almuradev.backpack.inventory.Backpack;
 import com.almuradev.backpack.util.Size;
 
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
@@ -29,7 +54,7 @@ public final class Storage {
 
 	public void onEnable() {
 		try {
-			Files.createDirectory(dir.toPath());
+			Files.createDirectories(dir.toPath());
 		} catch (FileAlreadyExistsException fafe) {
 			;
 		} catch (IOException e) {
@@ -38,43 +63,39 @@ public final class Storage {
 		}
 	}
 
-	protected void cleanup() {
+	protected void remove(String world, String holder) {
+        if (world == null || world.isEmpty() || holder == null || holder.isEmpty()) {
+            throw new IllegalArgumentException("world or holder is null!");
+        }
 		try {
-			Files.walkFileTree(dir.toPath(), new FileCleaningVisitor(plugin));
+			Files.walkFileTree(new File(dir, world + File.separator + holder + ".yml").toPath(), new FileCleaningVisitor(plugin));
 		} catch (IOException ignore) {
 			plugin.getLogger().severe("Encountered a major issue while attempting to traverse " + dir.toPath() + ". Disabling...");
 			plugin.getServer().getPluginManager().disablePlugin(plugin);
 		}
 	}
 
-	protected void load() {
+	protected void load(String world, String holder) {
+        if (world == null || world.isEmpty() || holder == null || holder.isEmpty()) {
+            throw new IllegalArgumentException("world or holder is null!");
+        }
 		try {
-			Files.walkFileTree(dir.toPath(), new FileLoadingVisitor(plugin));
+			Files.walkFileTree(new File(dir, world + File.separator + holder + ".yml").toPath(), new FileLoadingVisitor(plugin));
 		} catch (IOException ignore) {
-			plugin.getLogger().severe("Encountered a major issue while attempting to traverse " + dir.toPath() + ". Disabling...");
+			plugin.getLogger().severe("Encountered a major issue while attempting to find " + dir.toPath() + ". Disabling...");
 			plugin.getServer().getPluginManager().disablePlugin(plugin);
 		}
 	}
 
 	public Storage save(String world, Backpack backpack) {
 		if (world == null || world.isEmpty() || backpack == null) {
-			throw new NullPointerException("Trying to save a null world or backpack to the storage backend!");
-		}
-		Path worldDir;
-		final File worldRaw = new File(dir, world);
-		try {
-			worldDir = Files.createDirectory(worldRaw.toPath());
-		} catch (FileAlreadyExistsException fafe) {
-			worldDir = worldRaw.toPath();
-		} catch (IOException ioe) {
-			plugin.getLogger().severe("Could not save " + backpack.toString() + ". Skipping...");
-			ioe.printStackTrace();
-			return this;
+			throw new NullPointerException("world or backpack is null!");
 		}
 		final Path backpackPath;
 		try {
-			backpackPath = new File(worldDir.toFile(), backpack.getHolder().getName() + ".yml").toPath();
+			backpackPath = new File(dir, world + File.separator + backpack.getHolder().getName() + ".yml").toPath();
 			Files.deleteIfExists(backpackPath);
+            Files.createDirectories(backpackPath);
 			Files.createFile(backpackPath);
 		} catch (IOException ioe) {
 			plugin.getLogger().severe("Could not save " + backpack.toString() + ". Skipping...");
@@ -113,13 +134,13 @@ class FileCleaningVisitor extends SimpleFileVisitor<Path> {
 
 	@Override
 	public FileVisitResult visitFileFailed(Path path, IOException ioe) {
-		plugin.getLogger().severe("Could not load: " + path.getFileName() + ". Skipping...");
-		return FileVisitResult.CONTINUE;
+		plugin.getLogger().severe("Could not find: " + path.getFileName() + ".");
+		return FileVisitResult.TERMINATE;
 	}
 
 	@Override
 	public FileVisitResult visitFile(Path path, BasicFileAttributes attr) {
-		if (path.getFileName().toString().endsWith(".yml") && path.getNameCount() == 5) {
+		if (path.getFileName().toString().endsWith(".yml")) {
 			if (plugin.getBackend().get(path.getName(3).toString(), path.getName(4).toString().split(".yml")[0]) == null) {
 				try {
 					Files.deleteIfExists(path);
@@ -128,7 +149,7 @@ class FileCleaningVisitor extends SimpleFileVisitor<Path> {
 				}
 			}
 		}
-		return FileVisitResult.CONTINUE;
+		return FileVisitResult.TERMINATE;
 	}
 }
 
@@ -141,32 +162,30 @@ class FileLoadingVisitor extends SimpleFileVisitor<Path> {
 
 	@Override
 	public FileVisitResult visitFileFailed(Path path, IOException ioe) {
-		plugin.getLogger().severe("Could not load: " + path.getFileName() + ". Skipping...");
-		return FileVisitResult.CONTINUE;
+		return FileVisitResult.TERMINATE;
 	}
 
 	@Override
 	public FileVisitResult visitFile(Path path, BasicFileAttributes attr) {
-		if (path.getFileName().toString().endsWith(".yml") && path.getNameCount() == 5) {
-			final Backpack toInject = createBackpack(path.getName(4).toString().split(".yml")[0], path.toFile());
+		if (path.getFileName().toString().endsWith(".yml")) {
+			final Backpack toInject = createBackpack(path.toFile());
 			if (toInject == null) {
 				plugin.getLogger().severe("Could not load: " + path.getFileName() + ". Skipping...");
-				return FileVisitResult.CONTINUE;
+				return FileVisitResult.TERMINATE;
 			}
 			plugin.getBackend().add(path.getName(3).toString(), toInject);
 		}
-		return FileVisitResult.CONTINUE;
+		return FileVisitResult.TERMINATE;
 	}
 
-	private Backpack createBackpack(String holder, File yml) {
+	private Backpack createBackpack(File yml) {
 		final YamlConfiguration reader = YamlConfiguration.loadConfiguration(yml);
 		final String title = reader.getString("title", "");
-		final int size = Size.valueOf(reader.getString("size", Size.SMALL.name())).getValue();
 		final ConfigurationSection contentsSection = reader.getConfigurationSection("contents");
 		final ItemStack[] contents = new ItemStack[Size.EXTRA_LARGE.getValue()];
 		for (int i = 0; i < Size.EXTRA_LARGE.getValue(); i++) {
 			contents[i] = contentsSection.getItemStack("slot " + i, null);
 		}
-		return new Backpack(holder, Size.get(size), title, contents);
+		return new Backpack(yml.toPath().getName(4).toString().split(".yml")[0], Size.get(reader.getInt("size", Size.SMALL.getValue())), title, contents);
 	}
 }

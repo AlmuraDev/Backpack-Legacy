@@ -26,27 +26,23 @@
  */
 package com.almuradev.backpack.util;
 
-public enum Permissions {
-	ADMIN("backpack.admin"),
-	OPEN("backpack.open"),
-	VIEW("backpack.view"),
-	SMALL_UPGRADE("backpack.upgrade.small"),
-	MEDIUM_SMALL_UPGRADE("backpack.upgrade.mediumsmall"),
-	MEDIUM_UPGRADE("backpack.upgrade.medium"),
-	MEDIUM_LARGE_UPGRADE("backpack.upgrade.mediumlarge"),
-	LARGE_UPGRADE("backpack.upgrade.large"),
-	EXTRA_LARGE_UPGRADE("backpack.upgrade.extralarge");
-	private final String value;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
+import org.getspout.spoutapi.SpoutManager;
+import org.getspout.spoutapi.keyboard.BindingExecutionDelegate;
+import org.getspout.spoutapi.keyboard.Keyboard;
 
-	private Permissions(String value) {
-		this.value = value;
-	}
+public final class SpoutUtil {
+    public static boolean isSpoutEnabled() {
+        return Bukkit.getPluginManager().isPluginEnabled("Spout");
+    }
 
-	public String getValue() {
-		return value;
-	}
+    public static void bind(String ident, Keyboard key, String description, BindingExecutionDelegate delegate, Plugin plugin) {
+        SpoutManager.getKeyBindingManager().registerBinding(ident, key, description, delegate, plugin);
+    }
 
-	public static Permissions get(String name) {
-		return valueOf(name);
-	}
+    public static void message(Player player) {
+        SpoutManager.getPlayer(player).Noti
+    }
 }
