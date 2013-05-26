@@ -26,7 +26,44 @@
  */
 package com.almuradev.backpack;
 
+import com.almuradev.backpack.inventory.Backpack;
+import com.almuradev.backpack.util.Size;
+
+import org.bukkit.World;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerChangedWorldEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 
 public class BackpackListener implements Listener {
+	private final BackpackPlugin plugin;
+
+	public BackpackListener(final BackpackPlugin plugin) {
+		this.plugin = plugin;
+	}
+
+	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+	public void onPlayerJoin(PlayerJoinEvent event) {
+		checkAndCreateInitialBackpackIfValid(event.getPlayer());
+		plugin.getStorage().add(event.getPlayer().getWorld().getName(), event.getPlayer(), Size.MEDIUM);
+	}
+
+	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+	public void onPlayerChangedWorld(PlayerChangedWorldEvent event) {
+		checkAndCreateInitialBackpackIfValid(event.getPlayer());
+	}
+
+	/**
+	 * This is for creating the inner {@link org.bukkit.inventory.Inventory} during a login or during a {@link World} change.
+	 * @param player The player who caused the event
+	 */
+	private void checkAndCreateInitialBackpackIfValid(final Player player) {
+		final World world = player.getWorld();
+		final Backpack backpack = plugin.getStorage().get(world.getName(), player.getName());
+		if (backpack != null && !backpack.isCreated()) {
+			backpack.create();
+		}
+	}
 }

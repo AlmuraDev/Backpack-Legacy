@@ -26,23 +26,28 @@
  */
 package com.almuradev.backpack.util;
 
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 import org.getspout.spoutapi.SpoutManager;
 import org.getspout.spoutapi.keyboard.BindingExecutionDelegate;
 import org.getspout.spoutapi.keyboard.Keyboard;
 
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
+
+/**
+ * Utility class that enables optional Spout support for Bukkit plugins.
+ */
 public final class SpoutUtil {
-    public static boolean isSpoutEnabled() {
-        return Bukkit.getPluginManager().isPluginEnabled("Spout");
-    }
+	public static boolean isSpoutEnabled() {
+		return Bukkit.getPluginManager().isPluginEnabled("Spout");
+	}
 
-    public static void bind(String ident, Keyboard key, String description, BindingExecutionDelegate delegate, Plugin plugin) {
-        SpoutManager.getKeyBindingManager().registerBinding(ident, key, description, delegate, plugin);
-    }
+	public static void bind(String ident, Keyboard key, String description, BindingExecutionDelegate delegate, Plugin plugin) {
+		SpoutManager.getKeyBindingManager().registerBinding(ident, key, description, delegate, plugin);
+	}
 
-    public static void message(Player player) {
-        SpoutManager.getPlayer(player).Noti
-    }
+	public static void message(Player player, String title, String message, Material icon) {
+		SpoutManager.getPlayer(player).sendNotification(title, message, icon);
+	}
 }

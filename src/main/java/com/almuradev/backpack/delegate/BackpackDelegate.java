@@ -26,20 +26,35 @@
  */
 package com.almuradev.backpack.delegate;
 
+import com.almuradev.backpack.BackpackPlugin;
+import com.almuradev.backpack.inventory.Backpack;
 import com.almuradev.backpack.util.Permissions;
 import com.almuradev.backpack.util.VaultUtil;
 
 import org.getspout.spoutapi.event.input.KeyBindingEvent;
+import org.getspout.spoutapi.gui.ScreenType;
 import org.getspout.spoutapi.keyboard.BindingExecutionDelegate;
 
 import org.bukkit.entity.Player;
 
 public final class BackpackDelegate implements BindingExecutionDelegate {
+	private final BackpackPlugin plugin;
+
+	public BackpackDelegate(BackpackPlugin plugin) {
+		this.plugin = plugin;
+	}
+
 	@Override
 	public void keyPressed(KeyBindingEvent keyBindingEvent) {
+		if (keyBindingEvent.getScreenType() != ScreenType.GAME_SCREEN) {
+			return;
+		}
 		final Player player = keyBindingEvent.getPlayer();
 		if (VaultUtil.hasPermission(player.getName(), player.getWorld().getName(), Permissions.OPEN.getValue())) {
-
+			final Backpack backpack = plugin.getStorage().get(player.getWorld().getName(), player);
+			if (backpack.isCreated()) {
+				player.openInventory(backpack.getWrapped());
+			}
 		}
 	}
 

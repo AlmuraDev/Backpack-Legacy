@@ -1,0 +1,19 @@
+# Backpack Specifications.
+#
+# - Requires Java 7, uses NIO to handle files.
+# - Backpacks are stored in Backpack/backpacks/<world>/<holder>.yml
+# - The files containing actual backpack data are named based on the player's name (not display name).
+#
+# The following is an example file for ninjazidane.yml
+
+title: Zidane's Backpack
+size: SMALL
+contents:
+    slot 0:
+    slot 1:
+    slot 2:    
+    
+# Backpack Technical Details
+# - All backpacks (files) are loaded at server start (and never again).
+# - All backpacks are saved after EACH ACTION (and not on window close).
+# - For any player which does not have a Backpack within the backend will have their file deleted. This can only happen if the admin or another with permission runs the backpack remove command

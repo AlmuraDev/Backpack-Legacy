@@ -34,6 +34,7 @@ import java.util.Set;
 import com.almuradev.backpack.util.Size;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -45,41 +46,37 @@ import org.bukkit.inventory.ItemStack;
  * Assumptions are made in concern to the {@link org.bukkit.inventory.InventoryHolder} which holds an inventory. This class enforces it to a {@link Player}.
  */
 public final class Backpack {
+	//Initial state
+	private final String INITIAL_HOLDER;
+	private final Size INITIAL_SIZE;
+	private final String INITIAL_TITLE;
+	private final ItemStack[] INITIAL_CONTENTS;
+	//Mutability
 	private Inventory inventory;
 	private boolean dirty = false;
 
-	public Backpack(final String holder) {
-		this(holder, Size.SMALL, "My Backpack", new ItemStack[0]);
-	}
+	public Backpack(final Player holder, final Size size) {
+		if (holder == null || size == null) {
+			throw new IllegalArgumentException("Holder or size is invalid!");
+		}
 
-	public Backpack(final String holder, final String title) {
-		this(holder, Size.SMALL, title, new ItemStack[0]);
-	}
+		INITIAL_HOLDER = holder.getName();
+		INITIAL_SIZE = size;
+		INITIAL_TITLE = holder.getName().endsWith("s") ? ChatColor.BLUE + holder.getName() + "' " + ChatColor.RESET + "Backpack" : ChatColor.BLUE + holder.getName() + "'s " + ChatColor.RESET + "Backpack";
+		INITIAL_CONTENTS = null;
 
-	public Backpack(final String holder, final Size size, final String title) {
-		this(holder, size, title, new ItemStack[0]);
-	}
-
-	public Backpack(final String holder, final String title, final ItemStack... contents) {
-		this(holder, Size.SMALL, title, contents);
+		inventory = Bukkit.createInventory(holder, INITIAL_SIZE.getValue(), INITIAL_TITLE);
 	}
 
 	public Backpack(final String holder, final Size size, final ItemStack... contents) {
-		this(holder, size, "My Backpack", contents);
-	}
+		if (holder == null || holder.isEmpty() || size == null) {
+			throw new IllegalArgumentException("Holder or size is invalid!");
+		}
 
-	public Backpack(final String holder, final Size size, final String title, final ItemStack... contents) {
-		if (holder == null || holder.isEmpty() || size == null || title == null || title.isEmpty()) {
-			throw new IllegalArgumentException("Holder, size, or title is invalid!");
-		}
-		Player player = Bukkit.getPlayerExact(holder);
-		if (player == null) {
-			throw new IllegalStateException("Trying to create a backpack for an offline player!");
-		}
-		inventory = Bukkit.createInventory(player, size.getValue(), title);
-		if (contents != null) {
-			inventory.setContents(contents);
-		}
+		INITIAL_HOLDER = holder;
+		INITIAL_SIZE = size;
+		INITIAL_TITLE = holder.endsWith("s") ? ChatColor.BLUE + holder + "' " + ChatColor.RESET + "Backpack" : ChatColor.BLUE + holder + "'s"  + ChatColor.RESET + "Backpack";
+		INITIAL_CONTENTS = contents;
 	}
 
 	/**
@@ -91,26 +88,10 @@ public final class Backpack {
 	}
 
 	/**
-	 * Sets the holder ({@link Player}).
-	 * @param holder The new holder
-	 * @return This object, for chaining
-	 */
-	public Backpack setHolder(Player holder) {
-		if (!inventory.getHolder().equals(holder)) {
-
-			final Inventory inventory = Bukkit.createInventory(holder, this.inventory.getSize(), this.inventory.getTitle());
-			inventory.setContents(this.inventory.getContents());
-			this.inventory = inventory;
-			setDirty(true);
-		}
-		return this;
-	}
-
-	/**
-	 * Returns the wrapped {@link Inventory} which are the raw backpack contents.
+	 * Returns the wrapped {@link Inventory}'s contents.
 	 * <p/>
 	 * Guaranteed to never be null.
-	 * @return Wrapped Inventory object
+	 * @return The inner contents
 	 */
 	public ItemStack[] getContents() {
 		return inventory.getContents();
@@ -136,23 +117,8 @@ public final class Backpack {
 	}
 
 	/**
-	 * Sets the title this Backpack will show to the client's screen.
-	 * @param title The new title
-	 * @return This object, for chaining
-	 */
-	public Backpack setTitle(String title) {
-		if (!inventory.getTitle().equals(title)) {
-			final Inventory inventory = Bukkit.createInventory(getHolder(), getSize().getValue(), title);
-			inventory.setContents(getContents());
-			this.inventory = inventory;
-			setDirty(true);
-		}
-		return this;
-	}
-
-	/**
 	 * Gets the size of the internal {@link Inventory}.
-	 * @return
+	 * @return The size
 	 */
 	public Size getSize() {
 		return Size.get(inventory.getSize());
@@ -164,7 +130,6 @@ public final class Backpack {
 	 * @return This object, for chaining
 	 */
 	public Backpack setSize(final Size size) {
-		//Trying to resize a backpack with the same current size, don't do extra work.
 		if (!size.equals(getSize())) {
 			final Inventory inventory = Bukkit.createInventory(getHolder(), size.getValue(), getTitle());
 			inventory.setContents(getContents());
@@ -208,7 +173,7 @@ public final class Backpack {
 	 * Sets the dirty state of this object. INTERNAL USE ONLY.
 	 * @param dirty Dirty state
 	 */
-	protected void setDirty(boolean dirty) {
+	public void setDirty(boolean dirty) {
 		this.dirty = dirty;
 	}
 
@@ -225,5 +190,33 @@ public final class Backpack {
 	@Override
 	public String toString() {
 		return "Backpack{" + inventory.toString() + ", dirty= " + dirty + "}";
+	}
+
+	//INTERNAL USE ONLY
+
+	/**
+	 * Called when the player logs in. The goal is to hot inject the {@link Inventory} with the loaded filesystem values.
+	 * <p/>
+	 * This overcomes Bukkit's restrictions on {@link org.bukkit.inventory.InventoryHolder}s not being {@link org.bukkit.OfflinePlayer}s.
+	 */
+	public void create() {
+		final Player player = Bukkit.getPlayerExact(INITIAL_HOLDER);
+		if (player == null) {
+			throw new IllegalStateException("Attempting to create a Backpack for a player who is offline!");
+		}
+		inventory = Bukkit.createInventory(player, INITIAL_SIZE.getValue(), INITIAL_TITLE);
+		inventory.setContents(INITIAL_CONTENTS);
+	}
+
+	public boolean isCreated() {
+		return inventory != null;
+	}
+
+	public Inventory getWrapped() {
+		return inventory;
+	}
+
+	public String getRawHolder() {
+		return INITIAL_HOLDER;
 	}
 }
