@@ -6,7 +6,6 @@
 #
 # The following is an example file for ninjazidane.yml
 
-title: Zidane's Backpack
 size: SMALL
 contents:
     slot 0:

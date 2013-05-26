@@ -32,6 +32,7 @@ import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 
@@ -45,47 +46,47 @@ import org.bukkit.inventory.ItemStack;
 
 public final class Backend {
 	private final BackpackPlugin plugin;
-	private final File dir;
+	private final Path parent;
 
 	public Backend(BackpackPlugin plugin) {
 		this.plugin = plugin;
-		dir = new File(plugin.getDataFolder(), "backpacks");
+		parent = Paths.get(plugin.getDataFolder().getPath() + File.separator + "backpacks");
 	}
 
 	public void onEnable() {
 		try {
-			Files.createDirectories(dir.toPath());
+			Files.createDirectories(parent);
 		} catch (FileAlreadyExistsException fafe) {
 			;
 		} catch (IOException e) {
-			plugin.getLogger().severe("Could not create " + dir.getPath() + "! Disabling...");
+			plugin.getLogger().severe("Could not create " + parent + "! Disabling...");
 			plugin.getServer().getPluginManager().disablePlugin(plugin);
 		}
 	}
 
 	public void load() {
 		try {
-			Files.walkFileTree(new File(dir, "backpacks").toPath(), new FileLoadingVisitor(plugin));
+			Files.walkFileTree(parent, new FileLoadingVisitor(plugin));
 		} catch (IOException ignore) {
-			plugin.getLogger().severe("Encountered a major issue while attempting to find " + dir.toPath() + " when loading. Disabling...");
+			plugin.getLogger().severe("Encountered a major issue while attempting to find " + parent + " when loading. Disabling...");
 			plugin.getServer().getPluginManager().disablePlugin(plugin);
 		}
 	}
 
 	public void cleanup() {
 		try {
-			Files.walkFileTree(new File(dir, "backpacks").toPath(), new FileCleaningVisitor(plugin));
+			Files.walkFileTree(parent, new FileCleaningVisitor(plugin));
 		} catch (IOException ignore) {
-			plugin.getLogger().severe("Encountered a major issue while attempting to traverse " + dir.toPath() + " when cleaning up. Disabling...");
+			plugin.getLogger().severe("Encountered a major issue while attempting to traverse " + parent + " when cleaning up. Disabling...");
 			plugin.getServer().getPluginManager().disablePlugin(plugin);
 		}
 	}
 
 	public void save() {
 		try {
-			Files.walkFileTree(new File(dir, "backpacks").toPath(), new FileSavingVisitor(plugin));
+			Files.walkFileTree(parent, new FileSavingVisitor(plugin));
 		} catch (IOException ignore) {
-			plugin.getLogger().severe("Encountered a major issue while attempting to traverse " + dir.toPath() + " when saving. Disabling...");
+			plugin.getLogger().severe("Encountered a major issue while attempting to traverse " + parent + " when saving. Disabling...");
 			plugin.getServer().getPluginManager().disablePlugin(plugin);
 		}
 	}
@@ -107,7 +108,7 @@ class FileCleaningVisitor extends SimpleFileVisitor<Path> {
 	public FileVisitResult visitFile(Path path, BasicFileAttributes attr) {
 		if (path.getFileName().toString().endsWith(".yml")) {
 			final String world = path.getName(3).toString();
-			final String holder = path.getName(4).toString().split("yml")[0];
+			final String holder = path.getName(4).toString().split(".yml")[0];
 			if (plugin.getStorage().get(world, holder) == null) {
 				try {
 					Files.deleteIfExists(path);
@@ -148,10 +149,13 @@ class FileLoadingVisitor extends SimpleFileVisitor<Path> {
 	private Backpack createBackpack(File yml) {
 		final YamlConfiguration reader = YamlConfiguration.loadConfiguration(yml);
 		final String holder = yml.toPath().getName(4).toString().split(".yml")[0];
-		final Size size = Size.get(reader.getInt("size", Size.SMALL.getValue()));
+		final Size size = Size.get(reader.getString("size", Size.SMALL.name()));
 		final ConfigurationSection contentsSection = reader.getConfigurationSection("contents");
-		final ItemStack[] contents = new ItemStack[Size.EXTRA_LARGE.getValue()];
-		for (int i = 0; i < Size.EXTRA_LARGE.getValue(); i++) {
+		if (contentsSection == null) {
+			return null;
+		}
+		final ItemStack[] contents = new ItemStack[size.getValue()];
+		for (int i = 0; i < size.getValue(); i++) {
 			contents[i] = contentsSection.getItemStack("slot " + i, null);
 		}
 		return new Backpack(holder, size, contents);
@@ -174,9 +178,9 @@ class FileSavingVisitor extends SimpleFileVisitor<Path> {
 	public FileVisitResult visitFile(Path path, BasicFileAttributes attr) {
 		if (path.getFileName().toString().endsWith(".yml")) {
 			final String world = path.getName(3).toString();
-			final String holder = path.getName(4).toString().split("yml")[0];
+			final String holder = path.getName(4).toString().split(".yml")[0];
 			final Backpack backpack = plugin.getStorage().get(world, holder);
-			if (backpack != null && backpack.isDirty()) {
+			if (backpack != null /*&& backpack.isDirty() */) {
 				saveBackpack(path.toFile(), backpack);
 			}
 		}
@@ -190,7 +194,7 @@ class FileSavingVisitor extends SimpleFileVisitor<Path> {
 		if (contentsSection == null) {
 			contentsSection = reader.createSection("contents");
 		}
-		for (int i = 0; i < Size.EXTRA_LARGE.getValue(); i++) {
+		for (int i = 0; i < backpack.getSize().getValue(); i++) {
 			ItemStack stack;
 			try {
 				stack = backpack.getContents()[i];

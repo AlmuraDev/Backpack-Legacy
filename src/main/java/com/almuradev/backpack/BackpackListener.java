@@ -27,7 +27,6 @@
 package com.almuradev.backpack;
 
 import com.almuradev.backpack.inventory.Backpack;
-import com.almuradev.backpack.util.Size;
 
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -47,7 +46,6 @@ public class BackpackListener implements Listener {
 	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		checkAndCreateInitialBackpackIfValid(event.getPlayer());
-		plugin.getStorage().add(event.getPlayer().getWorld().getName(), event.getPlayer(), Size.MEDIUM);
 	}
 
 	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)

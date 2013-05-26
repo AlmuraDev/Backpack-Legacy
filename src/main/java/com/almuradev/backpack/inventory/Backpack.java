@@ -75,7 +75,7 @@ public final class Backpack {
 
 		INITIAL_HOLDER = holder;
 		INITIAL_SIZE = size;
-		INITIAL_TITLE = holder.endsWith("s") ? ChatColor.BLUE + holder + "' " + ChatColor.RESET + "Backpack" : ChatColor.BLUE + holder + "'s"  + ChatColor.RESET + "Backpack";
+		INITIAL_TITLE = holder.endsWith("s") ? ChatColor.BLUE + holder + "' " + ChatColor.RESET + "Backpack" : ChatColor.BLUE + holder + "'s "  + ChatColor.RESET + "Backpack";
 		INITIAL_CONTENTS = contents;
 	}
 
@@ -189,7 +189,7 @@ public final class Backpack {
 
 	@Override
 	public String toString() {
-		return "Backpack{" + inventory.toString() + ", dirty= " + dirty + "}";
+		return "Backpack{" + inventory + ", dirty= " + dirty + "}";
 	}
 
 	//INTERNAL USE ONLY
@@ -205,7 +205,9 @@ public final class Backpack {
 			throw new IllegalStateException("Attempting to create a Backpack for a player who is offline!");
 		}
 		inventory = Bukkit.createInventory(player, INITIAL_SIZE.getValue(), INITIAL_TITLE);
-		inventory.setContents(INITIAL_CONTENTS);
+		if (INITIAL_CONTENTS != null) {
+			inventory.setContents(INITIAL_CONTENTS);
+		}
 	}
 
 	public boolean isCreated() {
