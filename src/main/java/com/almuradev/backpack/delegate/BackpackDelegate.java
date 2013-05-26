@@ -46,14 +46,15 @@ public final class BackpackDelegate implements BindingExecutionDelegate {
 
 	@Override
 	public void keyPressed(KeyBindingEvent keyBindingEvent) {
-		if (keyBindingEvent.getScreenType() != ScreenType.GAME_SCREEN) {
-			return;
-		}
 		final Player player = keyBindingEvent.getPlayer();
-		if (VaultUtil.hasPermission(player.getName(), player.getWorld().getName(), Permissions.OPEN.getValue())) {
-			final Backpack backpack = plugin.getStorage().get(player.getWorld().getName(), player);
-			if (backpack.isCreated()) {
-				player.openInventory(backpack.getWrapped());
+		if (player.getOpenInventory().getTopInventory().getTitle().contains("Backpack")) {
+			player.closeInventory();
+		} else if (keyBindingEvent.getScreenType() == ScreenType.GAME_SCREEN) {
+			if (VaultUtil.hasPermission(player.getName(), player.getWorld().getName(), Permissions.OPEN.getValue())) {
+				final Backpack backpack = plugin.getStorage().get(player.getWorld().getName(), player);
+				if (backpack.isCreated()) {
+					player.openInventory(backpack.getWrapped());
+				}
 			}
 		}
 	}

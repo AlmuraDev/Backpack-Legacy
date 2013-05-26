@@ -28,13 +28,16 @@ package com.almuradev.backpack;
 
 import com.almuradev.backpack.inventory.Backpack;
 
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.inventory.Inventory;
 
 public class BackpackListener implements Listener {
 	private final BackpackPlugin plugin;
@@ -51,6 +54,36 @@ public class BackpackListener implements Listener {
 	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
 	public void onPlayerChangedWorld(PlayerChangedWorldEvent event) {
 		checkAndCreateInitialBackpackIfValid(event.getPlayer());
+	}
+
+	@EventHandler(priority = EventPriority.LOWEST)
+	public void onInventoryClick(InventoryClickEvent event) {
+		//Handle only player clicks
+		if (!(event.getWhoClicked() instanceof Player)) {
+			return;
+		}
+
+		final Inventory inventory = event.getInventory();
+
+		//Handle only Backpacks
+		if (!inventory.getTitle().contains("Backpack")) {
+			 return;
+		}
+
+		final Player holder = (Player) inventory.getHolder();
+		final Backpack backpack = plugin.getStorage().get(holder.getWorld().getName(), holder);
+
+		//Hypothetical situation A says that if the admin removes their Backpack while they still have the window open, lets immediately get rid of it.
+		if (backpack == null) {
+			event.getCurrentItem().setType(Material.AIR); //TODO Test this
+			holder.closeInventory();
+		} else {
+			if (event.getCurrentItem() == null || event.getCurrentItem().getType().equals(Material.AIR)) {
+				return;
+			}
+			//TODO This might be too severe, come back and optimize later
+			backpack.setDirty(true);
+		}
 	}
 
 	/**

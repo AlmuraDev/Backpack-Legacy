@@ -35,10 +35,12 @@ import com.almuradev.backpack.util.SpoutUtil;
 import org.getspout.spoutapi.keyboard.Keyboard;
 
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitScheduler;
 
 public final class BackpackPlugin extends JavaPlugin {
 	private Backend backend;
 	private Backpacks storage;
+	private int save_task_id;
 
 	@Override
 	public void onEnable() {
@@ -49,13 +51,17 @@ public final class BackpackPlugin extends JavaPlugin {
 		if (SpoutUtil.isSpoutEnabled()) {
 			SpoutUtil.bind("Open Backpack", Keyboard.KEY_B, "Opens the backpack", new BackpackDelegate(this), this);
 		}
-		getServer().getScheduler().scheduleSyncRepeatingTask(this, new SaveTask(this), 100, 100);
+		save_task_id = getServer().getScheduler().scheduleSyncRepeatingTask(this, new SaveTask(this), 100, 100);
 		getServer().getPluginManager().registerEvents(new BackpackListener(this), this);
 	}
 
 	@Override
 	public void onDisable() {
-		getServer().getScheduler().cancelTasks(this);
+		final BukkitScheduler scheduler = getServer().getScheduler();
+		if (!scheduler.isCurrentlyRunning(save_task_id)) {
+			scheduler.runTask(this, new SaveTask(this));
+		}
+		scheduler.cancelTasks(this);
 	}
 
 	public Backend getBackend() {

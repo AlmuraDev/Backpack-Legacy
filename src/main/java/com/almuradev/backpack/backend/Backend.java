@@ -149,7 +149,7 @@ class FileLoadingVisitor extends SimpleFileVisitor<Path> {
 	private Backpack createBackpack(File yml) {
 		final YamlConfiguration reader = YamlConfiguration.loadConfiguration(yml);
 		final String holder = yml.toPath().getName(4).toString().split(".yml")[0];
-		final Size size = Size.get(reader.getString("size", Size.SMALL.name()));
+		final Size size = Size.get(reader.getString("size", Size.SMALL.name().toLowerCase()).toUpperCase());
 		final ConfigurationSection contentsSection = reader.getConfigurationSection("contents");
 		if (contentsSection == null) {
 			return null;
@@ -180,7 +180,7 @@ class FileSavingVisitor extends SimpleFileVisitor<Path> {
 			final String world = path.getName(3).toString();
 			final String holder = path.getName(4).toString().split(".yml")[0];
 			final Backpack backpack = plugin.getStorage().get(world, holder);
-			if (backpack != null /*&& backpack.isDirty() */) {
+			if (backpack != null && backpack.isDirty()) {
 				saveBackpack(path.toFile(), backpack);
 			}
 		}
@@ -189,7 +189,7 @@ class FileSavingVisitor extends SimpleFileVisitor<Path> {
 
 	private void saveBackpack(final File yml, final Backpack backpack) {
 		final YamlConfiguration reader = YamlConfiguration.loadConfiguration(yml);
-		reader.set("size", backpack.getSize().name());
+		reader.set("size", backpack.getSize().name().toLowerCase());
 		ConfigurationSection contentsSection = reader.getConfigurationSection("contents");
 		if (contentsSection == null) {
 			contentsSection = reader.createSection("contents");
