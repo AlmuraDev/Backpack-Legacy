@@ -62,7 +62,7 @@ public final class Backpack {
 
 		INITIAL_HOLDER = holder.getName();
 		INITIAL_SIZE = size;
-		INITIAL_TITLE = holder.getName().endsWith("s") ? ChatColor.BLUE + holder.getName() + "' " + ChatColor.RESET + "Backpack" : ChatColor.BLUE + holder.getName() + "'s " + ChatColor.RESET + "Backpack";
+		INITIAL_TITLE = ChatColor.BLUE + "My Backpack";
 		INITIAL_CONTENTS = null;
 
 		inventory = Bukkit.createInventory(holder, INITIAL_SIZE.getValue(), INITIAL_TITLE);
@@ -75,7 +75,7 @@ public final class Backpack {
 
 		INITIAL_HOLDER = holder;
 		INITIAL_SIZE = size;
-		INITIAL_TITLE = holder.endsWith("s") ? ChatColor.BLUE + holder + "' " + ChatColor.RESET + "Backpack" : ChatColor.BLUE + holder + "'s "  + ChatColor.RESET + "Backpack";
+		INITIAL_TITLE = ChatColor.BLUE + "My Backpack";
 		INITIAL_CONTENTS = contents;
 	}
 
