@@ -136,18 +136,22 @@ public final class BackpackExecutor implements CommandExecutor {
 						plugin.getLogger().info("The console cannot view a backpack (did you mean to execute this in-game?)");
 					} else {
 						final Player watcher = (Player) commandSender;
-						if (strings.length == 1) {
-							watcher.sendMessage(plugin.getPrefix() + "You need to provide a player's name to view a backpack");
+						if (!VaultUtil.hasPermission(watcher.getName(), watcher.getWorld().getName(), Permissions.VIEW.getValue())) {
+							watcher.sendMessage(ChatColor.RED + "You do not have permission.");
 						} else {
-							final Player toWatch = Bukkit.getPlayerExact(strings[1]);
-							if (toWatch == null) {
-								watcher.sendMessage(plugin.getPrefix() + strings[1] + " is offline");
+							if (strings.length == 1) {
+								watcher.sendMessage(plugin.getPrefix() + "You need to provide a player's name to view a backpack");
 							} else {
-								final Backpack backpack = plugin.getStorage().get(toWatch.getWorld().getName(), toWatch);
-								if (backpack == null) {
-									watcher.sendMessage(plugin.getPrefix() + strings[1] + " does not have a backpack");
+								final Player toWatch = Bukkit.getPlayerExact(strings[1]);
+								if (toWatch == null) {
+									watcher.sendMessage(plugin.getPrefix() + strings[1] + " is offline");
 								} else {
-									watcher.openInventory(backpack.getWrapped());
+									final Backpack backpack = plugin.getStorage().get(toWatch.getWorld().getName(), toWatch);
+									if (backpack == null) {
+										watcher.sendMessage(plugin.getPrefix() + strings[1] + " does not have a backpack");
+									} else {
+										watcher.openInventory(backpack.getWrapped());
+									}
 								}
 							}
 						}
