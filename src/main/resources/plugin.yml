@@ -8,3 +8,10 @@ main: ${mainClass}
 depend: [Vault]
 softdepend: [Spout]
 load: POSTWORLD
+
+commands:
+  backpack:
+    description: Executing this command gives you access to all backpack commands.
+    usage: /backpack <create/downgrade/remove/upgrade/view> [player] [size]
+    permission: backpack.backpack
+    permission-message: You do not have permission.

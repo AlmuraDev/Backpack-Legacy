@@ -1,0 +1,64 @@
+#################################################################################################################
+# Backpack Configuration
+#
+# This will serve to explain the various options available in this file. Any inquiries made without reading over
+# this help me section will be ignored. You have been warned.
+#
+# Legend -> option (possible values)
+#
+# use-economy (true/false) -> Determines if Backpack will charge users for purchases. You must have an economy
+#                             plugin installed for this feature to work!
+#
+# use-spout (true/false)   -> Determines if Backpack will make use of SpoutPlugin's abilities. These include (but
+#                             not limited to) custom GUIs, hotkey support, and notifications. You must have
+#                             SpoutPlugin installed and be using the Spoutcraft client for these to have any
+#                             effect!
+#
+# save-interval (0+)       -> Determines how long Backpack will wait to batch save dirty backpacks. A dirty
+#                             backpack is one in-which someone has modified its contents. Bear in mind that
+#                             setting the value higher opens up exploit possibilities should your server go
+#                             down before a save. For this reason, we save every 5 seconds (100 ticks) but
+#                             leave the choice up to you. For reference, every second equals 20 ticks.
+#
+# hotkey (KEY_SOMEKEY)     -> Determines the default hotkey to open the backpack. This only has effect if
+#                             use-spout is true and SpoutPlugin is installed (see use-spout for more info).
+#                             Individual players are free to change this value in their client.
+#
+# costs (a list)           -> Determines the cost for each size of a backpack. I include all possible sizes
+#                             below but if you accidentally removed it, the options are under the FAQ section.
+#
+# Frequently Asked Questions
+#
+# Question: You said that I needed an economy plugin to require players to buy backpack upgrades? Where do I
+#           get one?
+#
+# Answer: Correct, I recommend searching for one on http://dev.bukkit.org (search for economy). I personally
+#         recommend CraftConomy (http://dev.bukkit.org/server-mods/craftconomy/) by greatman.
+#
+# Question: You said that I needed SpoutPlugin and Spoutcraft for optional features like GUIs and hotkeys?
+#           Where do I get it? Is it free?
+#
+# Answer: SpoutPlugin and Spoutcraft can be acquired from http://get.spout.org. SpoutPlugin is installed just
+#         just like a plugin but Spoutcraft is an actual client mod. Thankfully the SpoutDev team has made
+#         this simple and Spoutcraft is as easy as running the spoutcraft application you get from the link
+#         above. Lastly, this client requires a Minecraft premium account just like the original Minecraft
+#         game.
+#
+# Question: What available sizes are they and what are their names?
+#
+# Answer: You have small (9), medium_small (18), medium (27), medium_large (36), large (45),
+#         and extra_large (54).
+#################################################################################################################
+general:
+  use-economy: false
+  use-spout: true
+  save-interval: 100
+backpack:
+  hotkey: KEY_B
+  costs:
+    small: 0
+    medium_small: 0
+    medium: 0
+    medium_large: 0
+    large: 0
+    extra_large: 0
