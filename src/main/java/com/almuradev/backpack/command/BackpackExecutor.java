@@ -57,7 +57,7 @@ public final class BackpackExecutor implements CommandExecutor {
 		//Only executed /backpack
 		if (strings.length == 0) {
 			if (!(commandSender instanceof Player)) {
-				plugin.getLogger().warning("The console cannot open a backpack (did you mean to run this in-game?)");
+				plugin.getLogger().info("The console cannot open a backpack (did you mean to run this in-game?)");
 			} else {
 				final Player player = (Player) commandSender;
 				final Backpack backpack = plugin.getStorage().get(player.getWorld().getName(), player);
@@ -124,6 +124,7 @@ public final class BackpackExecutor implements CommandExecutor {
 							}
 						}
 					}
+					break;
 				case "DOWNGRADE":
 					break;
 				case "REMOVE":
@@ -131,6 +132,26 @@ public final class BackpackExecutor implements CommandExecutor {
 				case "UPGRADE":
 					break;
 				case "VIEW":
+					if (!(commandSender instanceof Player)) {
+						plugin.getLogger().info("The console cannot view a backpack (did you mean to execute this in-game?)");
+					} else {
+						final Player watcher = (Player) commandSender;
+						if (strings.length == 1) {
+							watcher.sendMessage(plugin.getPrefix() + "You need to provide a player's name to view a backpack");
+						} else {
+							final Player toWatch = Bukkit.getPlayerExact(strings[1]);
+							if (toWatch == null) {
+								watcher.sendMessage(plugin.getPrefix() + strings[1] + " is offline");
+							} else {
+								final Backpack backpack = plugin.getStorage().get(toWatch.getWorld().getName(), toWatch);
+								if (backpack == null) {
+									watcher.sendMessage(plugin.getPrefix() + strings[1] + " does not have a backpack");
+								} else {
+									watcher.openInventory(backpack.getWrapped());
+								}
+							}
+						}
+					}
 					break;
 				default:
 					return false;

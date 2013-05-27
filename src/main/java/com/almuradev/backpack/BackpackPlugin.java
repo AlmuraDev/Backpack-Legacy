@@ -53,7 +53,7 @@ public final class BackpackPlugin extends JavaPlugin {
 			SpoutUtil.bind("Open Backpack", configuration.getHotkey(), "Opens the backpack", new BackpackDelegate(this), this);
 		}
 		getCommand("backpack").setExecutor(new BackpackExecutor(this));
-		getServer().getScheduler().scheduleSyncRepeatingTask(this, new SaveTask(this), 0, configuration.);
+		getServer().getScheduler().scheduleSyncRepeatingTask(this, new SaveTask(this), 0, configuration.getSaveInterval());
 		getServer().getPluginManager().registerEvents(new BackpackListener(this), this);
 	}
 
