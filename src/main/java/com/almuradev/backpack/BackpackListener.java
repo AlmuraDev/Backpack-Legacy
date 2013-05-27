@@ -67,7 +67,7 @@ public class BackpackListener implements Listener {
 
 		//Handle only Backpacks
 		if (!inventory.getTitle().contains("Backpack")) {
-			 return;
+			return;
 		}
 
 		final Player holder = (Player) inventory.getHolder();

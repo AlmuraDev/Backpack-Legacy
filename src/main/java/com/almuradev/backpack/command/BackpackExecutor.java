@@ -34,9 +34,11 @@ import java.nio.file.Paths;
 
 import com.almuradev.backpack.BackpackPlugin;
 import com.almuradev.backpack.inventory.Backpack;
+import com.almuradev.backpack.util.Permissions;
 import com.almuradev.backpack.util.Size;
 import com.almuradev.backpack.util.VaultUtil;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -70,37 +72,56 @@ public final class BackpackExecutor implements CommandExecutor {
 				case "CREATE":
 					if (commandSender instanceof Player) {
 						final Player player = (Player) commandSender;
-						// /backpack create
+						// player -> /backpack create
 						if (strings.length == 1) {
-							if (plugin.getStorage().get(player.getWorld().getName(), player) != null) {
-								player.sendMessage(plugin.getPrefix() + "You already have a backpack (were you wanting to get a bigger size? Try /backpack upgrade <size> instead).");
+							if (!VaultUtil.hasPermission(player.getName(), player.getWorld().getName(), Permissions.CREATE.getValue())) {
+								player.sendMessage(ChatColor.RED + "You do not have permission.");
 							} else {
-								boolean create = true;
-								if (plugin.getConfiguration().isEconomyEnabled() && VaultUtil.hasEconomy()) {
-									final double cost = plugin.getConfiguration().getCostFor(Size.SMALL);
-									if (!VaultUtil.hasBalance(player.getName(), cost)) {
-										player.sendMessage(plugin.getPrefix() + "You do not have enough money for a backpack. They cost [" + ChatColor.RED + cost + ChatColor.RESET + "]");
-										create = false;
-									} else {
-										player.sendMessage(plugin.getPrefix() + "You were charged [" + ChatColor.RED + cost + ChatColor.RESET + "]");
+								if (plugin.getStorage().get(player.getWorld().getName(), player) != null) {
+									player.sendMessage(plugin.getPrefix() + "You already have a backpack (were you wanting to get a bigger size? Try /backpack upgrade <size> instead).");
+								} else {
+									if (performTransaction(player)) {
+										createBackpackFile(player);
 									}
-								}
-								if (create) {
-									final Path path = Paths.get(plugin.getDataFolder().getPath() + File.separator + "backpacks" + File.separator + player.getWorld().getName());
-									try {
-										Files.createDirectories(path);
-										Files.createFile(Paths.get(path.toString() + File.separator + player.getName() + ".yml"));
-									} catch (IOException e) {
-										player.sendMessage(plugin.getPrefix() + "An error occurred when creating your backpack. Report this to the server administrator.");
-										e.printStackTrace();
-									}
-									plugin.getStorage().add(player.getWorld().getName(), player, Size.SMALL).setDirty(true);
-									player.sendMessage(plugin.getPrefix() + "You have acquired a backpack");
 								}
 							}
-						// /backpack create <player>
-						}  else {
-
+							// player -> /backpack create <player>
+						} else {
+							if (!VaultUtil.hasPermission(player.getName(), player.getWorld().getName(), Permissions.CREATE_OTHER.getValue())) {
+								player.sendMessage(ChatColor.RED + "You do not have permission.");
+							} else {
+								final Player target = Bukkit.getPlayerExact(strings[1]);
+								if (target == null) {
+									player.sendMessage(plugin.getPrefix() + strings[1] + " is offline");
+								} else {
+									if (plugin.getStorage().get(target.getWorld().getName(), target) != null) {
+										player.sendMessage(plugin.getPrefix() + target.getName() + " already has a backpack.");
+									} else {
+										if (performTransaction(target, player)) {
+											createBackpackFile(target, player);
+										}
+									}
+								}
+							}
+						}
+						// console -> /backpack create
+					} else {
+						if (strings.length == 1) {
+							plugin.getLogger().info("The console cannot create a backpack (did you mean to specify a player's name?");
+							// console -> /backpack create <player>
+						} else {
+							final Player target = Bukkit.getPlayerExact(strings[1]);
+							if (target == null) {
+								plugin.getLogger().info(strings[1] + " is offline");
+							} else {
+								if (plugin.getStorage().get(target.getWorld().getName(), target) != null) {
+									plugin.getLogger().info(target.getName() + " already has a backpack.");
+								} else {
+									if (performTransaction(target, commandSender)) {
+										createBackpackFile(target, commandSender);
+									}
+								}
+							}
 						}
 					}
 				case "DOWNGRADE":
@@ -113,6 +134,56 @@ public final class BackpackExecutor implements CommandExecutor {
 					break;
 				default:
 					return false;
+			}
+		}
+		return true;
+	}
+
+	private void createBackpackFile(final Player player) {
+		createBackpackFile(player, null);
+	}
+
+	private void createBackpackFile(final Player player, final CommandSender messageRecipient) {
+		final Path path = Paths.get(plugin.getDataFolder().getPath() + File.separator + "backpacks" + File.separator + player.getWorld().getName());
+		try {
+			Files.createDirectories(path);
+			Files.createFile(Paths.get(path.toString() + File.separator + player.getName() + ".yml"));
+		} catch (IOException e) {
+			if (messageRecipient == null) {
+				player.sendMessage(plugin.getPrefix() + "An error occurred while creating your backpack. Report this to the server administrator.");
+			} else {
+				if (messageRecipient instanceof Player) {
+					messageRecipient.sendMessage(plugin.getPrefix() + "An error occurred when creating " + player.getName() + "'s backpack. Report this to the server administrator.");
+				} else {
+					plugin.getLogger().severe("An error occurred when creating " + player.getName() + "'s backpack.");
+				}
+			}
+			e.printStackTrace();
+		}
+		plugin.getStorage().add(player.getWorld().getName(), player, Size.SMALL).setDirty(true);
+		player.sendMessage(plugin.getPrefix() + "You have acquired a backpack");
+	}
+
+	private boolean performTransaction(final Player player) {
+		return performTransaction(player, null);
+	}
+
+	private boolean performTransaction(final Player player, final CommandSender messageRecipient) {
+		if (plugin.getConfiguration().isEconomyEnabled() && VaultUtil.hasEconomy()) {
+			final double cost = plugin.getConfiguration().getCostFor(Size.SMALL);
+			if (!VaultUtil.hasBalance(player.getName(), cost)) {
+				if (messageRecipient == null) {
+					player.sendMessage(plugin.getPrefix() + "You do not have enough money");
+				} else {
+					messageRecipient.sendMessage(plugin.getPrefix() + player.getName() + " did not have enough money");
+				}
+				return false;
+			} else {
+				if (messageRecipient == null) {
+					player.sendMessage(plugin.getPrefix() + "You were charged [" + ChatColor.RED + cost + ChatColor.RESET + "]");
+				} else {
+					messageRecipient.sendMessage(plugin.getPrefix() + player.getName() + " was charged [" + ChatColor.RED + cost + ChatColor.RESET + "]");
+				}
 			}
 		}
 		return true;

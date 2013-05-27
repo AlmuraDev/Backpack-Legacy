@@ -33,11 +33,8 @@ import com.almuradev.backpack.delegate.BackpackDelegate;
 import com.almuradev.backpack.task.SaveTask;
 import com.almuradev.backpack.util.SpoutUtil;
 
-import org.getspout.spoutapi.keyboard.Keyboard;
-
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitScheduler;
 
 public final class BackpackPlugin extends JavaPlugin {
 	private Backend backend;

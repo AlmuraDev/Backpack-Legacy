@@ -30,6 +30,8 @@ public enum Permissions {
 	ADMIN("backpack.admin"),
 	OPEN("backpack.open"),
 	VIEW("backpack.view"),
+	CREATE("backpack.create"),
+	CREATE_OTHER("backpack.create.other"),
 	SMALL_UPGRADE("backpack.upgrade.small"),
 	MEDIUM_SMALL_UPGRADE("backpack.upgrade.mediumsmall"),
 	MEDIUM_UPGRADE("backpack.upgrade.medium"),
