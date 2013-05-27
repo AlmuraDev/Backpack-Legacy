@@ -28,6 +28,7 @@ package com.almuradev.backpack.backend;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -68,16 +69,17 @@ public final class Backpacks {
 		return null;
 	}
 
-	public Backpack remove(String world, Player holder) {
-		if (world == null || world.isEmpty() || holder == null) {
+	public Backpack remove(String world, String holder) {
+		if (world == null || world.isEmpty() || holder == null || holder.isEmpty()) {
 			throw new NullPointerException("Specified world or holder is null!");
 		}
 		final List<Backpack> entry = BACKPACKS.get(world);
 		if (entry != null) {
-			while (entry.iterator().hasNext()) {
-				final Backpack next = entry.iterator().next();
-				if (next.getHolder().equals(holder)) {
-					entry.iterator().remove();
+			final Iterator<Backpack> iterator = entry.iterator();
+			while (iterator.hasNext()) {
+				final Backpack next = iterator.next();
+				if (next.getRawHolder().equals(holder)) {
+					iterator.remove();
 					return next;
 				}
 			}

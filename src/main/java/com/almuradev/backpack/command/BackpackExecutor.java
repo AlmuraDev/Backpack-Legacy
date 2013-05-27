@@ -115,7 +115,7 @@ public final class BackpackExecutor implements CommandExecutor {
 								plugin.getLogger().info(strings[1] + " is offline");
 							} else {
 								if (plugin.getStorage().get(target.getWorld().getName(), target) != null) {
-									plugin.getLogger().info(target.getName() + " already has a backpack.");
+									plugin.getLogger().info(target.getName() + " already has a backpack");
 								} else {
 									if (performTransaction(target, commandSender)) {
 										createBackpackFile(target, commandSender);
@@ -128,6 +128,60 @@ public final class BackpackExecutor implements CommandExecutor {
 				case "DOWNGRADE":
 					break;
 				case "REMOVE":
+					// Console -> /backpack remove <world> <player>
+					if (!(commandSender instanceof Player)) {
+						if (strings.length != 3) {
+							plugin.getLogger().info("The console cannot remove a backpack without specifying a world and player's name");
+						} else {
+							final Backpack removed = plugin.getStorage().remove(strings[1], strings[2]);
+							if (removed != null) {
+								plugin.getLogger().info(strings[2].endsWith("s") ? strings[2] + "' backpack has been removed" : strings[2] + "'s backpack has been removed");
+
+								final Player target = Bukkit.getPlayerExact(strings[2]);
+								if (target != null) {
+									if (target.getOpenInventory().getTopInventory().getTitle().contains("My Backpack")) {
+										target.closeInventory();
+									}
+								}
+							}
+						}
+					} else {
+						final Player player = (Player) commandSender;
+						// Player -> /backpack remove
+						if (strings.length == 1) {
+							if (!VaultUtil.hasPermission(player.getName(), player.getWorld().getName(), Permissions.REMOVE.getValue())) {
+								player.sendMessage(ChatColor.RED + "You do not have permission.");
+							} else {
+								final Backpack backpack = plugin.getStorage().remove(player.getWorld().getName(), player.getName());
+								if (backpack == null) {
+									player.sendMessage(plugin.getPrefix() + "You have no backpack to remove");
+								} else {
+									player.sendMessage(plugin.getPrefix() + "You removed your backpack");
+								}
+							}
+							// Player -> /backpack remove <world> <player>
+						} else if (strings.length == 3) {
+							if (!VaultUtil.hasPermission(player.getName(), player.getWorld().getName(), Permissions.REMOVE_OTHER.getValue())) {
+								player.sendMessage(ChatColor.RED + "You do not have permission.");
+							} else {
+								final Backpack backpack = plugin.getStorage().remove(strings[1], strings[2]);
+								if (backpack == null) {
+									player.sendMessage(plugin.getPrefix() + strings[2] + " had no backpack to remove");
+								} else {
+									player.sendMessage(plugin.getPrefix() + (strings[2].endsWith("s") ? strings[2] + "' backpack has been removed" : strings[2] + "'s backpack has been removed"));
+
+									final Player target = Bukkit.getPlayerExact(strings[2]);
+									if (target != null) {
+										if (target.getOpenInventory().getTopInventory().getTitle().contains("My Backpack")) {
+											target.closeInventory();
+										}
+									}
+								}
+							}
+						} else {
+							player.sendMessage(plugin.getPrefix() + "You must provide no arguments (to remove your own backpack) or the target player's world and name (ex /backpack remove world notch)");
+						}
+					}
 					break;
 				case "UPGRADE":
 					break;
@@ -139,20 +193,17 @@ public final class BackpackExecutor implements CommandExecutor {
 						if (!VaultUtil.hasPermission(watcher.getName(), watcher.getWorld().getName(), Permissions.VIEW.getValue())) {
 							watcher.sendMessage(ChatColor.RED + "You do not have permission.");
 						} else {
-							if (strings.length == 1) {
-								watcher.sendMessage(plugin.getPrefix() + "You need to provide a player's name to view a backpack");
-							} else {
-								final Player toWatch = Bukkit.getPlayerExact(strings[1]);
-								if (toWatch == null) {
-									watcher.sendMessage(plugin.getPrefix() + strings[1] + " is offline");
+							if (strings.length == 3) {
+								final Backpack backpack = plugin.getStorage().get(strings[1], strings[2]);
+								if (backpack == null) {
+									watcher.sendMessage(plugin.getPrefix() + strings[2] + " does not have a backpack");
+								} else if (!backpack.isCreated()) {
+									watcher.sendMessage(plugin.getPrefix() + strings[2] + " has not logged-in within this session and must do so at leat once due to Bukkit restrictions");
 								} else {
-									final Backpack backpack = plugin.getStorage().get(toWatch.getWorld().getName(), toWatch);
-									if (backpack == null) {
-										watcher.sendMessage(plugin.getPrefix() + strings[1] + " does not have a backpack");
-									} else {
-										watcher.openInventory(backpack.getWrapped());
-									}
+									watcher.openInventory(backpack.getWrapped());
 								}
+							} else {
+								watcher.sendMessage(plugin.getPrefix() + "You need to provide a world and player's name to view a backpack");
 							}
 						}
 					}
@@ -187,6 +238,13 @@ public final class BackpackExecutor implements CommandExecutor {
 		}
 		plugin.getStorage().add(player.getWorld().getName(), player, Size.SMALL).setDirty(true);
 		player.sendMessage(plugin.getPrefix() + "You have acquired a backpack");
+		if (messageRecipient != null) {
+			if (messageRecipient instanceof Player) {
+				messageRecipient.sendMessage(plugin.getPrefix() + player.getName() + " has been given a backpack");
+			} else {
+				plugin.getLogger().info(player.getName() + " has been given a backpack");
+			}
+		}
 	}
 
 	private boolean performTransaction(final Player player) {

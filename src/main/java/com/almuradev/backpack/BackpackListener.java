@@ -72,18 +72,11 @@ public class BackpackListener implements Listener {
 
 		final Player holder = (Player) inventory.getHolder();
 		final Backpack backpack = plugin.getStorage().get(holder.getWorld().getName(), holder);
-
-		//Hypothetical situation says that if the admin removes their Backpack while they still have the window open, lets immediately get rid of it.
-		if (backpack == null) {
-			event.getCurrentItem().setType(Material.AIR); //TODO Test this
-			holder.closeInventory();
-		} else {
-			if (event.getCurrentItem() == null || event.getCurrentItem().getType().equals(Material.AIR)) {
-				return;
-			}
-			//TODO This might be too severe, come back and optimize later
-			backpack.setDirty(true);
+		if (event.getCurrentItem() == null || event.getCurrentItem().getType().equals(Material.AIR)) {
+			return;
 		}
+		//TODO This might be too severe, come back and optimize later
+		backpack.setDirty(true);
 	}
 
 	/**
