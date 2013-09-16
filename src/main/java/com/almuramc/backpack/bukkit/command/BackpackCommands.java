@@ -44,6 +44,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.getspout.spoutapi.player.SpoutPlayer;
 
 public class BackpackCommands implements CommandExecutor {
 	private static final Storage STORE = BackpackPlugin.getInstance().getStore();
@@ -60,6 +61,8 @@ public class BackpackCommands implements CommandExecutor {
 				player = (Player) commandSender;
 			}
 
+			boolean useSpoutInterface = false;
+			
 			if (strings.length == 0 && player != null) {
 				if (PERM.has(player.getWorld().getName(), player.getName(), "backpack.use")) {
 					player.openInventory(STORE.load(player, PermissionHelper.getWorldToOpen(player, player.getWorld())).getInventory());
@@ -82,8 +85,16 @@ public class BackpackCommands implements CommandExecutor {
 					MessageHelper.sendMessage(commandSender, "Insufficient permissions to upgrade your backpack!");
 					return true;
 				}
+				
 				if (CONFIG.useSpout() && HOOKS.isSpoutPluginEnabled()) {
-					SafeSpout.openUpgradePanel((Player) commandSender);
+					SpoutPlayer sPlayer = (SpoutPlayer)player;
+					if (sPlayer.isSpoutCraftEnabled()) {  // Check if player is a Spoutcraft User
+						useSpoutInterface = true;
+					}				
+				}
+				
+				if (useSpoutInterface) {					
+						SafeSpout.openUpgradePanel((Player) commandSender);					
 				} else {
 					BackpackInventory backpack = STORE.load(player, target);
 					int newSize = backpack.getSize() + 9;

@@ -43,6 +43,7 @@ import com.almuramc.backpack.bukkit.util.SafeSpout;
 import net.milkbowl.vault.permission.Permission;
 
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.entity.HumanEntity;
@@ -53,6 +54,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryInteractEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerKickEvent;
@@ -156,6 +158,18 @@ public class BackpackListener implements Listener {
 			}
 		}
 	}
+	
+	@EventHandler
+	public void onInventoryInteract(InventoryInteractEvent event) {
+		if (event.getInventory().getTitle().equals("Backpack")) {
+			PlayerBackpacks.put(((Player) event.getWhoClicked()).getUniqueId(), event.getView());
+			final InventoryView view = PlayerBackpacks.get(((Player) event).getPlayer().getUniqueId());
+			if (view != null) {
+				onBackpackClose(view, ((Player) event).getPlayer());				
+			}
+		}
+	}
+	
 
 	@EventHandler
 	public void onWorldLoad(WorldLoadEvent event) {
