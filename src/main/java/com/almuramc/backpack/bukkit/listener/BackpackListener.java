@@ -100,15 +100,12 @@ public class BackpackListener implements Listener {
 	
 	@EventHandler()
 	public void onInventoryClick(InventoryClickEvent event) {
-		if (event.getInventory().getTitle().equals("Backpack")) {
-			PlayerBackpacks.put(((Player) event.getWhoClicked()).getUniqueId(), event.getView());
+		if (event.isCancelled()) {
+			return;
 		}
-
-		if (event.getInventory().getTitle().equals("Backpack")) {				
-			if (event.getSlot() < 0 && event.getWhoClicked() instanceof Player) {				
-				Player sPlayer = (Player) event.getWhoClicked();				
-				STORE.save(sPlayer, sPlayer.getWorld(), null);				
-			}
+		
+		if (event.getInventory().getTitle().equals("Backpack")) {
+			onBackpackClose(event.getView(), ((Player) event.getWhoClicked()));
 		}
 	}
 
@@ -136,39 +133,21 @@ public class BackpackListener implements Listener {
 
 	@EventHandler
 	public void onPlayerQuit(PlayerQuitEvent event) {
-		if (CONFIG.useSaveOnLogin()) {
-			final InventoryView view = PlayerBackpacks.get(event.getPlayer().getUniqueId());
-			if (view != null) {
-				onBackpackClose(view, event.getPlayer());
-			}
-		} else {
-			STORE.save(event.getPlayer(), event.getPlayer().getWorld(), null);
+		final InventoryView view = PlayerBackpacks.get(event.getPlayer().getUniqueId());
+		if (view != null) {
+			onBackpackClose(view, event.getPlayer());
 		}
 	}
 
 	@EventHandler
 	public void onPlayerLogin(PlayerLoginEvent event) {
-		if (CONFIG.useSaveOnLogin()) {
-			final InventoryView view = PlayerBackpacks.get(event.getPlayer().getUniqueId());
-			if (view != null) {
-				onBackpackClose(PlayerBackpacks.get(event.getPlayer()), event.getPlayer());
-				PlayerBackpacks.remove(event.getPlayer());
-			}
-		}
+		final InventoryView view = PlayerBackpacks.get(event.getPlayer().getUniqueId());
+		if (view != null) {
+			onBackpackClose(PlayerBackpacks.get(event.getPlayer()), event.getPlayer());
+			PlayerBackpacks.remove(event.getPlayer());
+		}		
 	}
 	
-	@EventHandler
-	public void onInventoryInteract(InventoryInteractEvent event) {
-		if (event.getInventory().getTitle().equals("Backpack")) {
-			PlayerBackpacks.put(((Player) event.getWhoClicked()).getUniqueId(), event.getView());
-			final InventoryView view = PlayerBackpacks.get(((Player) event).getPlayer().getUniqueId());
-			if (view != null) {
-				onBackpackClose(view, ((Player) event).getPlayer());				
-			}
-		}
-	}
-	
-
 	@EventHandler
 	public void onWorldLoad(WorldLoadEvent event) {
 		plugin.getStore().initWorld(event.getWorld());

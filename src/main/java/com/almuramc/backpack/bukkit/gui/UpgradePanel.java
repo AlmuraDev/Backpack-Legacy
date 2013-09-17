@@ -66,10 +66,10 @@ public class UpgradePanel extends GenericPopup {
 	private static final Economy ECON = BackpackPlugin.getInstance().getHooks().getEconomy();
 	private static final Permission PERM = BackpackPlugin.getInstance().getHooks().getPermissions();
 	double cost18 = CONFIG.getUpgradeCosts().get("slot" + 18);
-	double cost27 = CONFIG.getUpgradeCosts().get("slot" + 18) + CONFIG.getUpgradeCosts().get("slot" + 27);
-	double cost36 = CONFIG.getUpgradeCosts().get("slot" + 18) + CONFIG.getUpgradeCosts().get("slot" + 27) + CONFIG.getUpgradeCosts().get("slot" + 36);
-	double cost45 = CONFIG.getUpgradeCosts().get("slot" + 18) + CONFIG.getUpgradeCosts().get("slot" + 27) + CONFIG.getUpgradeCosts().get("slot" + 36) + CONFIG.getUpgradeCosts().get("slot" + 45);
-	double cost54 = CONFIG.getUpgradeCosts().get("slot" + 18) + CONFIG.getUpgradeCosts().get("slot" + 27) + CONFIG.getUpgradeCosts().get("slot" + 36) + CONFIG.getUpgradeCosts().get("slot" + 45) + CONFIG.getUpgradeCosts().get("slot" + 54);
+	double cost27 = CONFIG.getUpgradeCosts().get("slot" + 27);
+	double cost36 = CONFIG.getUpgradeCosts().get("slot" + 36);
+	double cost45 = CONFIG.getUpgradeCosts().get("slot" + 45);
+	double cost54 = CONFIG.getUpgradeCosts().get("slot" + 54);
 
 	public UpgradePanel(SpoutPlayer player) {
 		super();
@@ -205,11 +205,12 @@ public class UpgradePanel extends GenericPopup {
 			buy54.setAnchor(WidgetAnchor.CENTER_CENTER);
 			buy54.setHeight(18).setWidth(40);
 			buy54.shiftXPos(80).shiftYPos(nextLoc - 5);
+			nextLoc = nextLoc + 1;
 			attachWidgets(BackpackPlugin.getInstance(), buy54, Size54);
 		}
 
 		// No Upgrades Available
-		if (nextLoc == -70 && !(curSize <= 45 && maxSize >= 54)) {
+		if (nextLoc == -70) {
 			GenericLabel notAvailable = new GenericLabel();
 			notAvailable.setText("You already have your Max Size!");
 			notAvailable.setAnchor(WidgetAnchor.CENTER_CENTER);
