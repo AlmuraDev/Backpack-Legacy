@@ -42,6 +42,7 @@ import com.almuramc.backpack.bukkit.util.SafeSpout;
 
 import net.milkbowl.vault.permission.Permission;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.World;
@@ -64,13 +65,14 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
 
 public class BackpackListener implements Listener {
 	private static final BackpackPlugin plugin = BackpackPlugin.getInstance();
 	private static final Storage STORE = BackpackPlugin.getInstance().getStore();
 	private static final CachedConfiguration CONFIG = BackpackPlugin.getInstance().getCached();
 	private static final Permission PERM = BackpackPlugin.getInstance().getHooks().getPermissions();
-	private static final HashMap<UUID, InventoryView> PlayerBackpacks = new HashMap<UUID, InventoryView>();
+	private static boolean debug = false;
 
 	@EventHandler
 	public void onEntityDeath(EntityDeathEvent event) {
@@ -96,6 +98,9 @@ public class BackpackListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onInventoryClose(InventoryCloseEvent event) {
 		onBackpackClose(event.getView(), event.getPlayer());
+		if (debug) {
+			Bukkit.getLogger().warning("[Backpack Debug] - BackpackListener.java - onInventoryClose method called.");
+		}
 	}
 	
 	@EventHandler()
@@ -103,10 +108,22 @@ public class BackpackListener implements Listener {
 		if (event.isCancelled()) {
 			return;
 		}
+		final Inventory myInventory = event.getInventory();
+		final InventoryView myView = event.getView();
+		final Player player = (Player) event.getWhoClicked();
 		
-		if (event.getInventory().getTitle().equals("Backpack")) {
-			onBackpackClose(event.getView(), ((Player) event.getWhoClicked()));
-		}
+		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(BackpackPlugin.getInstance(), new Runnable() {
+			@Override
+			public void run() {
+				if (myInventory.getTitle().equals("Backpack")) {
+					if (debug) {
+						Bukkit.getLogger().warning("[Backpack Debug] - BackpackListener.java - onInventoryClick method called.");
+					}
+					onBackpackClose(myView, ((Player) player));
+				}
+			}
+		}, 20L);
+		
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST)
@@ -128,24 +145,17 @@ public class BackpackListener implements Listener {
 			event.setCancelled(true);
 			return;
 		}
-		onBackpackClose(event.getPlayer().getOpenInventory(), event.getPlayer());
+		//onBackpackClose(event.getPlayer().getOpenInventory(), event.getPlayer());
+		forceSave(event.getPlayer());
 	}
 
 	@EventHandler
 	public void onPlayerQuit(PlayerQuitEvent event) {
-		final InventoryView view = PlayerBackpacks.get(event.getPlayer().getUniqueId());
-		if (view != null) {
-			onBackpackClose(view, event.getPlayer());
+		if (debug) {
+			Bukkit.getLogger().warning("[Backpack Debug] - onPlayerQuit method called.");
 		}
-	}
-
-	@EventHandler
-	public void onPlayerLogin(PlayerLoginEvent event) {
-		final InventoryView view = PlayerBackpacks.get(event.getPlayer().getUniqueId());
-		if (view != null) {
-			onBackpackClose(PlayerBackpacks.get(event.getPlayer()), event.getPlayer());
-			PlayerBackpacks.remove(event.getPlayer());
-		}		
+		//onBackpackClose(event.getPlayer().getOpenInventory(), event.getPlayer());
+		forceSave(event.getPlayer());
 	}
 	
 	@EventHandler
@@ -199,6 +209,9 @@ public class BackpackListener implements Listener {
 		InventoryHolder holder = inventory.getHolder();
 		String title = inventory.getTitle();
 		if (holder == null) {
+			if (debug) {
+				Bukkit.getLogger().warning("[Backpack Debug] - BackpackListener.java - onBackpackClose method >> holder is null.");
+			}
 			return;
 		}
 		if (holder.equals(player) && title.equals("Backpack")) {
@@ -220,7 +233,19 @@ public class BackpackListener implements Listener {
 					MessageHelper.sendMessage(player, "Found illegal items in your Backpack! Dropping them around you...");
 				}
 			}
+			if (debug) {
+				Bukkit.getLogger().warning("[Backpack Debug] - BackpackListener.java - STORE.save method called.");
+			}
 			STORE.save(player, world, new BackpackInventory(backpack.getInventory()));
+		}
+	}
+	
+	private void forceSave(Player player) {
+		World world = PermissionHelper.getWorldToOpen(player, player.getWorld());
+		BackpackInventory inventory = STORE.load(player, world);
+		STORE.save(player, world, inventory);
+		if (debug) {
+			Bukkit.getLogger().warning("[Backpack Debug] - BackpackListener.java - forceSave method called.");
 		}
 	}
 }
