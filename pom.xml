@@ -4,15 +4,15 @@
 	<!-- Project information -->
 	<groupId>com.almuramc</groupId>
 	<artifactId>backpack</artifactId>
-	<version>dev-SNAPSHOT</version>
+	<version>b148</version>
 	<name>Backpack</name>
 	<url>http://www.almuramc.com</url>
 	<description>Backpack is a plugin for Bukkit/Spout that gives users a handy backpack.</description>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<bukkitVersion>1.5.2-R1.0</bukkitVersion>
-		<buildNumber>b130</buildNumber>
+		<bukkitVersion>1.6.2-R1.0</bukkitVersion>
+		<buildNumber>b131</buildNumber>
 	</properties>
 
 	<!-- Organization -->
