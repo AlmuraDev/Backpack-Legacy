@@ -24,12 +24,21 @@
  * <http://www.gnu.org/licenses/> for the GNU General Public License and
  * the GNU Lesser Public License.
  */
-package com.almuramc.backpack.bukkit.util;
+package com.almuramc.backpack.gui;
 
-import org.bukkit.command.CommandSender;
+import org.getspout.spoutapi.event.screen.ButtonClickEvent;
+import org.getspout.spoutapi.gui.GenericButton;
 
-public class MessageHelper {
-	public static void sendMessage(CommandSender sender, String message) {
-		sender.sendMessage("[Backpack] " + message); //TODO Make pretty Dockter
+public class Buy27Button extends GenericButton {
+	private UpgradePanel guicon;
+
+	public Buy27Button(UpgradePanel guicon) {
+		super("Buy");
+		this.guicon = guicon;
+	}
+
+	@Override
+	public void onButtonClick(ButtonClickEvent event) {
+		guicon.onBuy27Click();
 	}
 }

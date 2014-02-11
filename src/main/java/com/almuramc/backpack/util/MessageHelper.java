@@ -24,21 +24,12 @@
  * <http://www.gnu.org/licenses/> for the GNU General Public License and
  * the GNU Lesser Public License.
  */
-package com.almuramc.backpack.bukkit.gui;
+package com.almuramc.backpack.util;
 
-import org.getspout.spoutapi.event.screen.ButtonClickEvent;
-import org.getspout.spoutapi.gui.GenericButton;
+import org.bukkit.command.CommandSender;
 
-public class CloseButton extends GenericButton {
-	private UpgradePanel guicon;
-
-	public CloseButton(UpgradePanel guicon) {
-		super("Close");
-		this.guicon = guicon;
-	}
-
-	@Override
-	public void onButtonClick(ButtonClickEvent event) {
-		guicon.onCloseClick();
+public class MessageHelper {
+	public static void sendMessage(CommandSender sender, String message) {
+		sender.sendMessage("[Backpack] " + message); //TODO Make pretty Dockter
 	}
 }

@@ -24,10 +24,10 @@
  * <http://www.gnu.org/licenses/> for the GNU General Public License and
  * the GNU Lesser Public License.
  */
-package com.almuramc.backpack.bukkit.input;
+package com.almuramc.backpack.input;
 
-import com.almuramc.backpack.bukkit.BackpackPlugin;
-import com.almuramc.backpack.bukkit.util.PermissionHelper;
+import com.almuramc.backpack.BackpackPlugin;
+import com.almuramc.backpack.util.PermissionHelper;
 
 import org.getspout.spoutapi.event.input.KeyBindingEvent;
 import org.getspout.spoutapi.gui.ScreenType;

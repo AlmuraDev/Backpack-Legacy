@@ -24,21 +24,21 @@
  * <http://www.gnu.org/licenses/> for the GNU General Public License and
  * the GNU Lesser Public License.
  */
-package com.almuramc.backpack.bukkit.gui;
+package com.almuramc.backpack.gui;
 
 import org.getspout.spoutapi.event.screen.ButtonClickEvent;
 import org.getspout.spoutapi.gui.GenericButton;
 
-public class Buy54Button extends GenericButton {
+public class Buy18Button extends GenericButton {
 	private UpgradePanel guicon;
 
-	public Buy54Button(UpgradePanel guicon) {
+	public Buy18Button(UpgradePanel guicon) {
 		super("Buy");
 		this.guicon = guicon;
 	}
 
 	@Override
 	public void onButtonClick(ButtonClickEvent event) {
-		guicon.onBuy54Click();
+		guicon.onBuy18Click();
 	}
 }

@@ -24,15 +24,15 @@
  * <http://www.gnu.org/licenses/> for the GNU General Public License and
  * the GNU Lesser Public License.
  */
-package com.almuramc.backpack.bukkit;
+package com.almuramc.backpack;
 
-import com.almuramc.backpack.bukkit.command.BackpackCommands;
-import com.almuramc.backpack.bukkit.listener.BackpackListener;
-import com.almuramc.backpack.bukkit.storage.Storage;
-import com.almuramc.backpack.bukkit.storage.type.YamlStorage;
-import com.almuramc.backpack.bukkit.util.CachedConfiguration;
-import com.almuramc.backpack.bukkit.util.Dependency;
-import com.almuramc.backpack.bukkit.util.SafeSpout;
+import com.almuramc.backpack.command.BackpackCommands;
+import com.almuramc.backpack.listener.BackpackListener;
+import com.almuramc.backpack.storage.Storage;
+import com.almuramc.backpack.storage.type.YamlStorage;
+import com.almuramc.backpack.util.CachedConfiguration;
+import com.almuramc.backpack.util.Dependency;
+import com.almuramc.backpack.util.SafeSpout;
 
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;

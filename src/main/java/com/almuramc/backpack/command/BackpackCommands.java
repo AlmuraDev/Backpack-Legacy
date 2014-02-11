@@ -24,20 +24,20 @@
  * <http://www.gnu.org/licenses/> for the GNU General Public License and
  * the GNU Lesser Public License.
  */
-package com.almuramc.backpack.bukkit.command;
+package com.almuramc.backpack.command;
 
-import com.almuramc.backpack.bukkit.BackpackPlugin;
-import com.almuramc.backpack.bukkit.inventory.BackpackInventory;
-import com.almuramc.backpack.bukkit.storage.Storage;
-import com.almuramc.backpack.bukkit.util.CachedConfiguration;
-import com.almuramc.backpack.bukkit.util.Dependency;
-import com.almuramc.backpack.bukkit.util.MessageHelper;
-import com.almuramc.backpack.bukkit.util.PermissionHelper;
-import com.almuramc.backpack.bukkit.util.SafeSpout;
+import com.almuramc.backpack.BackpackPlugin;
+import com.almuramc.backpack.inventory.BackpackInventory;
+import com.almuramc.backpack.storage.Storage;
+import com.almuramc.backpack.util.CachedConfiguration;
+import com.almuramc.backpack.util.Dependency;
+import com.almuramc.backpack.util.MessageHelper;
+import com.almuramc.backpack.util.PermissionHelper;
+import com.almuramc.backpack.util.SafeSpout;
 
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
-
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.command.Command;
@@ -56,13 +56,9 @@ public class BackpackCommands implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
 		if (command.getName().equalsIgnoreCase("backpack")) {
-			Player player = null;
-			if (commandSender instanceof Player) {
-				player = (Player) commandSender;
-			}
+			Player player = commandSender instanceof Player ? (Player) commandSender : null;
 
 			boolean useSpoutInterface = false;
-			
 			if (strings.length == 0 && player != null) {
 				if (PERM.has(player.getWorld().getName(), player.getName(), "backpack.use")) {
 					player.openInventory(STORE.load(player, PermissionHelper.getWorldToOpen(player, player.getWorld())).getInventory());
@@ -71,7 +67,29 @@ public class BackpackCommands implements CommandExecutor {
 					MessageHelper.sendMessage(commandSender, "Insufficient permissions to use backpack!");
 				}
 				return true;
+			} else if (strings.length > 1 && strings[0].equalsIgnoreCase("clear")) {
+				if (player != null && !PERM.has(player.getWorld().getName(), player.getName(), "backpack.admin")) {
+					MessageHelper.sendMessage(commandSender, "Insufficient permissions to clear backpacks!");
+					return true;
+				}
+				final Player target = Bukkit.getPlayerExact(strings[1]);
+				if (target == null) {
+					MessageHelper.sendMessage(commandSender, strings[1] + " is not online!");
+					return true;
+				}
+				final BackpackInventory backpack = STORE.load(target, target.getWorld());
+				backpack.clear();
+				if (player != null && CONFIG.useSpout() && HOOKS.isSpoutPluginEnabled()) {
+					SafeSpout.sendMessage(player, target.getName() + "'s backpack was cleared.", "Backpack", Material.GOLDEN_APPLE);
+				} else {
+					MessageHelper.sendMessage(commandSender, target.getName() + "'s backpack was cleared.");
+				}
+				return true;
 			} else if (strings.length > 0 && strings[0].equalsIgnoreCase("reload")) {
+				if (player != null && !PERM.has(player.getWorld().getName(), player.getName(), "backpack.admin")) {
+					MessageHelper.sendMessage(commandSender, "Insufficient permissions to reload backpack!");
+					return true;
+				}
 				CONFIG.reload();
 				if (CONFIG.useSpout() && HOOKS.isSpoutPluginEnabled()) {
 					SafeSpout.sendMessage(player, "Configuration reloaded", "Backpack", Material.CAKE);
@@ -84,17 +102,14 @@ public class BackpackCommands implements CommandExecutor {
 				if (!PERM.has(player.getWorld().getName(), player.getName(), "backpack.upgrade")) {
 					MessageHelper.sendMessage(commandSender, "Insufficient permissions to upgrade your backpack!");
 					return true;
-				}
-				
-				if (CONFIG.useSpout() && HOOKS.isSpoutPluginEnabled()) {
-					SpoutPlayer sPlayer = (SpoutPlayer)player;
+				}	if (CONFIG.useSpout() && HOOKS.isSpoutPluginEnabled()) {
+					SpoutPlayer sPlayer = (SpoutPlayer) player;
 					if (sPlayer.isSpoutCraftEnabled()) {  // Check if player is a Spoutcraft User
 						useSpoutInterface = true;
-					}				
+					}
 				}
-				
-				if (useSpoutInterface) {					
-						SafeSpout.openUpgradePanel((Player) commandSender);					
+				if (useSpoutInterface) {
+					SafeSpout.openUpgradePanel(player);
 				} else {
 					BackpackInventory backpack = STORE.load(player, target);
 					int newSize = backpack.getSize() + 9;

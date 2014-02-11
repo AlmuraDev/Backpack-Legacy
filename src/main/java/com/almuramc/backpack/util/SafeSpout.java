@@ -24,12 +24,12 @@
  * <http://www.gnu.org/licenses/> for the GNU General Public License and
  * the GNU Lesser Public License.
  */
-package com.almuramc.backpack.bukkit.util;
+package com.almuramc.backpack.util;
 
-import com.almuramc.backpack.bukkit.BackpackPlugin;
-import com.almuramc.backpack.bukkit.gui.UpgradePanel;
-import com.almuramc.backpack.bukkit.input.BackpackInputHandler;
-import com.almuramc.backpack.bukkit.input.PanelInputHandler;
+import com.almuramc.backpack.BackpackPlugin;
+import com.almuramc.backpack.gui.UpgradePanel;
+import com.almuramc.backpack.input.BackpackInputHandler;
+import com.almuramc.backpack.input.PanelInputHandler;
 
 import org.getspout.spoutapi.SpoutManager;
 import org.getspout.spoutapi.keyboard.Keyboard;

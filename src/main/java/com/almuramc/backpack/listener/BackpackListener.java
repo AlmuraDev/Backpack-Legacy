@@ -24,21 +24,20 @@
  * <http://www.gnu.org/licenses/> for the GNU General Public License and
  * the GNU Lesser Public License.
  */
-package com.almuramc.backpack.bukkit.listener;
+package com.almuramc.backpack.listener;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
-import java.util.UUID;
 
-import com.almuramc.backpack.bukkit.BackpackPlugin;
-import com.almuramc.backpack.bukkit.inventory.BackpackInventory;
-import com.almuramc.backpack.bukkit.storage.Storage;
-import com.almuramc.backpack.bukkit.util.CachedConfiguration;
-import com.almuramc.backpack.bukkit.util.InventoryUtil;
-import com.almuramc.backpack.bukkit.util.MessageHelper;
-import com.almuramc.backpack.bukkit.util.PermissionHelper;
-import com.almuramc.backpack.bukkit.util.SafeSpout;
+import com.almuramc.backpack.BackpackPlugin;
+import com.almuramc.backpack.inventory.BackpackInventory;
+import com.almuramc.backpack.storage.Storage;
+import com.almuramc.backpack.util.CachedConfiguration;
+import com.almuramc.backpack.util.InventoryUtil;
+import com.almuramc.backpack.util.MessageHelper;
+import com.almuramc.backpack.util.PermissionHelper;
+import com.almuramc.backpack.util.SafeSpout;
 
 import net.milkbowl.vault.permission.Permission;
 

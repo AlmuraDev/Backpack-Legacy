@@ -24,12 +24,12 @@
  * <http://www.gnu.org/licenses/> for the GNU General Public License and
  * the GNU Lesser Public License.
  */
-package com.almuramc.backpack.bukkit.storage;
+package com.almuramc.backpack.storage;
 
 import java.util.HashMap;
 import java.util.UUID;
 
-import com.almuramc.backpack.bukkit.inventory.BackpackInventory;
+import com.almuramc.backpack.inventory.BackpackInventory;
 
 import org.bukkit.World;
 import org.bukkit.entity.Player;

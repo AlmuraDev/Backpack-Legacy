@@ -24,17 +24,17 @@
  * <http://www.gnu.org/licenses/> for the GNU General Public License and
  * the GNU Lesser Public License.
  */
-package com.almuramc.backpack.bukkit.storage.type;
+package com.almuramc.backpack.storage.type;
 
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.Set;
 
-import com.almuramc.backpack.bukkit.BackpackPlugin;
-import com.almuramc.backpack.bukkit.inventory.BackpackInventory;
-import com.almuramc.backpack.bukkit.storage.Storage;
-import com.almuramc.backpack.bukkit.util.PermissionHelper;
+import com.almuramc.backpack.BackpackPlugin;
+import com.almuramc.backpack.inventory.BackpackInventory;
+import com.almuramc.backpack.storage.Storage;
+import com.almuramc.backpack.util.PermissionHelper;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;

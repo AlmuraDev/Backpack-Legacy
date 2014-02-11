@@ -24,7 +24,7 @@
  * <http://www.gnu.org/licenses/> for the GNU General Public License and
  * the GNU Lesser Public License.
  */
-package com.almuramc.backpack.bukkit.inventory;
+package com.almuramc.backpack.inventory;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,7 +33,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.ListIterator;
 
-import com.almuramc.backpack.bukkit.BackpackPlugin;
+import com.almuramc.backpack.BackpackPlugin;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;

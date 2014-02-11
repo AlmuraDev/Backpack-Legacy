@@ -1,10 +1,10 @@
 name: ${project.name}
-version: ${buildNumber}
+version: ${project.version}
 description: ${project.description}
 author: ${project.organization.name}
 website: ${project.organization.url}
 
-main: com.almuramc.backpack.bukkit.BackpackPlugin
+main: com.almuramc.backpack.BackpackPlugin
 depend: [Vault]
 softdepend: [Spout]
 load: POSTWORLD
@@ -15,7 +15,7 @@ commands:
         usage: /backpack [command] [arguments]
 permissions:
     backpack.admin:
-        description: Gives you access to /backpack clear player
+        description: Gives access to the clear and reload commands.
         default: op
     backpack.use:
         description: Allows users to access backpack.
