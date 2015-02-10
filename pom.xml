@@ -32,16 +32,8 @@
 	<!-- Repository locations -->
 	<repositories>
 		<repository>
-			<id>bukkit-repo</id>
-			<url>http://repo.bukkit.org/content/groups/public/</url>
-		</repository>
-		<repository>
 			<id>oss-sonatype-repo</id>
 			<url>https://oss.sonatype.org/content/repositories/public/</url>
-		</repository>
-		<repository>
-			<id>vault-repo</id>
-			<url>http://ci.herocraftonline.com/plugin/repository/everything/</url>
 		</repository>
 	</repositories>
 
@@ -49,21 +41,24 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.bukkit</groupId>
-			<artifactId>bukkit</artifactId>
-			<version>${bukkitVersion}</version>
-			<scope>provided</scope>
+			<artifactId>1.6.4-R1.0</artifactId>
+			<version>Custom</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/libs/bukkit.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>org.spoutcraft</groupId>
 			<artifactId>spoutcraftplugin</artifactId>
-			<version>${bukkitVersion}</version>
-			<scope>provided</scope>
+			<version>Custom</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/libs/spoutcraftplugin.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>net.milkbowl.vault</groupId>
 			<artifactId>Vault</artifactId>
-			<version>1.2.27-SNAPSHOT</version>
-			<scope>provided</scope>
+			<version>Custom</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/libs/vault.jar</systemPath>
 		</dependency>
 	</dependencies>
 

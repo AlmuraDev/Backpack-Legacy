@@ -28,6 +28,7 @@ package com.almuramc.backpack.listener;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import com.almuramc.backpack.BackpackPlugin;
@@ -163,7 +164,7 @@ public class BackpackListener implements Listener {
 
 	@EventHandler
 	public void onItemPickup(PlayerPickupItemEvent event) {
-		if (!PERM.has(event.getPlayer().getWorld(), event.getPlayer().getName(), "backpack.overflow")) {
+		if (!PERM.playerHas(event.getPlayer().getWorld(), event.getPlayer().getName(), "backpack.overflow")) {
 			return;
 		}
 		Player player = event.getPlayer();
@@ -193,9 +194,11 @@ public class BackpackListener implements Listener {
 			}
 			return;
 		}
-		inventory.addItem(item);
+		final Map<Integer, ItemStack> nonMergable = inventory.addItem(item);
 		STORE.save(player, world, inventory);
-		event.getItem().remove();
+		if (nonMergable.isEmpty()) {
+			event.getItem().remove();
+		}
 		Random random = new Random();
 		player.playSound(player.getLocation(), Sound.ITEM_PICKUP, 0.2F, ((random.nextFloat() - random.nextFloat()) * 0.7F + 1.0F) * 2.0F);
 		event.setCancelled(true);
