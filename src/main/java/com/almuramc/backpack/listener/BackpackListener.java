@@ -114,7 +114,7 @@ public class BackpackListener implements Listener {
 		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(BackpackPlugin.getInstance(), new Runnable() {
 			@Override
 			public void run() {
-				if (myInventory.getTitle().equals("Backpack")) {
+				if ("Backpack".equals(myInventory.getTitle())) {
 					if (debug) {
 						Bukkit.getLogger().warning("[Backpack Debug] - BackpackListener.java - onInventoryClick method called.");
 					}
